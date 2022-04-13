@@ -1,26 +1,57 @@
-import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/screens/more_user_details.dart';
+import 'dart:async';
 
-class EmailVerification extends StatelessWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
+
+import 'package:gamingmob/AuthScreens/screens/more_user_details.dart';
+import 'package:provider/provider.dart';
+
+class EmailVerification extends StatefulWidget {
   const EmailVerification({Key? key}) : super(key: key);
   static const routeName = "/emailverification";
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: GestureDetector(
-            onTap: (){
-              Navigator.of(context).pushNamed(MoreUserDetails.routeName);
-            },
+  State<EmailVerification> createState() => _EmailVerificationState();
+}
 
-            child: const Text(
-              "Email Verification Screen Touch To Navigate",
-            ),
-          ),
-        ),
-      ),
+class _EmailVerificationState extends State<EmailVerification> {
+  Timer? timer;
+  @override
+  void dispose() {
+    super.dispose();
+    timer!.cancel();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((value) =>
+        Provider.of<AuthProvider>(context, listen: false)
+            .checkIsEmailVerified(timer, context));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthProvider>(
+      builder: ((context, value, child) {
+        var isEmailVerified =
+            Provider.of<AuthProvider>(context, listen: false).emailVerified();
+        return isEmailVerified
+            ? MoreUserDetails()
+            : SafeArea(
+                child: Scaffold(
+                  body: Center(
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: const Text(
+                        "Email Verification Screen Touch To Navigate",
+                      ),
+                    ),
+                  ),
+                ),
+              );
+      }),
     );
   }
 }

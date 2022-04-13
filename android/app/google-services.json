@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "708216005419",
+    "project_id": "gaming-mob",
+    "storage_bucket": "gaming-mob.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708216005419:android:0bfb75ec98abdc300b9b6e",
+        "android_client_info": {
+          "package_name": "com.example.gamingmob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708216005419-5vuvh4atff6eoe95mm0rfkrh416lu435.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq6mrwgApffd2CtaSMD72xM4krBHouq_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708216005419-5vuvh4atff6eoe95mm0rfkrh416lu435.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

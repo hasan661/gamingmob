@@ -7,8 +7,6 @@ class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({Key? key}) : super(key: key);
   static const routeName = "/productdetailscreen";
 
- 
-
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -19,13 +17,17 @@ class ProductDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        
         centerTitle: true,
+        
         title: Text(
           product.productName,
         ),
       ),
-      body: ProductDetailItem(product: product, screenWidth: screenWidth, id: productID,),
+      body: ProductDetailItem(
+        product: product,
+        screenWidth: screenWidth,
+        id: productID,
+      ),
     );
   }
 }

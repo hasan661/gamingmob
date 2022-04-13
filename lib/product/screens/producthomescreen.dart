@@ -13,7 +13,7 @@ class ProductHomeScreen extends StatefulWidget {
 }
 
 class _ProductHomeScreenState extends State<ProductHomeScreen> {
-  var query="";
+  var query = "";
   Widget productgrid(product) {
     return GridView.builder(
       shrinkWrap: true,
@@ -55,118 +55,38 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
           elevation: 10000,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          color: backgroundColor,
-          child: SizedBox(
-            height: 66,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  color: backgroundColor,
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: const [
-                            Icon(
-                              Icons.home,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Home",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: const [
-                            Icon(
-                              Icons.chat,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Chat",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  color: backgroundColor,
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: const [
-                            Icon(
-                              Icons.ad_units,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "My Ads",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: const [
-                            Icon(
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Account",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: const Color(
+              0xff8d1ba5,
             ),
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            fixedColor: Colors.red,
+            unselectedItemColor: Colors.white,
+            currentIndex: 0,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: "Chat",
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.ad_units), label: "My Ads"),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person), label: "Account"),
+            ],
           ),
         ),
         appBar: AppBar(
+          // elevation: 0,
+          // backgroundColor: Theme.of(context).primaryColor,
+          // foregroundColor: Theme.of(context).primaryColor,
+          leading: Container(),
           actions: [
             IconButton(
                 onPressed: () {
@@ -197,7 +117,6 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
           centerTitle: true,
           title: const Text(
             "Gaming Mob",
-            style: TextStyle(color: Colors.white),
           ),
         ),
         body: TabBarView(
@@ -275,11 +194,9 @@ class CustomSearchDelegate extends SearchDelegate {
     return ListView.builder(
         itemCount: matchQuery.length,
         itemBuilder: (context, index) => ListTile(
-          onTap: (){
-            
-            query=matchQuery[index];
-
-          },
+              onTap: () {
+                query = matchQuery[index];
+              },
               title: Text(matchQuery[index]),
             ));
   }
