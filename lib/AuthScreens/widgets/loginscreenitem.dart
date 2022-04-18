@@ -1,12 +1,9 @@
-// import 'package:flutter/cupertino.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
 import 'package:gamingmob/AuthScreens/screens/register_screen.dart';
 import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';
 import 'package:provider/provider.dart';
-// import 'package:gamingmob/widgets/textfieldstyled.dart';
 
 class LoginScreenItem extends StatefulWidget {
   const LoginScreenItem({Key? key}) : super(key: key);

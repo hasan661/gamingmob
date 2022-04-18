@@ -14,6 +14,7 @@ getRoutes() {
     AddProductScreen.routeName: (ctx) => AddProductScreen(),
     RegisterScreen.routeName: (ctx) => const RegisterScreen(),
     EmailVerification.routeName: (ctx) => const EmailVerification(),
-    MoreUserDetails.routeName:(ctx)=>const MoreUserDetails()
+    MoreUserDetails.routeName:(ctx)=>const MoreUserDetails(),
+    
   };
 }

@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/screens/producthomescreen.dart';
 
 class AuthProvider with ChangeNotifier {
   bool isEmailVerified = false;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  var verificationID;
 
   login(emailController, passwordController) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,7 +17,6 @@ class AuthProvider with ChangeNotifier {
 
   registerEmail(email, password) async {
     final _auth = FirebaseAuth.instance;
-
     await _auth.createUserWithEmailAndPassword(
         email: email.text.trim(), password: password.text);
   }
@@ -36,6 +38,7 @@ class AuthProvider with ChangeNotifier {
     await FirebaseAuth.instance.currentUser!.reload();
 
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+
     if (isEmailVerified) timer!.cancel();
     notifyListeners();
   }
@@ -56,7 +59,38 @@ class AuthProvider with ChangeNotifier {
   }
 
   emailVerified() {
-    print(isEmailVerified);
     return isEmailVerified;
+  }
+
+  Future<void> registerPhone(phoneNumberController) async {
+    var userInfo = auth.currentUser;
+    await auth.verifyPhoneNumber(
+      phoneNumber: "+92" + phoneNumberController.text,
+      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+        await userInfo!.linkWithCredential(phoneAuthCredential);
+        notifyListeners();
+      },
+      verificationFailed: (FirebaseAuthException e) {},
+      codeSent: (String verificationId, int? resendToken) {
+        verificationID = verificationId;
+        notifyListeners();
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
+  void verifyOTP(smsCode) async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationID, smsCode: "$smsCode");
+        
+
+    var currentUser = auth.currentUser;
+    print(currentUser);
+    await currentUser!.linkWithCredential(credential);
+  }
+
+  bool isVerificationIdNull(){
+    print(verificationID==null);
+    return verificationID==null;
   }
 }

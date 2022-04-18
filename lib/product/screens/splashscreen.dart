@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
-import 'package:gamingmob/product/screens/producthomescreen.dart';
 import 'package:gamingmob/Helper/helper.dart';
 
 class SplashScreen extends StatefulWidget {

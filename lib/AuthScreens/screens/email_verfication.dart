@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
 
@@ -38,7 +36,7 @@ class _EmailVerificationState extends State<EmailVerification> {
         var isEmailVerified =
             Provider.of<AuthProvider>(context, listen: false).emailVerified();
         return isEmailVerified
-            ? MoreUserDetails()
+            ? const MoreUserDetails()
             : SafeArea(
                 child: Scaffold(
                   body: Center(

@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
+import 'package:gamingmob/AuthScreens/screens/verifymobilenumberscreen.dart';
 import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';
+import 'package:provider/provider.dart';
 
 class MoreUserDetails extends StatefulWidget {
   const MoreUserDetails({Key? key}) : super(key: key);
@@ -14,56 +17,21 @@ class MoreUserDetails extends StatefulWidget {
 class _MoreUserDetailsState extends State<MoreUserDetails> {
   String verificationID = "";
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
   var phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    void loginWithPhone() async {
-      auth.verifyPhoneNumber(
-        phoneNumber: "+92" + phoneNumberController.text,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await auth.signInWithCredential(credential).then((value) {
-            
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          verificationID = verificationId;
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
-    }
+    var authProvider = Provider.of<AuthProvider>(context);
+    
 
-    void verifyOTP() async {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationID, smsCode: "36623");
-
-      await auth
-          .signInWithCredential(credential)
-          .then(
-            (value) {},
-          )
-          .whenComplete(
-        () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ProductHomeScreen(),
-            ),
-          );
-        },
-      );
-    }
-
+    
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Padding(
-         padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+    return  authProvider.isVerificationIdNull()
+        ?
+         Scaffold(
+      body:  Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
         child: Column(
           children: [
             SizedBox(
@@ -103,8 +71,10 @@ class _MoreUserDetailsState extends State<MoreUserDetails> {
               height: height * 0.06,
               width: width,
               child: ElevatedButton(
-                onPressed: loginWithPhone,
-                child: const Text("Veify"),
+                onPressed: () async {
+                  await authProvider.registerPhone(phoneNumberController);
+                },
+                child: const Text("Verify"),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
                       Theme.of(context).primaryColor.withOpacity(1)),
@@ -122,6 +92,6 @@ class _MoreUserDetailsState extends State<MoreUserDetails> {
           ],
         ),
       ),
-    );
+    ):const MobileVerification();
   }
 }
