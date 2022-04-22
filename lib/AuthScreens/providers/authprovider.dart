@@ -2,26 +2,39 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamingmob/product/screens/producthomescreen.dart';
 
 class AuthProvider with ChangeNotifier {
   bool isEmailVerified = false;
   FirebaseAuth auth = FirebaseAuth.instance;
-  var verificationID;
+  String? verificationID;
 
-  login(emailController, passwordController) async {
+  Future<void> login(emailController, passwordController) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.signInWithEmailAndPassword(
         email: emailController.text, password: passwordController.text);
+    notifyListeners();
   }
 
-  registerEmail(email, password) async {
+  Future<void> registerEmail(
+    email,
+    password,
+    name,
+  ) async {
+    verificationID = null;
     final _auth = FirebaseAuth.instance;
-    await _auth.createUserWithEmailAndPassword(
-        email: email.text.trim(), password: password.text);
+
+    await _auth
+        .createUserWithEmailAndPassword(
+            email: email.text.trim(), password: password.text)
+        .then((value) {
+      value.user!.updateDisplayName(name.toString());
+    });
+
+    notifyListeners();
   }
 
   checkIsEmailVerified(timer, context) {
+    verificationID = null;
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
     if (!isEmailVerified) {
@@ -45,7 +58,9 @@ class AuthProvider with ChangeNotifier {
 
   Future sendEmailVerification(context) async {
     try {
+      verificationID = null;
       final user = FirebaseAuth.instance.currentUser!;
+
       await user.sendEmailVerification();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,10 +78,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> registerPhone(phoneNumberController) async {
+    await FirebaseAuth.instance.currentUser!.reload();
     var userInfo = auth.currentUser;
+
     await auth.verifyPhoneNumber(
       phoneNumber: "+92" + phoneNumberController.text,
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+        verificationID = null;
         await userInfo!.linkWithCredential(phoneAuthCredential);
         notifyListeners();
       },
@@ -79,18 +97,17 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  void verifyOTP(smsCode) async {
+  Future<void> verifyOTP(smsCode) async {
+    await FirebaseAuth.instance.currentUser!.reload();
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationID, smsCode: "$smsCode");
-        
+        verificationId: verificationID ?? "", smsCode: "$smsCode");
 
     var currentUser = auth.currentUser;
-    print(currentUser);
     await currentUser!.linkWithCredential(credential);
+    notifyListeners();
   }
 
-  bool isVerificationIdNull(){
-    print(verificationID==null);
-    return verificationID==null;
+  bool isVerificationIdNull() {
+    return verificationID == null;
   }
 }

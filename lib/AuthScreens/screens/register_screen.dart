@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/widgets/registerscreenitem.dart';
 import 'package:gamingmob/Helper/helper.dart';
 
-
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
   static const routeName = "/registerscreen";
-  
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -25,7 +24,6 @@ class RegisterScreen extends StatelessWidget {
                   child: Helper.appLogo,
                 ),
                 const RegisterScreenItem()
-                
               ],
             ),
           ),

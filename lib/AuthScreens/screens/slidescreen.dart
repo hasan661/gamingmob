@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
 import 'package:gamingmob/Helper/helper.dart';
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SlideScreen extends StatefulWidget {
+  const SlideScreen({ Key? key }) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SlideScreen> createState() => _SlideScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  @override
+class _SlideScreenState extends State<SlideScreen> {
+   @override
   void initState() {
     super.initState();
     navigateHome();
@@ -18,6 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   navigateHome() async {
     await Future.delayed(const Duration(milliseconds: 3000), () {});
+
     Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
   }
 
@@ -29,4 +29,5 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
+
 }

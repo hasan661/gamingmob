@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-
-import 'package:gamingmob/AuthScreens/screens/more_user_details.dart';
+import 'package:gamingmob/AuthScreens/widgets/emailverificationitem.dart';
+import 'package:gamingmob/AuthScreens/widgets/mobilenumberinput.dart';
 import 'package:provider/provider.dart';
 
 class EmailVerification extends StatefulWidget {
@@ -36,19 +36,8 @@ class _EmailVerificationState extends State<EmailVerification> {
         var isEmailVerified =
             Provider.of<AuthProvider>(context, listen: false).emailVerified();
         return isEmailVerified
-            ? const MoreUserDetails()
-            : SafeArea(
-                child: Scaffold(
-                  body: Center(
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: const Text(
-                        "Email Verification Screen Touch To Navigate",
-                      ),
-                    ),
-                  ),
-                ),
-              );
+            ? const MobileNumberInput()
+            : const EmailVerificationItem();
       }),
     );
   }

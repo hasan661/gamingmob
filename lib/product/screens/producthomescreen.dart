@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/models/product.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
@@ -34,7 +35,6 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var backgroundColor = Theme.of(context).primaryColor;
     var gamingProducts = Provider.of<ProductProvider>(context).productItems;
     var rentOnly = Provider.of<ProductProvider>(context).rentOnly();
     var buyOnly = Provider.of<ProductProvider>(context).buyOnly();
@@ -73,6 +73,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
+                
                 label: "Chat",
               ),
               BottomNavigationBarItem(
@@ -83,6 +84,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
           ),
         ),
         appBar: AppBar(
+          
           // elevation: 0,
           // backgroundColor: Theme.of(context).primaryColor,
           // foregroundColor: Theme.of(context).primaryColor,
@@ -95,6 +97,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                     context: context,
                     delegate: CustomSearchDelegate(searchterms, gamingProducts),
                   );
+                  
                 },
                 icon: const Icon(
                   Icons.search,

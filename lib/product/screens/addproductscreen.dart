@@ -3,10 +3,17 @@ import 'package:gamingmob/product/models/product.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:provider/provider.dart';
 
-class AddProductScreen extends StatelessWidget {
-  AddProductScreen({Key? key}) : super(key: key);
-  final _formkey = GlobalKey<FormState>();
+class AddProductScreen extends StatefulWidget {
+  const AddProductScreen({Key? key}) : super(key: key);
   static const routeName = "/addproduct";
+
+  @override
+  State<AddProductScreen> createState() => _AddProductScreenState();
+}
+
+class _AddProductScreenState extends State<AddProductScreen> {
+  final _formkey = GlobalKey<FormState>();
+
   var _item = Product(
     imageURL: [],
     productDescripton: "",
@@ -19,11 +26,17 @@ class AddProductScreen extends StatelessWidget {
     productPrice: 0,
     productRentFee: 0,
   );
+
   var prodName = TextEditingController();
+
   var prodType = TextEditingController();
+
   var prodDes = TextEditingController();
+
   var prodPrice = TextEditingController();
+
   var prodImage = TextEditingController();
+
   var mobileNumber = TextEditingController();
 
   @override

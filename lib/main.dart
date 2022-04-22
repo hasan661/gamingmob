@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
 import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
+import 'package:gamingmob/AuthScreens/screens/slidescreen.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
-import 'package:gamingmob/product/screens/splashscreen.dart';
+
 import 'package:gamingmob/routes/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -55,15 +56,8 @@ class MyApp extends StatelessWidget {
         //   scheme: FlexScheme.bahamaBlue,
 
         // ),
-        home: StreamBuilder(
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const EmailVerification();
-            } else {
-              return const SplashScreen();
-            }
-          },
-        ),
+        home: const SlideScreen(),
+      
         routes: getRoutes(),
       ),
     );

@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
 import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
 import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
+
 import 'package:gamingmob/Helper/helper.dart';
 import 'package:provider/provider.dart';
 
@@ -24,33 +23,38 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
 
   final firstName = TextEditingController();
   final _formkey = GlobalKey<FormState>();
-
   final lastName = TextEditingController();
-
   final email = TextEditingController();
-
   final password = TextEditingController();
-
   final confirmPassword = TextEditingController();
 
   Future<void> onRegisterButtonPressed() async {
     final isValid = _formkey.currentState!.validate();
+    FirebaseAuth.instance.currentUser == null
+        ? null
+        : FirebaseAuth.instance.currentUser!.reload();
 
     if (isValid) {
       try {
-        await Provider.of<AuthProvider>(context, listen: false)
-            .registerEmail(email, password);
-        Navigator.of(context).pushNamed(EmailVerification.routeName);
+        var currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser == null || email.text!=currentUser.email) {
+          await Provider.of<AuthProvider>(context, listen: false).registerEmail(
+              email, password, firstName.text + " " + lastName.text);
+          Navigator.of(context).pushNamed(EmailVerification.routeName);
+           
+        }
+        else{
+          Navigator.of(context).pushNamed(EmailVerification.routeName);
+        }
+        
       } on FirebaseAuthException catch (e) {
-        print(e.code);
         if (e.code == "network-request-failed") {
           scaffold("Please check your internet connection");
         } else if (e.code == "email-already-in-use") {
           scaffold("Email already in use");
         }
-      }
-      catch(_){
-        scaffold("Something went wrong");
+      } catch (e) {
+        scaffold("$e");
       }
     } else {
       return;
