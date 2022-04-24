@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
 import 'package:gamingmob/Helper/helper.dart';
+import 'package:provider/provider.dart';
 
 class EmailVerificationItem extends StatelessWidget {
   const EmailVerificationItem({Key? key}) : super(key: key);
@@ -40,7 +42,9 @@ class EmailVerificationItem extends StatelessWidget {
                 height: height * 0.06,
                 width: width,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<AuthProvider>(context, listen: false).sendEmailVerification(context);
+                  },
                   child: const Text("Resend Email"),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(

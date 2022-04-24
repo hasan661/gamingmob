@@ -30,9 +30,24 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
         await Provider.of<AuthProvider>(context, listen: false)
             .login(emailController, passwordController);
       }
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      if (e.code == "wrong-password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("invalid password"),
+          ),
+        );
+      }
+      else if (e.code=="user-not-found"){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Email does not exist"),
+          ),
+        );
+      }
+    } catch (_) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+          .showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 

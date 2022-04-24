@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
 import 'package:gamingmob/AuthScreens/screens/slidescreen.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 

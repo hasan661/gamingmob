@@ -62,7 +62,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                   Form(
                     key: _formkey,
                     child: SizedBox(
-                      height: height * 0.11,
+                      height: height * 0.13,
                       child: TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -82,8 +82,9 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                         ),
                         decoration: InputDecoration(
                           hintText: "Contact Number",
+                          helperMaxLines: 2,
                           helperText:
-                              "You will need to verify your mobile number",
+                              "You will need to verify your mobile number through an OTP send to your phone",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),

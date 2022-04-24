@@ -84,7 +84,6 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
           ),
         ),
         appBar: AppBar(
-          
           // elevation: 0,
           // backgroundColor: Theme.of(context).primaryColor,
           // foregroundColor: Theme.of(context).primaryColor,
@@ -92,12 +91,12 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  showSearch(
-                    query: query,
-                    context: context,
-                    delegate: CustomSearchDelegate(searchterms, gamingProducts),
-                  );
-                  
+                  // showSearch(
+                  //   query: query,
+                  //   context: context,
+                  //   delegate: CustomSearchDelegate(searchterms, gamingProducts),
+                  // );
+                  FirebaseAuth.instance.signOut();
                 },
                 icon: const Icon(
                   Icons.search,

@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
-import 'package:gamingmob/AuthScreens/screens/register_screen.dart';
 import 'package:gamingmob/AuthScreens/widgets/loginscreenitem.dart';
-import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -37,24 +37,23 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
     if (isValid) {
       try {
         var currentUser = FirebaseAuth.instance.currentUser;
-        if (currentUser == null || email.text!=currentUser.email) {
+        if (currentUser == null || email.text != currentUser.email) {
           await Provider.of<AuthProvider>(context, listen: false).registerEmail(
               email, password, firstName.text + " " + lastName.text);
           Navigator.of(context).pushNamed(EmailVerification.routeName);
-           
-        }
-        else{
+        } else {
           Navigator.of(context).pushNamed(EmailVerification.routeName);
         }
-        
       } on FirebaseAuthException catch (e) {
         if (e.code == "network-request-failed") {
           scaffold("Please check your internet connection");
         } else if (e.code == "email-already-in-use") {
           scaffold("Email already in use");
         }
-      } catch (e) {
-        scaffold("$e");
+      } catch (_) {
+        scaffold(
+          "Something Went Wrong",
+        );
       }
     } else {
       return;
@@ -74,6 +73,7 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
             SizedBox(
               height: height * 0.076,
               child: TextFormField(
+                
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please provide your first name";

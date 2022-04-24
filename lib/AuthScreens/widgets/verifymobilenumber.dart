@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class MobileVerification extends StatefulWidget {
   const MobileVerification({Key? key}) : super(key: key);
-  static const routeName="/mobilenumberverify";
+  static const routeName = "/mobilenumberverify";
 
   @override
   State<MobileVerification> createState() => _MobileVerificationState();
@@ -29,128 +29,135 @@ class _MobileVerificationState extends State<MobileVerification> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: ListView(
-            children: [
-              SizedBox(
-                height: height * 0.0663,
-              ),
-              SizedBox(
-                height: height * 0.2,
-                child: Helper.appLogo,
-              ),
-              SizedBox(
-                height: height * 0.0663,
-              ),
-              Container(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Column(
-                    children: [
-                      const Text(
-                        " Confirm",
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        "Please Enter the 6 digit code sent to",
-                        style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      Form(
-                        key: formKey,
-                        child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 25.0, horizontal: 40),
-                            child: PinCodeTextField(
-                              appContext: context,
-                              length: 6,
-                              obscureText: true,
-                              obscuringCharacter: '*',
-                              animationType: AnimationType.fade,
-                              validator: (v) {
-                                if (v!.length < 3) {
-                                  return "";
-                                } else {
-                                  return null;
-                                }
-                              },
-                              pinTheme: PinTheme(
-                                shape: PinCodeFieldShape.box,
-                                borderRadius: BorderRadius.circular(5),
-                                fieldHeight: 60,
-                                fieldWidth: 50,
-                              ),
-                              cursorColor: Colors.black,
-                              animationDuration:
-                                  const Duration(milliseconds: 300),
-                              enablePinAutofill: true,
-                              controller: otp,
-                              keyboardType: TextInputType.number,
-                              onCompleted: (v) {},
-                              onChanged: (value) {
-                                currentText = value;
-                              },
-                              beforeTextPaste: (text) {
-                                return true;
-                              },
-                            )),
-                      ),
-                      const Text(
-                        "This code will expire in 5 minutes",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey),
-                      ),
-                      const SizedBox(height: 40),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          "Resend Code",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+        children: [
+          SizedBox(
+            height: height * 0.0663,
+          ),
+          SizedBox(
+            height: height * 0.2,
+            child: Helper.appLogo,
+          ),
+          SizedBox(
+            height: height * 0.0663,
+          ),
+          Container(
+              padding: const EdgeInsets.only(left: 5),
+              child: Column(
+                children: [
+                  const Text(
+                    " Confirm",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "Please Enter the 6 digit code sent to",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 25.0, horizontal: 40),
+                        child: PinCodeTextField(
+                          appContext: context,
+                          length: 6,
+                          obscureText: true,
+                          obscuringCharacter: '*',
+                          animationType: AnimationType.fade,
+                          validator: (v) {
+                            if (v!.length < 3) {
+                              return "";
+                            } else {
+                              return null;
+                            }
+                          },
+                          pinTheme: PinTheme(
+                            shape: PinCodeFieldShape.box,
+                            borderRadius: BorderRadius.circular(5),
+                            fieldHeight: 60,
+                            fieldWidth: 50,
+                          ),
+                          cursorColor: Colors.black,
+                          animationDuration: const Duration(milliseconds: 300),
+                          enablePinAutofill: true,
+                          controller: otp,
+                          keyboardType: TextInputType.number,
+                          onCompleted: (v) {},
+                          onChanged: (value) {
+                            currentText = value;
+                          },
+                          beforeTextPaste: (text) {
+                            return true;
+                          },
+                        )),
+                  ),
+                  const Text(
+                    "This code will expire in 5 minutes",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  ),
+                  const SizedBox(height: 40),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Text(
+                      "Resend Code",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              )),
+          const SizedBox(
+            height: 40,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+            child: SizedBox(
+              height: height * 0.06,
+              width: width,
+              child: ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await Provider.of<AuthProvider>(context, listen: false)
+                        .verifyOTP(otp.text);
+                        Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+                  } on FirebaseException catch   (e) {
+                    print(e.code);
+                    if (e.code == "credential-already-in-use") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Contact number already in use"),
                         ),
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                child: SizedBox(
-                  height: height * 0.06,
-                  width: width,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      try{
-                      await Provider.of<AuthProvider>(context, listen: false)
-                          .verifyOTP(otp.text);
-                      }
-                      on FirebaseException catch(_){
-    
-                      }
-                      catch(_){
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Something Went Wrong")));
-                      }
-                      Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-                    },
-                    child: const Text("Verify and continue"),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).primaryColor.withOpacity(1)),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                      );
+                      Future.delayed(const Duration(seconds: 5)).then((value) {
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  } catch (_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Something Went Wrong")));
+                  }
+                  
+                },
+                child: const Text("Verify and continue"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      Theme.of(context).primaryColor.withOpacity(1)),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
+        ],
+      ),
     );
   }
 }
