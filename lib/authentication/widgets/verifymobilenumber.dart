@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
-import 'package:gamingmob/Helper/helper.dart';
+import 'package:gamingmob/authentication/providers/authprovider.dart';
+import 'package:gamingmob/authentication/screens/login_screen.dart';
+import 'package:gamingmob/helper.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 

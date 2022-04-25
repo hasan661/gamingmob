@@ -17,11 +17,6 @@ class ProductDetailItem extends StatefulWidget {
   final Product product;
   final double screenWidth;
   final String id;
-
-  // Future<DateTime?> showdatepicker(){
-  //   return showDatePicker(context: context, initialDate: initialDate, firstDate: firstDate, lastDate: lastDate);
-  // }
-
   @override
   State<ProductDetailItem> createState() => _ProductDetailItemState();
 }
@@ -40,7 +35,6 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
     );
     await launch(launchUri.toString());
   }
-
   Future<void> _messageOwner(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'sms',

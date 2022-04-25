@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
-import 'package:gamingmob/AuthScreens/screens/register_screen.dart';
-import 'package:gamingmob/AuthScreens/widgets/mobilenumberinput.dart';
-import 'package:gamingmob/Helper/helper.dart';
+import 'package:gamingmob/authentication/providers/authprovider.dart';
+import 'package:gamingmob/authentication/screens/email_verfication.dart';
+import 'package:gamingmob/authentication/screens/register_screen.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

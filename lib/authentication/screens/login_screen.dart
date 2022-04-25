@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/widgets/loginscreenitem.dart';
+import 'package:gamingmob/authentication/providers/authprovider.dart';
+import 'package:gamingmob/authentication/widgets/loginscreenitem.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';
 import 'package:provider/provider.dart';
 

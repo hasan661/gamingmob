@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
-import 'package:gamingmob/Helper/helper.dart';
+import 'package:gamingmob/authentication/screens/login_screen.dart';
+import 'package:gamingmob/helper.dart';
 class SlideScreen extends StatefulWidget {
   const SlideScreen({ Key? key }) : super(key: key);
 

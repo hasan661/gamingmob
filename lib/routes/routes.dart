@@ -1,8 +1,8 @@
-import 'package:gamingmob/AuthScreens/screens/email_verfication.dart';
-import 'package:gamingmob/AuthScreens/screens/login_screen.dart';
-import 'package:gamingmob/AuthScreens/screens/register_screen.dart';
-import 'package:gamingmob/AuthScreens/widgets/mobilenumberinput.dart';
-import 'package:gamingmob/AuthScreens/widgets/verifymobilenumber.dart';
+import 'package:gamingmob/authentication/screens/email_verfication.dart';
+import 'package:gamingmob/authentication/screens/login_screen.dart';
+import 'package:gamingmob/authentication/screens/register_screen.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/authentication/widgets/verifymobilenumber.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/productdetailscreen.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';

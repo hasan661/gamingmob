@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/AuthScreens/providers/authprovider.dart';
-import 'package:gamingmob/AuthScreens/screens/slidescreen.dart';
+import 'package:gamingmob/authentication/providers/authprovider.dart';
+import 'package:gamingmob/authentication/screens/slidescreen.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 
 import 'package:gamingmob/routes/routes.dart';

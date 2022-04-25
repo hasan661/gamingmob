@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +28,6 @@ class AuthProvider with ChangeNotifier {
         .then((value) {
       value.user!.updateDisplayName(name.toString());
     });
-
     notifyListeners();
   }
 
@@ -43,19 +41,8 @@ class AuthProvider with ChangeNotifier {
         checkEmailVerified(timer);
       });
     }
-
     notifyListeners();
   }
-
-  Future checkEmailVerified(timer) async {
-    await FirebaseAuth.instance.currentUser!.reload();
-
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-
-    if (isEmailVerified) timer!.cancel();
-    notifyListeners();
-  }
-
   Future sendEmailVerification(context) async {
     try {
       verificationID = null;
@@ -72,6 +59,17 @@ class AuthProvider with ChangeNotifier {
       );
     }
   }
+
+  Future checkEmailVerified(timer) async {
+    await FirebaseAuth.instance.currentUser!.reload();
+
+    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+
+    if (isEmailVerified) timer!.cancel();
+    notifyListeners();
+  }
+
+  
 
   emailVerified() {
     return isEmailVerified;
@@ -109,5 +107,10 @@ class AuthProvider with ChangeNotifier {
 
   bool isVerificationIdNull() {
     return verificationID == null;
+  }
+
+  Future<void> logoutUser()async{
+    await FirebaseAuth.instance.signOut();
+    notifyListeners();
   }
 }
