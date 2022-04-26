@@ -14,100 +14,109 @@ class ProductCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var searchterms = Provider.of<ProductProvider>(context).searchTerms;
 
-    var gamingProducts = Provider.of<ProductProvider>(context).getAllProductItems;
-    var favoritesProducts=Provider.of<ProductProvider>(context).favoritesOnly;
-    var categires =
-        Provider.of<CategoryProvider>(context, listen: false).categories;
+    var gamingProducts =
+        Provider.of<ProductProvider>(context).getAllProductItems;
+    var favoritesProducts = Provider.of<ProductProvider>(context).favoritesOnly;
+
     var query = "";
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        drawer: const AppDrawer(),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: const Color(
-              0xff8d1ba5,
+          drawer: const AppDrawer(),
+          bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: const Color(
+                0xff8d1ba5,
+              ),
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              fixedColor: Colors.amber,
+              unselectedItemColor: Colors.white,
+              currentIndex: 0,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: "Chat",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.ad_units),
+                  label: "My Ads",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: "Account",
+                ),
+              ],
             ),
           ),
-          
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            fixedColor: Colors.amber,
-            unselectedItemColor: Colors.white,
-            currentIndex: 0,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: "Chat",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.ad_units),
-                label: "My Ads",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Account",
-              ),
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                      query: query,
+                      context: context,
+                      delegate: ProductSearch(searchterms, gamingProducts),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                  ))
             ],
+            bottom: const TabBar(
+              labelColor: Colors.white,
+              tabs: [
+                Tab(
+                  text: "Categories",
+                ),
+                Tab(
+                  text: "Favorites",
+                ),
+              ],
+            ),
+            centerTitle: true,
+            title: const Text(
+              "Gaming Mob",
+            ),
           ),
-        ),
-        
-        appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showSearch(
-                    query: query,
-                    context: context,
-                    delegate: ProductSearch(searchterms, gamingProducts),
+          body: FutureBuilder(
+              future: Provider.of<CategoryProvider>(context, listen: false)
+                  .fetchCategories(),
+              builder: (ctx, snapshot) {
+                var categires =
+                    Provider.of<CategoryProvider>(context, listen: false)
+                        .categories;
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-                icon: const Icon(
-                  Icons.search,
-                ))
-          ],
-          bottom: const TabBar(
-            labelColor: Colors.white,
-            tabs: [
-              Tab(
-                text: "Categories",
-              ),
-              Tab(
-                text: "Favorites",
-              ),
-             
-              
-            ],
-          ),
-          centerTitle: true,
-          title: const Text(
-            "Gaming Mob",
-          ),
-        ),
-        body: TabBarView(children: [
-          Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            itemCount: categires.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              childAspectRatio: 3 / 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (ctx, index) {
-              return CategoriesScreenItem(index: index);
-            },
-          ),
-        ),
-        ProductGrid(product: favoritesProducts)
-
-        ])
-      ),
+                } else {
+                  return TabBarView(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        itemCount: categires.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 3 / 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemBuilder: (ctx, index) {
+                          return CategoriesScreenItem(index: index);
+                        },
+                      ),
+                    ),
+                    ProductGrid(product: favoritesProducts)
+                  ]);
+                }
+              })),
     );
   }
 }

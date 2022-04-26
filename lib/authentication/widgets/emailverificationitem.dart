@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
-import 'package:gamingmob/helper.dart';
 import 'package:provider/provider.dart';
 
 class EmailVerificationItem extends StatelessWidget {

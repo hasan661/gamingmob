@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/authentication/providers/authprovider.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
-import 'package:gamingmob/authentication/widgets/verifymobilenumber.dart';
-import 'package:provider/provider.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+
+
 
 class MoreUserDetails extends StatefulWidget {
   const MoreUserDetails({Key? key}) : super(key: key);

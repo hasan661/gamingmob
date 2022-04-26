@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/authentication/widgets/registerscreenitem.dart';
-import 'package:gamingmob/helper.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);

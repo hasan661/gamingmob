@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/widgets/emailverificationitem.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
 import 'package:provider/provider.dart';
 
 class EmailVerification extends StatefulWidget {

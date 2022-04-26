@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/email_verfication.dart';
 import 'package:gamingmob/authentication/screens/register_screen.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
-import 'package:gamingmob/helper.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,6 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
   onLoginButtonPressed() async {
     
     var currentUser = FirebaseAuth.instance.currentUser;
-    print(currentUser);
     try {
       if (currentUser == null) {
         await Provider.of<AuthProvider>(context, listen: false)

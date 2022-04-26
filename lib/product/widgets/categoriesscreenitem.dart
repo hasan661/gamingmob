@@ -39,10 +39,13 @@ class CategoriesScreenItem extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              categories[index].imageUrl,
-              fit: BoxFit.cover,
-              height: 100,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                categories[index].imageUrl,
+                fit: BoxFit.cover,
+                height: 100,
+              ),
             ),
             Center(
               child: Text(
