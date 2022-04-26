@@ -50,6 +50,9 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
         } else if (e.code == "email-already-in-use") {
           scaffold("Email already in use");
         }
+        else{
+          scaffold(e.code);
+        }
       } catch (_) {
         scaffold(
           "Something Went Wrong",

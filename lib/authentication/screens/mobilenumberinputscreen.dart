@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
 
 class MobileNumberInputScreen extends StatelessWidget {
   const MobileNumberInputScreen({Key? key}) : super(key: key);

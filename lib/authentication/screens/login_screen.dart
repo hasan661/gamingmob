@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/widgets/loginscreenitem.dart';
-import 'package:gamingmob/product/screens/producthomescreen.dart';
+import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
             user.currentUser!.emailVerified &&
             (user.currentUser!.phoneNumber != null &&
                 user.currentUser!.phoneNumber!.isNotEmpty)) {
-          return const ProductHomeScreen();
+          return const ProductCategoriesScreen();
         } else {
           return const LoginScreenItem();
         }

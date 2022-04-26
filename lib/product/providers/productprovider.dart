@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:gamingmob/product/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
   final List<Product> _productItems = [
     Product(
+      
       imageURL: [
         "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
         "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
@@ -14,7 +17,9 @@ class ProductProvider with ChangeNotifier {
       productPrice: 100000,
       productType: "Sell",
       userID: "U1",
-      ownerMobileNum: "03452226620"
+      ownerMobileNum: "03452226620",
+      productCategory: "Consoles and Controllers",
+      productSubCategory: "",
     ),
     Product(
       imageURL: [
@@ -26,20 +31,23 @@ class ProductProvider with ChangeNotifier {
       productType: "Rent",
       userID: "U1",
       productRentFee: 1000,
-      ownerMobileNum: "03452226620"
+      ownerMobileNum: "03452226620",
+      productCategory: "Consoles and Controllers",
+      productSubCategory: "",
     ),
-    Product(
+     Product(
       imageURL: [
-        "https://gmedia.playstation.com/is/image/SIEPDC/ps4-pro-console-01-en-26oct18?\$1600px--t\$",
-       
+        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
       ],
-      productDescripton: "New PS4 Console which is great for having fun",
+      productDescripton: "New PS5 which is great for having fun",
       productID: "P3",
-      productName: "PS4 Console",
-      productPrice: 100000,
-      productType: "Sell",
+      productName: "XBOX One",
+      productType: "Rent",
       userID: "U1",
-      ownerMobileNum: "03452226620"
+      productRentFee: 1000,
+      ownerMobileNum: "03452226620",
+      productCategory: "Gaming CDs",
+      productSubCategory: "XBOX One",
     ),
     Product(
       imageURL: [
@@ -47,127 +55,51 @@ class ProductProvider with ChangeNotifier {
       ],
       productDescripton: "New PS5 which is great for having fun",
       productID: "P4",
-      productName: "PS5",
+      productName: "Headset",
       productType: "Rent",
       userID: "U1",
       productRentFee: 1000,
-      ownerMobileNum: "03452226620"
+      ownerMobileNum: "03452226620",
+      productCategory: "Headsets",
+      productSubCategory: "",
     ),
     Product(
       imageURL: [
         "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-        "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
       ],
       productDescripton: "New PS5 which is great for having fun",
       productID: "P5",
-      productName: "PS5",
-      productPrice: 100000,
-      productType: "Sell",
-      userID: "U1",
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P6",
-      productName: "PS5",
+      productName: "Headset1",
       productType: "Rent",
       userID: "U1",
       productRentFee: 1000,
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-        "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P7",
-      productName: "PS5",
-      productPrice: 100000,
-      productType: "Sell",
-      userID: "U1",
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P8",
-      productName: "PS5",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-        "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P9",
-      productName: "PS5",
-      productPrice: 100000,
-      productType: "Sell",
-      userID: "U1",
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P10",
-      productName: "PS5",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-        "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P11",
-      productName: "PS5",
-      productPrice: 100000,
-      productType: "Sell",
-      userID: "U1",
-      ownerMobileNum: "03452226620"
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P12",
-      productName: "PS5",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620"
+      ownerMobileNum: "03452226620",
+      productCategory: "Gaming CDs",
+      productSubCategory: "PS3",
     ),
   ];
 
-  List<Product> get productItems {
+  List<Product> get getAllProductItems {
     return _productItems;
   }
 
-  List<Product> rentOnly() {
+  List<Product> filterByCategory(String category, String subCategory){
+    if(subCategory=="All"){
+      return _productItems.where((element) => element.productCategory==category).toList();
+    }
+
+    return _productItems.where((element) => element.productCategory==category && element.productSubCategory==subCategory).toList();
+
+  }
+  List<Product> filterRentOnlyByCategory(String category, String subCategory) {
     return _productItems
-        .where((element) => element.productType == "Rent")
+        .where((element) => element.productType == "Rent" && element.productCategory==category && element.productSubCategory==subCategory)
         .toList();
   }
 
-  List<Product> buyOnly() {
+  List<Product> filterBuyOnlyByCategory(String category, String subCategory) {
     return _productItems
-        .where((element) => element.productType == "Sell")
+        .where((element) => element.productType == "Sell" && element.productCategory==category && element.productSubCategory==subCategory)
         .toList();
   }
 

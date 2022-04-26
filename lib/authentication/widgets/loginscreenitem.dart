@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/email_verfication.dart';
 import 'package:gamingmob/authentication/screens/register_screen.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
 import 'package:gamingmob/helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +17,16 @@ class LoginScreenItem extends StatefulWidget {
 
 class _LoginScreenItemState extends State<LoginScreenItem> {
   onLoginButtonPressed() async {
+    
     var currentUser = FirebaseAuth.instance.currentUser;
+    print(currentUser);
     try {
       if (currentUser == null) {
         await Provider.of<AuthProvider>(context, listen: false)
             .login(emailController, passwordController);
-      } else if (!currentUser.emailVerified) {
+      } else if (currentUser.email==emailController.text && !currentUser.emailVerified) {
         Navigator.of(context).pushNamed(EmailVerification.routeName);
-      } else if (currentUser.phoneNumber == null) {
+      } else if (currentUser.email==emailController.text && currentUser.phoneNumber == null) {
         Navigator.of(context).pushNamed(MobileNumberInput.routeName);
       } else {
         await Provider.of<AuthProvider>(context, listen: false)

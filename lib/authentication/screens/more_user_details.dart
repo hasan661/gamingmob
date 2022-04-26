@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
-import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/authentication/widgets/mobilenumberinputitem.dart';
 import 'package:gamingmob/authentication/widgets/verifymobilenumber.dart';
 import 'package:provider/provider.dart';
 
@@ -16,15 +16,9 @@ class _MoreUserDetailsState extends State<MoreUserDetails> {
   
   @override
   Widget build(BuildContext context) {
-    
-    var authProvider = Provider.of<AuthProvider>(context);
-    
-    return Scaffold(
-    
-      
-      body: authProvider.isVerificationIdNull()
-          ? const MobileNumberInput()
-          : const MobileVerification(),
+    return const Scaffold(
+      body: MobileNumberInput()
+         
     );
   }
 }

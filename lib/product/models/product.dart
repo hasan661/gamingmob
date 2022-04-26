@@ -11,6 +11,8 @@ class Product {
   bool isFavorite;
   final int productRentFee;
   final String ownerMobileNum;
+  final String productCategory;
+  final String productSubCategory; 
 
   Product({
     required this.imageURL,
@@ -23,5 +25,7 @@ class Product {
     required this.userID,
     this.productRentFee = 0,
     required this.ownerMobileNum,
+    required this.productCategory,
+    required this.productSubCategory
   });
 }

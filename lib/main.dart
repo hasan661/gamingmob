@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/slidescreen.dart';
+import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 
 import 'package:gamingmob/routes/routes.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => CategoryProvider(),
         )
       ],
       child: MaterialApp(
@@ -56,7 +60,7 @@ class MyApp extends StatelessWidget {
 
         // ),
         home: const SlideScreen(),
-      
+
         routes: getRoutes(),
       ),
     );

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
+import 'package:gamingmob/product/widgets/categoriesscreenitem.dart';
 import 'package:gamingmob/product/widgets/producthomegrid.dart';
 import 'package:gamingmob/product/widgets/productserach.dart';
 import 'package:provider/provider.dart';
 
-class ProductHomeScreen extends StatelessWidget {
-  const ProductHomeScreen({Key? key}) : super(key: key);
-  static const routeName = "/Home";
-
+class ProductCategoriesScreen extends StatelessWidget {
+  const ProductCategoriesScreen({Key? key}) : super(key: key);
+  static const routeName = "/productcategories";
   @override
   Widget build(BuildContext context) {
-    var mapOfCategoriesAndSubcategories=ModalRoute.of(context)!.settings.arguments as Map<String,String>;
-    var title=mapOfCategoriesAndSubcategories["category"] ?? "";
-    var subCategory=mapOfCategoriesAndSubcategories["subcategory"]??"";
-    var query = "";
-    var gamingProducts = Provider.of<ProductProvider>(context).filterByCategory(title, subCategory);
-    var rentOnly = Provider.of<ProductProvider>(context).filterRentOnlyByCategory(title, subCategory);
-    var buyOnly = Provider.of<ProductProvider>(context).filterBuyOnlyByCategory(title, subCategory);
     var searchterms = Provider.of<ProductProvider>(context).searchTerms;
+
+    var gamingProducts = Provider.of<ProductProvider>(context).getAllProductItems;
+    var favoritesProducts=Provider.of<ProductProvider>(context).favoritesOnly;
+    var categires =
+        Provider.of<CategoryProvider>(context, listen: false).categories;
+    var query = "";
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         drawer: const AppDrawer(),
         bottomNavigationBar: Theme(
@@ -29,6 +29,7 @@ class ProductHomeScreen extends StatelessWidget {
               0xff8d1ba5,
             ),
           ),
+          
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             fixedColor: Colors.amber,
@@ -54,33 +55,31 @@ class ProductHomeScreen extends StatelessWidget {
             ],
           ),
         ),
+        
         appBar: AppBar(
           actions: [
             IconButton(
-              onPressed: () {
-                showSearch(
-                  query: query,
-                  context: context,
-                  delegate: ProductSearch(searchterms, gamingProducts),
-                );
-              },
-              icon: const Icon(
-                Icons.search,
-              ),
-            )
+                onPressed: () {
+                  showSearch(
+                    query: query,
+                    context: context,
+                    delegate: ProductSearch(searchterms, gamingProducts),
+                  );
+                },
+                icon: const Icon(
+                  Icons.search,
+                ))
           ],
           bottom: const TabBar(
             labelColor: Colors.white,
             tabs: [
               Tab(
-                text: "All",
+                text: "Categories",
               ),
               Tab(
-                text: "Rent",
+                text: "Favorites",
               ),
-              Tab(
-                text: "Buy",
-              ),
+             
               
             ],
           ),
@@ -89,20 +88,25 @@ class ProductHomeScreen extends StatelessWidget {
             "Gaming Mob",
           ),
         ),
-        body: TabBarView(
-          children: [
-            ProductGrid(
-              product: gamingProducts,
+        body: TabBarView(children: [
+          Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+            itemCount: categires.length,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
             ),
-            ProductGrid(
-              product: rentOnly,
-            ),
-            ProductGrid(
-              product: buyOnly,
-            ),
-           
-          ],
+            itemBuilder: (ctx, index) {
+              return CategoriesScreenItem(index: index);
+            },
+          ),
         ),
+        ProductGrid(product: favoritesProducts)
+
+        ])
       ),
     );
   }
