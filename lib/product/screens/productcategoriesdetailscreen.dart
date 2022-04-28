@@ -1,40 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/product/models/categories.dart';
-import 'package:gamingmob/product/providers/categoriesprovider.dart';
+
+import 'package:gamingmob/product/screens/accounts.dart';
+import 'package:gamingmob/product/screens/chatscreen.dart';
+import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/categoriesdetailscreenitem.dart';
-import 'package:gamingmob/product/widgets/marketplacebottomnavbar.dart';
-import 'package:provider/provider.dart';
-class ProductCategoriesDetailScreen extends StatelessWidget {
-  const ProductCategoriesDetailScreen({Key? key})
-      : super(key: key);
+
+
+class ProductCategoriesDetailScreen extends StatefulWidget {
+  const ProductCategoriesDetailScreen({Key? key}) : super(key: key);
   static const routeName = "/productcategoriesdetail";
+
+  @override
+  State<ProductCategoriesDetailScreen> createState() =>
+      _ProductCategoriesDetailScreenState();
+}
+
+class _ProductCategoriesDetailScreenState
+    extends State<ProductCategoriesDetailScreen> {
+  var _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    var idMap=ModalRoute.of(context)!.settings.arguments as Map<String,String>;
-    String title=idMap["title"]??"";
-    String id=idMap["id"] ?? "";
-    var categoriesObject = Provider.of<CategoryProvider>(context, listen: false);
-    List<SubCategories> listOfSubcategories=categoriesObject.getSubCategories(id);
-   
+    var idMap =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    String title = idMap["title"] ?? "";
+    String id = idMap["id"] ?? "";
+    List<Widget> screens = [
+      CategoriesDetailScreenItem(
+        id: id,
+        title: title,
+      ),
+      const ChatScreen(),
+      const MyAdScreen(),
+      const AccountScreen()
+    ];
+
     return Scaffold(
-      bottomNavigationBar: const BottomNavBarMarketplace(),
-      appBar: AppBar(),
-      body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            itemCount: listOfSubcategories.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              childAspectRatio: 3 / 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (ctx, index) {
-              return CategoriesDetailScreenItem(index: index, subcategories:listOfSubcategories, title:title);
-              
-            },
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: const Color(
+            0xff8d1ba5,
           ),
         ),
+        child: BottomNavigationBar(
+          onTap: (index) => {
+            setState(() {
+              _selectedIndex = index;
+            })
+          },
+          iconSize: 30,
+          selectedFontSize: 15,
+          fixedColor: Colors.amber,
+          unselectedItemColor: Colors.white,
+          currentIndex: _selectedIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: "Chat",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.ad_units),
+              label: "My Ads",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Account",
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(),
+      body: screens[_selectedIndex],
     );
   }
 }
