@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gamingmob/product/models/categories.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryProvider with ChangeNotifier {
-  final List<Categories> _categoryItem = [
+  List<Categories> _categoryItem = [
    
   ];
 
@@ -22,12 +18,16 @@ class CategoryProvider with ChangeNotifier {
     return listOfSubCategories;
   }
 
-  Future fetchCategories() async {
-    final db = FirebaseFirestore.instance.collection("Categories").snapshots();
+  Future fetchCategories() async{
+    _categoryItem=[];
+    var db = FirebaseFirestore.instance.collection("Categories").snapshots();
+    final List<Categories> fetchedCategoryItems=[];
 
-    final userData = await db.first;
+
+    final userData = await db.las;
+   
     for (var element in userData.docs) {
-      _categoryItem.add(
+      fetchedCategoryItems.add(
         Categories(
             id: element.id,
             title: element.data()["title"],
@@ -37,6 +37,8 @@ class CategoryProvider with ChangeNotifier {
                 : getListOfSubCategories(element)),
       );
     }
+    _categoryItem=fetchedCategoryItems;
+    
     
   }
 

@@ -48,6 +48,9 @@ class CategoriesScreenItem extends StatelessWidget {
               ),
             ),
             Center(
+              child: Container(width: width*0.4),
+            ),
+            Center(
               child: Text(
                 categories[index].title,
                 style: const TextStyle(
