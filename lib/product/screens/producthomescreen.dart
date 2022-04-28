@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
+import 'package:gamingmob/product/widgets/marketplacebottomnavbar.dart';
 import 'package:gamingmob/product/widgets/producthomegrid.dart';
 import 'package:gamingmob/product/widgets/productserach.dart';
 import 'package:provider/provider.dart';
@@ -23,37 +24,7 @@ class ProductHomeScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         drawer: const AppDrawer(),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: const Color(
-              0xff8d1ba5,
-            ),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            fixedColor: Colors.amber,
-            unselectedItemColor: Colors.white,
-            currentIndex: 0,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: "Chat",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.ad_units),
-                label: "My Ads",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Account",
-              ),
-            ],
-          ),
-        ),
+        bottomNavigationBar: const BottomNavBarMarketplace(),
         appBar: AppBar(
           actions: [
             IconButton(

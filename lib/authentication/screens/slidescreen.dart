@@ -3,7 +3,6 @@ import 'package:gamingmob/Helper/helper.dart';
 import 'package:gamingmob/authentication/screens/login_screen.dart';
 class SlideScreen extends StatefulWidget {
   const SlideScreen({ Key? key }) : super(key: key);
-
   @override
   State<SlideScreen> createState() => _SlideScreenState();
 }

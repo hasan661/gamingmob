@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/product/models/categories.dart';
 import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/widgets/categoriesdetailscreenitem.dart';
+import 'package:gamingmob/product/widgets/marketplacebottomnavbar.dart';
 import 'package:provider/provider.dart';
 class ProductCategoriesDetailScreen extends StatelessWidget {
   const ProductCategoriesDetailScreen({Key? key})
@@ -16,6 +17,7 @@ class ProductCategoriesDetailScreen extends StatelessWidget {
     List<SubCategories> listOfSubcategories=categoriesObject.getSubCategories(id);
    
     return Scaffold(
+      bottomNavigationBar: const BottomNavBarMarketplace(),
       appBar: AppBar(),
       body: Padding(
           padding: const EdgeInsets.all(8.0),

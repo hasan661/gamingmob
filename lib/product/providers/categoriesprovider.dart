@@ -24,7 +24,7 @@ class CategoryProvider with ChangeNotifier {
     final List<Categories> fetchedCategoryItems=[];
 
 
-    final userData = await db.las;
+    final userData = await db.first;
    
     for (var element in userData.docs) {
       fetchedCategoryItems.add(
