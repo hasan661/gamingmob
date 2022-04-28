@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class ProductProvider with ChangeNotifier {
   final List<Product> _productItems = [
     Product(
-      
       imageURL: [
         "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
         "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
@@ -33,7 +32,7 @@ class ProductProvider with ChangeNotifier {
       productCategory: "Consoles and Controllers",
       productSubCategory: "",
     ),
-     Product(
+    Product(
       imageURL: [
         "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
       ],
@@ -81,23 +80,35 @@ class ProductProvider with ChangeNotifier {
     return _productItems;
   }
 
-  List<Product> filterByCategory(String category, String subCategory){
-    if(subCategory=="All"){
-      return _productItems.where((element) => element.productCategory==category).toList();
+  List<Product> filterByCategory(String category, String subCategory) {
+    if (subCategory == "All") {
+      return _productItems
+          .where((element) => element.productCategory == category)
+          .toList();
     }
 
-    return _productItems.where((element) => element.productCategory==category && element.productSubCategory==subCategory).toList();
-
+    return _productItems
+        .where((element) =>
+            element.productCategory == category &&
+            element.productSubCategory == subCategory)
+        .toList();
   }
+
   List<Product> filterRentOnlyByCategory(String category, String subCategory) {
     return _productItems
-        .where((element) => element.productType == "Rent" && element.productCategory==category && element.productSubCategory==subCategory)
+        .where((element) =>
+            element.productType == "Rent" &&
+            element.productCategory == category &&
+            element.productSubCategory == subCategory)
         .toList();
   }
 
   List<Product> filterBuyOnlyByCategory(String category, String subCategory) {
     return _productItems
-        .where((element) => element.productType == "Sell" && element.productCategory==category && element.productSubCategory==subCategory)
+        .where((element) =>
+            element.productType == "Sell" &&
+            element.productCategory == category &&
+            element.productSubCategory == subCategory)
         .toList();
   }
 
@@ -107,31 +118,22 @@ class ProductProvider with ChangeNotifier {
     return _productItems[productIndex];
   }
 
-  void toggleFavorites(String id){
-    var _indexToToggle=_productItems.indexWhere((element) => element.productID==id);
-    _productItems[_indexToToggle].isFavorite=!_productItems[_indexToToggle].isFavorite;
+  void toggleFavorites(String id) {
+    var _indexToToggle =
+        _productItems.indexWhere((element) => element.productID == id);
+    _productItems[_indexToToggle].isFavorite =
+        !_productItems[_indexToToggle].isFavorite;
     notifyListeners();
   }
 
-  List<String> get searchTerms{
-    List<String> itemnames=[];
-    for (var element in _productItems) {
-      itemnames.add(element.productName);
-    }
-    return itemnames;
-
-  }
-
-  void addproduct(Product newProduct){
-  
-
+  void addproduct(Product newProduct) {
     _productItems.add(newProduct);
-   
     notifyListeners();
-
   }
-  List<Product> get favoritesOnly{
-    return _productItems.where((element) => element.isFavorite==true).toList();
 
+  List<Product> get favoritesOnly {
+    return _productItems
+        .where((element) => element.isFavorite == true)
+        .toList();
   }
 }

@@ -5,7 +5,6 @@ import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
 import 'package:gamingmob/product/widgets/producthomegrid.dart';
-import 'package:gamingmob/product/widgets/productserach.dart';
 import 'package:provider/provider.dart';
 
 class ProductHomeScreen extends StatefulWidget {
@@ -24,11 +23,10 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     var mapOfCategoriesAndSubcategories=ModalRoute.of(context)!.settings.arguments as Map<String,String>;
     var title=mapOfCategoriesAndSubcategories["category"] ?? "";
     var subCategory=mapOfCategoriesAndSubcategories["subcategory"]??"";
-    var query = "";
+    
     var gamingProducts = Provider.of<ProductProvider>(context).filterByCategory(title, subCategory);
     var rentOnly = Provider.of<ProductProvider>(context).filterRentOnlyByCategory(title, subCategory);
     var buyOnly = Provider.of<ProductProvider>(context).filterBuyOnlyByCategory(title, subCategory);
-    var searchterms = Provider.of<ProductProvider>(context).searchTerms;
     List<Widget> screens = [
       TabBarView(
           children: [
@@ -93,20 +91,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
             ),
           ),
         appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                showSearch(
-                  query: query,
-                  context: context,
-                  delegate: ProductSearch(searchterms, gamingProducts),
-                );
-              },
-              icon: const Icon(
-                Icons.search,
-              ),
-            )
-          ],
+           
           bottom: _selectedIndex==0? const TabBar(
             labelColor: Colors.white,
             tabs: [

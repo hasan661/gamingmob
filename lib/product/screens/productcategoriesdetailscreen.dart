@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
-import 'package:gamingmob/product/widgets/categoriesdetailscreenitem.dart';
+import 'package:gamingmob/product/widgets/productcategoriesdetailscreenitem.dart';
 
 
 class ProductCategoriesDetailScreen extends StatefulWidget {

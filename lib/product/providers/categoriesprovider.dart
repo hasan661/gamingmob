@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryProvider with ChangeNotifier {
   List<Categories> _categoryItem = [
+    
    
   ];
 
@@ -44,6 +45,27 @@ class CategoryProvider with ChangeNotifier {
 
   List<Categories> get categories {
     return _categoryItem;
+  }
+
+  List<String> get categoriesTitle{
+    List<String> categoriesTitle=[];
+
+    for(var element in _categoryItem){
+      categoriesTitle.add(element.title);
+
+    }
+    return categoriesTitle;
+  }
+  List<String> subCategories(category){
+    List<String> subCat=[];
+   Categories cat= _categoryItem.firstWhere((element) => element.title==category);
+   for(var element in cat.subCategories){
+     subCat.add(element.title);
+
+   }
+   return subCat;
+    
+
   }
 
   Categories filterById(String id) {

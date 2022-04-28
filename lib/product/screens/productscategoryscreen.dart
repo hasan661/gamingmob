@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
-import 'package:gamingmob/product/widgets/categoriesscreenitem.dart';
-import 'package:gamingmob/product/widgets/productserach.dart';
-import 'package:provider/provider.dart';
+import 'package:gamingmob/product/widgets/productcategoriesscreenitem.dart';
 
 class ProductCategoriesScreen extends StatefulWidget {
   const ProductCategoriesScreen({Key? key}) : super(key: key);
@@ -28,13 +25,6 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    var searchterms = Provider.of<ProductProvider>(context).searchTerms;
-
-    var gamingProducts =
-        Provider.of<ProductProvider>(context).getAllProductItems;
-    
-
-    var query = "";
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -77,19 +67,7 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
           ),
         ),
         appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showSearch(
-                    query: query,
-                    context: context,
-                    delegate: ProductSearch(searchterms, gamingProducts),
-                  );
-                },
-                icon: const Icon(
-                  Icons.search,
-                ))
-          ],
+         
           bottom: _selectedIndex==0? const TabBar(
             labelColor: Colors.white,
             tabs: [

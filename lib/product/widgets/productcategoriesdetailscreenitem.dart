@@ -13,8 +13,6 @@ class CategoriesDetailScreenItem extends StatelessWidget {
 
   final String id;
   final String title;
-
-
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
