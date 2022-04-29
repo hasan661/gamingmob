@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
 import 'package:gamingmob/product/widgets/productcategoriesscreenitem.dart';
+import 'package:provider/provider.dart';
 
 class ProductCategoriesScreen extends StatefulWidget {
   const ProductCategoriesScreen({Key? key}) : super(key: key);
@@ -15,7 +17,16 @@ class ProductCategoriesScreen extends StatefulWidget {
 }
 
 class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+    });
+  }
   var _selectedIndex = 0;
+  
 
   List<Widget> screens = [
     const CategoriesScreenItem(),

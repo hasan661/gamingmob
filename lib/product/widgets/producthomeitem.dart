@@ -55,7 +55,7 @@ class ProductHomeItem extends StatelessWidget {
                 ),
                 child: Text(
                   gamingProducts[index].productType == "Rent"
-                      ? "${gamingProducts[index].productRentFee} per day"
+                      ? "${gamingProducts[index].productPrice} per day"
                       : "Rs " + gamingProducts[index].productPrice.toString(),
                   maxLines: 2,
                   style: Theme.of(context).textTheme.headline4,

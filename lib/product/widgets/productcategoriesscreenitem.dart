@@ -20,9 +20,10 @@ class CategoriesScreenItem extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var favoritesProducts = Provider.of<ProductProvider>(context).favoritesOnly;
     return FutureBuilder(
-          future: Provider.of<CategoryProvider>(context, listen: false)
+          future: categoriesObject
               .fetchCategories(),
           builder: (ctx, snapshot) {
+            print(snapshot);
             var categires =
                 Provider.of<CategoryProvider>(context, listen: false)
                     .categories;

@@ -9,7 +9,6 @@ class Product {
   final int productPrice;
   final String productDescripton;
   bool isFavorite;
-  final int productRentFee;
   final String ownerMobileNum;
   final String productCategory;
   final String productSubCategory; 
@@ -23,7 +22,7 @@ class Product {
     this.productPrice = 0,
     required this.productType,
     required this.userID,
-    this.productRentFee = 0,
+    
     required this.ownerMobileNum,
     required this.productCategory,
     required this.productSubCategory

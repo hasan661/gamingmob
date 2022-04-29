@@ -1,80 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gamingmob/product/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
-  final List<Product> _productItems = [
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-        "https://media.direct.playstation.com/is/image/psdglobal/dualsense-ps5-controller-white-accessory-front?\$Background_Large\$"
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P1",
-      productName: "PS5",
-      productPrice: 100000,
-      productType: "Sell",
-      userID: "U1",
-      ownerMobileNum: "03452226620",
-      productCategory: "Consoles and Controllers",
-      productSubCategory: "",
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P2",
-      productName: "PS5",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620",
-      productCategory: "Consoles and Controllers",
-      productSubCategory: "",
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P3",
-      productName: "XBOX One",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620",
-      productCategory: "Gaming CDs",
-      productSubCategory: "XBOX One",
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P4",
-      productName: "Headset",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620",
-      productCategory: "Headsets",
-      productSubCategory: "",
-    ),
-    Product(
-      imageURL: [
-        "https://www.shophive.com/media/catalog/product/cache/3617b85921733ef3774cdbec091e1c0f/6/1/619bkvkw35l._sl1500_.jpg",
-      ],
-      productDescripton: "New PS5 which is great for having fun",
-      productID: "P5",
-      productName: "Headset1",
-      productType: "Rent",
-      userID: "U1",
-      productRentFee: 1000,
-      ownerMobileNum: "03452226620",
-      productCategory: "Gaming CDs",
-      productSubCategory: "PS3",
-    ),
+  List<Product> _productItems = [
+    
   ];
+
+  Future<void> fetchProducts()async{
+    _productItems=[];
+   List<Product> _products=[];
+    var obj=await FirebaseFirestore.instance.collection("UserProducts").snapshots().first;
+    
+    var objDocks=obj.docs;
+    
+    for(var element in objDocks){
+      print(element.id);
+      List<String> imageUrls=[];
+      for(var e in element["imageURL"]){
+        imageUrls.add(e.toString());
+
+      }
+      _products.add(Product(imageURL: imageUrls, productDescripton: element["productDescripton"], productID: element.id, productName: element["productName"], productType: element["productType"], userID: element["userID"], ownerMobileNum: element["ownerMobileNum"], productCategory: element["productCategory"], productSubCategory: element["productSubCategory"],productPrice: element["productPrice"],isFavorite: element["isFavorite"],));
+
+
+    }
+    _productItems=_products;
+    print("object");
+    print(_products.toString()+"hasan");
+    notifyListeners();
+  }
 
   List<Product> get getAllProductItems {
     return _productItems;
@@ -82,9 +38,13 @@ class ProductProvider with ChangeNotifier {
 
   List<Product> filterByCategory(String category, String subCategory) {
     if (subCategory == "All") {
+      print(_productItems
+          .where((element) => element.productCategory == category)
+          .toList());
       return _productItems
           .where((element) => element.productCategory == category)
           .toList();
+    
     }
 
     return _productItems
@@ -95,12 +55,16 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> filterRentOnlyByCategory(String category, String subCategory) {
-    return _productItems
+    var p=_productItems
+    
         .where((element) =>
             element.productType == "Rent" &&
             element.productCategory == category &&
             element.productSubCategory == subCategory)
         .toList();
+    print(category);
+    print(subCategory);
+    return p;
   }
 
   List<Product> filterBuyOnlyByCategory(String category, String subCategory) {
@@ -128,6 +92,21 @@ class ProductProvider with ChangeNotifier {
 
   void addproduct(Product newProduct) {
     _productItems.add(newProduct);
+    var firestoreObject = FirebaseFirestore.instance;
+    var authId = FirebaseAuth.instance.currentUser!.uid;
+    firestoreObject.collection("UserProducts").doc().set({
+      "imageURL": newProduct.imageURL,
+      "productDescripton": newProduct.productDescripton,
+      "productName": newProduct.productName,
+      "productPrice": newProduct.productPrice,
+      "productType": newProduct.productType,
+      "userID": newProduct.userID,
+      "ownerMobileNum": newProduct.ownerMobileNum,
+      "productCategory": newProduct.productCategory,
+      "productSubCategory": newProduct.productSubCategory,
+      "isFavorite":false,
+    });
+    
     notifyListeners();
   }
 

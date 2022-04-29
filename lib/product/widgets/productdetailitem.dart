@@ -170,7 +170,7 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
               children: [
                 Text(
                   widget.product.productType == "Rent"
-                      ? "Rs ${widget.product.productRentFee} per day"
+                      ? "Rs ${widget.product.productPrice} per day"
                       : "Rs ${widget.product.productPrice}",
                   style: Theme.of(context).textTheme.headline4,
                 ),
