@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/accounts.dart';
+import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
@@ -19,7 +20,6 @@ class ProductCategoriesScreen extends StatefulWidget {
 class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero).then((value) {
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
@@ -39,6 +39,17 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+       floatingActionButton: _selectedIndex==2? Align(
+          alignment: Alignment.bottomCenter,
+          child: FloatingActionButton(
+            elevation: 0,
+          onPressed: () {
+            Navigator.of(context).pushNamed(AddProductScreen.routeName);
+          },
+          child: const Icon(Icons.add),
+              ),
+        ):null,
+        
         drawer: const AppDrawer(),
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/accounts.dart';
+import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
@@ -16,32 +17,34 @@ class ProductHomeScreen extends StatefulWidget {
 }
 
 class _ProductHomeScreenState extends State<ProductHomeScreen> {
-  var _selectedIndex=0;
+  var _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    
-    var mapOfCategoriesAndSubcategories=ModalRoute.of(context)!.settings.arguments as Map<String,String>;
-    var title=mapOfCategoriesAndSubcategories["category"] ?? "";
-    var subCategory=mapOfCategoriesAndSubcategories["subcategory"]??"";
-    
-    var gamingProducts = Provider.of<ProductProvider>(context).filterByCategory(title, subCategory);
-    var rentOnly = Provider.of<ProductProvider>(context).filterRentOnlyByCategory(title, subCategory);
-    var buyOnly = Provider.of<ProductProvider>(context).filterBuyOnlyByCategory(title, subCategory);
+    var mapOfCategoriesAndSubcategories =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    var title = mapOfCategoriesAndSubcategories["category"] ?? "";
+    var subCategory = mapOfCategoriesAndSubcategories["subcategory"] ?? "";
+
+    var gamingProducts = Provider.of<ProductProvider>(context)
+        .filterByCategory(title, subCategory);
+    var rentOnly = Provider.of<ProductProvider>(context)
+        .filterRentOnlyByCategory(title, subCategory);
+    var buyOnly = Provider.of<ProductProvider>(context)
+        .filterBuyOnlyByCategory(title, subCategory);
     List<Widget> screens = [
       TabBarView(
-          children: [
-            ProductGrid(
-              product: gamingProducts,
-            ),
-            ProductGrid(
-              product: rentOnly,
-            ),
-            ProductGrid(
-              product: buyOnly,
-            ),
-           
-          ],
-        ),
+        children: [
+          ProductGrid(
+            product: gamingProducts,
+          ),
+          ProductGrid(
+            product: rentOnly,
+          ),
+          ProductGrid(
+            product: buyOnly,
+          ),
+        ],
+      ),
       const ChatScreen(),
       const MyAdScreen(),
       const AccountScreen()
@@ -49,24 +52,34 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        drawer: const AppDrawer(),
-        bottomNavigationBar: Theme(
+          floatingActionButton: _selectedIndex == 2
+              ? Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FloatingActionButton(
+                    elevation: 0,
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(AddProductScreen.routeName);
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                )
+              : null,
+          drawer: const AppDrawer(),
+          bottomNavigationBar: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: const Color(
                 0xff8d1ba5,
               ),
             ),
             child: BottomNavigationBar(
-              
-              onTap: (index)=>{
-                setState((){
-                  _selectedIndex=index;
+              onTap: (index) => {
+                setState(() {
+                  _selectedIndex = index;
                 })
-
               },
               iconSize: 30,
               selectedFontSize: 15,
-              
               fixedColor: Colors.amber,
               unselectedItemColor: Colors.white,
               currentIndex: _selectedIndex,
@@ -90,30 +103,29 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
               ],
             ),
           ),
-        appBar: AppBar(
-           
-          bottom: _selectedIndex==0? const TabBar(
-            labelColor: Colors.white,
-            tabs: [
-              Tab(
-                text: "All",
-              ),
-              Tab(
-                text: "Rent",
-              ),
-              Tab(
-                text: "Buy",
-              ),
-              
-            ],
-          ):null,
-          centerTitle: true,
-          title: const Text(
-            "Gaming Mob",
+          appBar: AppBar(
+            bottom: _selectedIndex == 0
+                ? const TabBar(
+                    labelColor: Colors.white,
+                    tabs: [
+                      Tab(
+                        text: "All",
+                      ),
+                      Tab(
+                        text: "Rent",
+                      ),
+                      Tab(
+                        text: "Buy",
+                      ),
+                    ],
+                  )
+                : null,
+            centerTitle: true,
+            title: const Text(
+              "Gaming Mob",
+            ),
           ),
-        ),
-        body: screens[_selectedIndex]
-      ),
+          body: screens[_selectedIndex]),
     );
   }
 }

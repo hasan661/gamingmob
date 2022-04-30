@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
+import 'package:provider/provider.dart';
 
 class MyAdScreen extends StatelessWidget {
   const MyAdScreen({Key? key}) : super(key: key);
@@ -7,16 +9,65 @@ class MyAdScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child: Container()),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: FloatingActionButton(onPressed: (){
-            Navigator.of(context).pushNamed(AddProductScreen.routeName);
-          },child: const Icon(Icons.add),),
-        )
-      ],
-    );
+    var width = MediaQuery.of(context).size.width;
+    var productObj = Provider.of<ProductProvider>(context);
+
+    return FutureBuilder(
+        future: Provider.of<ProductProvider>(context).fetchProducts(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            var userProducts = productObj.userProducts;
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userProducts.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: userProducts[index].imageURL.isEmpty
+                              ? null
+                              : NetworkImage(
+                                  userProducts[index].imageURL[0],
+                                ),
+                        ),
+                        title: Text(userProducts[index].productName),
+                        trailing: SizedBox(
+                          width: width * 0.24,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+
+                                  productObj.deleteProduct(
+                                      userProducts[index].productID);
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Theme.of(context).errorColor,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(AddProductScreen.routeName, arguments: userProducts[index].productID);
+                                },
+                                icon: const Icon(Icons.edit),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        });
   }
 }

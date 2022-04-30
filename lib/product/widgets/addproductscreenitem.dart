@@ -8,7 +8,6 @@ import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class AddProductScreenItem extends StatefulWidget {
   const AddProductScreenItem({Key? key}) : super(key: key);
@@ -18,14 +17,13 @@ class AddProductScreenItem extends StatefulWidget {
 }
 
 class _AddProductScreenItemState extends State<AddProductScreenItem> {
+  
   final List<File?> _pickedImage = [];
   var activeindex = 0;
   List<String> imageUrl = [];
   void _pickImage() async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-
-      // maxWidth: 150,
     );
     if (image == null) {
       return;
@@ -50,15 +48,41 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     productCategory: "Others",
     productSubCategory: "",
   );
-  var prodName = TextEditingController();
-  var prodType = TextEditingController();
+   var prodName = TextEditingController();
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
-  var prodImage = TextEditingController();
-  var mobileNumber = TextEditingController();
+  var productid;
+  var initvalue = {'imageURL': [],"prodType":"", "prodCat":"","prodSub":""};
+  var _isInit = true;
+  
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+       productid = ModalRoute.of(context)!.settings.arguments;
+      if (productid != null) {
+        _item = Provider.of<ProductProvider>(context, listen: false)
+            .filterbyid(productid.toString());
+        initvalue = {
+          "imageURL": _item.imageURL,
+          'prodType': _item.productType,
+          'prodCat': _item.productCategory,
+          'prodSub': _item.productSubCategory,
+        };
+        prodName.text=_item.productName;
+        prodDes.text=_item.productDescripton;
+        prodPrice.text=_item.productPrice.toString();
+      }
+
+      _isInit=false;
+    }
+    super.didChangeDependencies();
+  }
+  
+ 
 
   @override
   Widget build(BuildContext context) {
+    
     var categoriesTitles =
         Provider.of<CategoryProvider>(context).categoriesTitle;
     var subCategoriesTitle = Provider.of<CategoryProvider>(context)
@@ -90,8 +114,6 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
             "GamingMob/Products/${_item.userID + _item.productName + _item.productDescripton}/$i");
         await ref.putFile(File(_pickedImage[i]!.path));
         imageUrl.add(await ref.getDownloadURL());
-
-
       }
       _item = Product(
           imageURL: imageUrl,
@@ -105,7 +127,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           productSubCategory: _item.productSubCategory);
 
       _formkey.currentState!.save();
-      Provider.of<ProductProvider>(context, listen: false).addproduct(_item);
+      if(productid==null){
+        Provider.of<ProductProvider>(context, listen: false).addproduct(_item);
+      }
+      else{
+        Provider.of<ProductProvider>(context, listen: false).updateProduct(_item);
+      }
     }
 
     return SingleChildScrollView(
@@ -120,13 +147,14 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: Colors.white),
               ),
-              child: _pickedImage.isNotEmpty
+              child: _pickedImage.isNotEmpty || _item.imageURL.isNotEmpty
                   ? CarouselSlider.builder(
-                      itemCount: _pickedImage.length,
+                      itemCount: productid!=null? _item.imageURL.length :_pickedImage.length,
                       itemBuilder: (ctx, index, _) => Stack(
                         alignment: Alignment.center,
                         children: [
-                          Image.file(
+                          productid!=null ? Image.network(_item.imageURL[index],width: width,
+                            fit: BoxFit.cover,) :Image.file(
                             File(_pickedImage[index]!.path),
                             width: width,
                             fit: BoxFit.cover,
@@ -150,11 +178,19 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 20,),
+                              const SizedBox(
+                                width: 20,
+                              ),
                               MaterialButton(
                                 onPressed: () {
                                   setState(() {
-                                    _pickedImage.removeAt(activeindex);
+                                    if(productid==null){
+                                      _pickedImage.removeAt(activeindex);
+                                    }
+                                    else{
+                                      _item.imageURL.removeAt(activeindex);
+                                    }
+                                    
                                   });
                                 },
                                 color: Colors.transparent,
@@ -239,6 +275,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                     if (value!.isEmpty) {
                       return "Please enter the product name";
                     }
+                    return null;
                   },
                   keyboardType: TextInputType.name,
                   controller: prodName,
@@ -326,7 +363,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   }
                   return null;
                 },
-                value: null,
+                value: productid!=null? initvalue["prodType"].toString() :null,
                 items: ["Rent", "Sell"].map((String value) {
                   return DropdownMenuItem(
                     value: value,
@@ -371,22 +408,19 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 height: height * 0.076,
                 child: TextFormField(
                   onSaved: (val) {
-                    
-                      _item = Product(
-                        isFavorite: false,
-                        productPrice: int.parse(val.toString()),
-                       
-                        imageURL: _item.imageURL,
-                        productDescripton: _item.productDescripton,
-                        productID: _item.productID,
-                        productName: _item.productName,
-                        productType: _item.productType,
-                        userID: _item.userID,
-                        ownerMobileNum: _item.ownerMobileNum,
-                        productCategory: _item.productCategory,
-                        productSubCategory: _item.productSubCategory,
-                      );
-                    
+                    _item = Product(
+                      isFavorite: false,
+                      productPrice: int.parse(val.toString()),
+                      imageURL: _item.imageURL,
+                      productDescripton: _item.productDescripton,
+                      productID: _item.productID,
+                      productName: _item.productName,
+                      productType: _item.productType,
+                      userID: _item.userID,
+                      ownerMobileNum: _item.ownerMobileNum,
+                      productCategory: _item.productCategory,
+                      productSubCategory: _item.productSubCategory,
+                    );
                   },
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -421,7 +455,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
               child: DropdownButtonFormField<String>(
-                value: null,
+                value:  productid!=null ? initvalue["prodCat"].toString() :null,
                 onSaved: (val) {},
                 items: categoriesTitles.map((String value) {
                   return DropdownMenuItem(
@@ -468,7 +502,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: DropdownButtonFormField<String>(
-                  value: null,
+                  value:productid!=null? initvalue["prodSub"].toString():null,
                   onSaved: (val) {},
                   items: subCategoriesTitle.map((String value) {
                     return DropdownMenuItem(

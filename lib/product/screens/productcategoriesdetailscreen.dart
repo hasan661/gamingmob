@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:gamingmob/product/screens/accounts.dart';
+import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/productcategoriesdetailscreenitem.dart';
-
 
 class ProductCategoriesDetailScreen extends StatefulWidget {
   const ProductCategoriesDetailScreen({Key? key}) : super(key: key);
@@ -35,6 +35,18 @@ class _ProductCategoriesDetailScreenState
     ];
 
     return Scaffold(
+      floatingActionButton: _selectedIndex == 2
+          ? Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                elevation: 0,
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AddProductScreen.routeName);
+                },
+                child: const Icon(Icons.add),
+              ),
+            )
+          : null,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: const Color(

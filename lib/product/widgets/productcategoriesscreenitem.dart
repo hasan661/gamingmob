@@ -23,7 +23,6 @@ class CategoriesScreenItem extends StatelessWidget {
           future: categoriesObject
               .fetchCategories(),
           builder: (ctx, snapshot) {
-            print(snapshot);
             var categires =
                 Provider.of<CategoryProvider>(context, listen: false)
                     .categories;
@@ -81,18 +80,19 @@ class CategoriesScreenItem extends StatelessWidget {
                 width: width * 0.5,
                 color: Colors.black,
                 height: 20,
-              ),
-            ),
-            Center(
-              child: Text(
-                categories[index].title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                child: FittedBox(
+                  child: Text(
+                  categories[index].title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                              ),
                 ),
               ),
             ),
+            
           ],
         ),
         decoration: BoxDecoration(

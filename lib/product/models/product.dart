@@ -22,7 +22,6 @@ class Product {
     this.productPrice = 0,
     required this.productType,
     required this.userID,
-    
     required this.ownerMobileNum,
     required this.productCategory,
     required this.productSubCategory
