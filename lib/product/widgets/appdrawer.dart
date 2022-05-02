@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
+import 'package:gamingmob/authentication/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 class AppDrawer extends StatelessWidget {
   const AppDrawer({ Key? key }) : super(key: key);
@@ -69,6 +70,7 @@ class AppDrawer extends StatelessWidget {
                     context,
                     listen: false,
                   ).logoutUser();
+                  Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
                 },
               ),
             ],

@@ -15,7 +15,7 @@ class CategoriesScreenItem extends StatelessWidget {
     
     var categoriesObject =
         Provider.of<CategoryProvider>(context, listen: false);
-    var categories = categoriesObject.categories;
+    // var categories = categoriesObject.categories;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     var favoritesProducts = Provider.of<ProductProvider>(context).favoritesOnly;
@@ -47,17 +47,17 @@ class CategoriesScreenItem extends StatelessWidget {
                       return InkWell(
       onTap: () {
         var subCategories =
-            categoriesObject.getSubCategories(categories[index].id);
+            categoriesObject.getSubCategories(categires[index].id);
         subCategories.isEmpty
             ? Navigator.of(context).pushNamed(
                 ProductHomeScreen.routeName,
-                arguments: {"category": categories[index].title},
+                arguments: {"category": categires[index].title},
               )
             : Navigator.of(context).pushNamed(
                 ProductCategoriesDetailScreen.routeName,
                 arguments: {
-                  "id": categories[index].id,
-                  "title": categories[index].title
+                  "id": categires[index].id,
+                  "title": categires[index].title
                 },
               );
       },
@@ -70,7 +70,7 @@ class CategoriesScreenItem extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                categories[index].imageUrl,
+                categires[index].imageUrl,
                 fit: BoxFit.cover,
                 height: 100,
               ),
@@ -82,7 +82,7 @@ class CategoriesScreenItem extends StatelessWidget {
                 height: 20,
                 child: FittedBox(
                   child: Text(
-                  categories[index].title,
+                  categires[index].title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

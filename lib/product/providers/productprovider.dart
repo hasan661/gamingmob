@@ -140,7 +140,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id)async{
-    print(id);
     await db.doc("UserProducts/$id").delete();
     _productItems.removeWhere((element) => element.productID==id);
     notifyListeners();
