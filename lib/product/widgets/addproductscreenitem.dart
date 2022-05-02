@@ -51,14 +51,14 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
    var prodName = TextEditingController();
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
-  var productid;
+  String? productid;
   var initvalue = {'imageURL': [],"prodType":"", "prodCat":"","prodSub":""};
   var _isInit = true;
   
   @override
   void didChangeDependencies() {
     if(_isInit){
-       productid = ModalRoute.of(context)!.settings.arguments;
+       productid = ModalRoute.of(context)!.settings.arguments as String;
       if (productid != null) {
         _item = Provider.of<ProductProvider>(context, listen: false)
             .filterbyid(productid.toString());

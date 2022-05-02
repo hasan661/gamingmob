@@ -126,7 +126,6 @@ class _MobileVerificationState extends State<MobileVerification> {
                         .verifyOTP(otp.text);
                         Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
                   } on FirebaseException catch   (e) {
-                    print(e.code);
                     if (e.code == "credential-already-in-use") {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

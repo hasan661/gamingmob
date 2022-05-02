@@ -1,0 +1,46 @@
+import 'package:flutter/material.dart';
+import 'package:gamingmob/blogs/providers/blogprovider.dart';
+import 'package:gamingmob/blogs/screens/myblogsscreen.dart';
+import 'package:gamingmob/blogs/widgets/bloghomeitem.dart';
+import 'package:gamingmob/blogs/widgets/blogsbottomappbar.dart';
+import 'package:gamingmob/product/widgets/appdrawer.dart';
+import 'package:provider/provider.dart';
+
+class BlogHomeScreen extends StatefulWidget {
+  const BlogHomeScreen({Key? key}) : super(key: key);
+  static const routeName = "/blog-home";
+
+  @override
+  State<BlogHomeScreen> createState() => _BlogHomeScreenState();
+}
+
+class _BlogHomeScreenState extends State<BlogHomeScreen> {
+
+  final List<Widget> screens = [
+    const BlogHomeItem(),
+    const MyBlogsScreen(),
+  ];
+  var _selectedIndex = 0;
+
+  void selectedIndexValue(value) {
+    setState(() {
+      _selectedIndex = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Blogs"),
+        centerTitle: true,
+      ),
+      drawer: const AppDrawer(),
+      body: screens[_selectedIndex],
+      bottomNavigationBar: BlogsBottomAppBar(
+          screens: screens,
+          selectedIndex: _selectedIndex,
+          selectedIndexValue: selectedIndexValue),
+    );
+  }
+}
