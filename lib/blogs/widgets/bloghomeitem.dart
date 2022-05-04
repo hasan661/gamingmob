@@ -19,6 +19,7 @@ class BlogHomeItem extends StatelessWidget {
           }
          else{
             var blogItems = Provider.of<BlogProvider>(context).allBlogs;
+            print(blogItems);
           return ListView.builder(
             itemCount: blogItems.length,
             itemBuilder: (context, index) {
@@ -63,15 +64,7 @@ class BlogHomeItem extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: width * 0.02, right: width * 0.02),
-                          child: Text(
-                            blogItems[index].blogContent,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
+                        
                         SizedBox(
                           height: height * 0.04,
                         ),

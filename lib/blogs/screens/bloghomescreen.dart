@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/blogs/providers/blogprovider.dart';
-import 'package:gamingmob/blogs/screens/myblogsscreen.dart';
+import 'package:gamingmob/blogs/screens/addblogsscreen.dart';
+import 'package:gamingmob/blogs/widgets/myblogsitem.dart';
 import 'package:gamingmob/blogs/widgets/bloghomeitem.dart';
 import 'package:gamingmob/blogs/widgets/blogsbottomappbar.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
-import 'package:provider/provider.dart';
 
 class BlogHomeScreen extends StatefulWidget {
   const BlogHomeScreen({Key? key}) : super(key: key);
@@ -15,7 +14,6 @@ class BlogHomeScreen extends StatefulWidget {
 }
 
 class _BlogHomeScreenState extends State<BlogHomeScreen> {
-
   final List<Widget> screens = [
     const BlogHomeItem(),
     const MyBlogsScreen(),
@@ -31,6 +29,18 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: _selectedIndex == 1
+          ? Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                elevation: 0,
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AddBlogScreen.routeName);
+                },
+                child: const Icon(Icons.add),
+              ),
+            )
+          : null,
       appBar: AppBar(
         title: const Text("Blogs"),
         centerTitle: true,
@@ -38,9 +48,10 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
       drawer: const AppDrawer(),
       body: screens[_selectedIndex],
       bottomNavigationBar: BlogsBottomAppBar(
-          screens: screens,
-          selectedIndex: _selectedIndex,
-          selectedIndexValue: selectedIndexValue),
+        screens: screens,
+        selectedIndex: _selectedIndex,
+        selectedIndexValue: selectedIndexValue,
+      ),
     );
   }
 }

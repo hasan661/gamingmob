@@ -4,34 +4,36 @@ import 'package:gamingmob/product/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
-  var db=FirebaseFirestore.instance;
-  var auth=FirebaseAuth.instance;
-  List<Product> _productItems = [
-  
-    
-  ];
+  var db = FirebaseFirestore.instance;
+  var auth = FirebaseAuth.instance;
+  List<Product> _productItems = [];
 
-  Future<void> fetchProducts()async{
-    _productItems=[];
-   List<Product> _products=[];
-    var obj=await db.collection("UserProducts").snapshots().first;
-    var objDocks=obj.docs;
-    List<String> imageUrls=[];
-    
-    for(var element in objDocks){
-      
-      for(var e in element["imageURL"]){
+  Future<void> fetchProducts() async {
+    _productItems = [];
+    List<Product> _products = [];
+    var obj = await db.collection("UserProducts").snapshots().first;
+    var objDocks = obj.docs;
+    List<String> imageUrls = [];
+
+    for (var element in objDocks) {
+      for (var e in element["imageURL"]) {
         imageUrls.add(e.toString());
-      
-
       }
-      _products.add(Product(imageURL: imageUrls, productDescripton: element["productDescripton"], productID: element.id, productName: element["productName"], productType: element["productType"], userID: element["userID"], ownerMobileNum: element["ownerMobileNum"], productCategory: element["productCategory"], productSubCategory: element["productSubCategory"],productPrice: element["productPrice"],isFavorite: element["isFavorite"],));
-
-
+      _products.add(Product(
+        imageURL: imageUrls,
+        productDescripton: element["productDescripton"],
+        productID: element.id,
+        productName: element["productName"],
+        productType: element["productType"],
+        userID: element["userID"],
+        ownerMobileNum: element["ownerMobileNum"],
+        productCategory: element["productCategory"],
+        productSubCategory: element["productSubCategory"],
+        productPrice: element["productPrice"],
+        isFavorite: element["isFavorite"],
+      ));
     }
-    _productItems=_products;
-  
-    
+    _productItems = _products;
   }
 
   List<Product> get getAllProductItems {
@@ -39,17 +41,15 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> get userProducts {
-    var id=auth.currentUser!.uid;
-    return _productItems.where((element) => element.userID==id).toList();
+    var id = auth.currentUser!.uid;
+    return _productItems.where((element) => element.userID == id).toList();
   }
 
   List<Product> filterByCategory(String category, String subCategory) {
     if (subCategory == "All") {
- 
       return _productItems
           .where((element) => element.productCategory == category)
           .toList();
-    
     }
 
     return _productItems
@@ -60,8 +60,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> filterRentOnlyByCategory(String category, String subCategory) {
-    var p=_productItems
-    
+    var p = _productItems
         .where((element) =>
             element.productType == "Rent" &&
             element.productCategory == category &&
@@ -93,10 +92,9 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateProduct(Product newProduct)async{
-    
+  Future<void> updateProduct(Product newProduct) async {
     db.collection("UserProducts").doc(newProduct.productID).update({
-       "imageURL": newProduct.imageURL,
+      "imageURL": newProduct.imageURL,
       "productDescripton": newProduct.productDescripton,
       "productName": newProduct.productName,
       "productPrice": newProduct.productPrice,
@@ -105,13 +103,12 @@ class ProductProvider with ChangeNotifier {
       "ownerMobileNum": newProduct.ownerMobileNum,
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
-      "isFavorite":false,
+      "isFavorite": false,
     });
     notifyListeners();
   }
 
   Future<void> addproduct(Product newProduct) async {
-    
     // var firestoreObject = FirebaseFirestore.instance;
     await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,
@@ -123,13 +120,11 @@ class ProductProvider with ChangeNotifier {
       "ownerMobileNum": newProduct.ownerMobileNum,
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
-      "isFavorite":false,
+      "isFavorite": false,
     });
-    
-    
+
     _productItems.add(newProduct);
 
-    
     notifyListeners();
   }
 
@@ -139,10 +134,9 @@ class ProductProvider with ChangeNotifier {
         .toList();
   }
 
-  Future<void> deleteProduct(String id)async{
+  Future<void> deleteProduct(String id) async {
     await db.doc("UserProducts/$id").delete();
-    _productItems.removeWhere((element) => element.productID==id);
+    _productItems.removeWhere((element) => element.productID == id);
     notifyListeners();
-
   }
 }

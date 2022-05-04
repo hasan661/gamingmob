@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
-import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
-import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
@@ -45,7 +43,7 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-       floatingActionButton: _selectedIndex==2? Align(
+       floatingActionButton: _selectedIndex==1? Align(
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             elevation: 0,

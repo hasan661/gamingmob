@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
-import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
 import 'package:gamingmob/product/widgets/productcategoriesdetailscreenitem.dart';
@@ -39,7 +37,7 @@ class _ProductCategoriesDetailScreenState
     ];
 
     return Scaffold(
-      floatingActionButton: _selectedIndex == 2
+      floatingActionButton: _selectedIndex == 1
           ? Align(
               alignment: Alignment.bottomCenter,
               child: FloatingActionButton(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
-import 'package:gamingmob/product/screens/accounts.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
-import 'package:gamingmob/product/screens/chatscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
@@ -27,6 +25,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    
     var mapOfCategoriesAndSubcategories =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     var title = mapOfCategoriesAndSubcategories["category"] ?? "";
@@ -59,7 +58,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          floatingActionButton: _selectedIndex == 2
+          floatingActionButton: _selectedIndex == 1
               ? Align(
                   alignment: Alignment.bottomCenter,
                   child: FloatingActionButton(
