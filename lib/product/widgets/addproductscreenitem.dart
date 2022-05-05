@@ -17,13 +17,13 @@ class AddProductScreenItem extends StatefulWidget {
 }
 
 class _AddProductScreenItemState extends State<AddProductScreenItem> {
-  
   final List<File?> _pickedImage = [];
   var activeindex = 0;
   List<String> imageUrl = [];
   void _pickImage() async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
+      imageQuality: 20
     );
     if (image == null) {
       return;
@@ -47,18 +47,24 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     productPrice: 0,
     productCategory: "Others",
     productSubCategory: "",
+    ownerName: "",
   );
-   var prodName = TextEditingController();
+  var prodName = TextEditingController();
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
-  String? productid;
-  var initvalue = {'imageURL': [],"prodType":"", "prodCat":"","prodSub":""};
+  var productid;
+  var initvalue = {
+    'imageURL': [],
+    "prodType": "",
+    "prodCat": "",
+    "prodSub": ""
+  };
   var _isInit = true;
-  
+
   @override
   void didChangeDependencies() {
-    if(_isInit){
-       productid = ModalRoute.of(context)!.settings.arguments as String;
+    if (_isInit) {
+      productid = ModalRoute.of(context)!.settings.arguments;
       if (productid != null) {
         _item = Provider.of<ProductProvider>(context, listen: false)
             .filterbyid(productid.toString());
@@ -68,21 +74,18 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           'prodCat': _item.productCategory,
           'prodSub': _item.productSubCategory,
         };
-        prodName.text=_item.productName;
-        prodDes.text=_item.productDescripton;
-        prodPrice.text=_item.productPrice.toString();
+        prodName.text = _item.productName;
+        prodDes.text = _item.productDescripton;
+        prodPrice.text = _item.productPrice.toString();
       }
 
-      _isInit=false;
+      _isInit = false;
     }
     super.didChangeDependencies();
   }
-  
- 
 
   @override
   Widget build(BuildContext context) {
-    
     var categoriesTitles =
         Provider.of<CategoryProvider>(context).categoriesTitle;
     var subCategoriesTitle = Provider.of<CategoryProvider>(context)
@@ -99,6 +102,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
       var userPhoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
       var userId = FirebaseAuth.instance.currentUser!.uid;
       _item = Product(
+        ownerName: _item.ownerName,
           imageURL: _item.imageURL,
           productDescripton: _item.productDescripton,
           productID: _item.productID,
@@ -116,22 +120,25 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         imageUrl.add(await ref.getDownloadURL());
       }
       _item = Product(
-          imageURL: imageUrl,
-          productDescripton: _item.productDescripton,
-          productID: _item.productID,
-          productName: _item.productName,
-          productType: _item.productType,
-          userID: userId,
-          ownerMobileNum: userPhoneNumber ?? "",
-          productCategory: _item.productCategory,
-          productSubCategory: _item.productSubCategory);
+        ownerName: _item.ownerName,
+        imageURL: imageUrl,
+        productDescripton: _item.productDescripton,
+        productID: _item.productID,
+        productName: _item.productName,
+        productType: _item.productType,
+        userID: userId,
+        ownerMobileNum: userPhoneNumber ?? "",
+        productCategory: _item.productCategory,
+        productSubCategory: _item.productSubCategory,
+        
+      );
 
       _formkey.currentState!.save();
-      if(productid==null){
+      if (productid == null) {
         Provider.of<ProductProvider>(context, listen: false).addproduct(_item);
-      }
-      else{
-        Provider.of<ProductProvider>(context, listen: false).updateProduct(_item);
+      } else {
+        Provider.of<ProductProvider>(context, listen: false)
+            .updateProduct(_item);
       }
     }
 
@@ -149,16 +156,23 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
               ),
               child: _pickedImage.isNotEmpty || _item.imageURL.isNotEmpty
                   ? CarouselSlider.builder(
-                      itemCount: productid!=null? _item.imageURL.length :_pickedImage.length,
+                      itemCount: productid != null
+                          ? _item.imageURL.length
+                          : _pickedImage.length,
                       itemBuilder: (ctx, index, _) => Stack(
                         alignment: Alignment.center,
                         children: [
-                          productid!=null ? Image.network(_item.imageURL[index],width: width,
-                            fit: BoxFit.cover,) :Image.file(
-                            File(_pickedImage[index]!.path),
-                            width: width,
-                            fit: BoxFit.cover,
-                          ),
+                          productid != null
+                              ? Image.network(
+                                  _item.imageURL[index],
+                                  width: width,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(_pickedImage[index]!.path),
+                                  width: width,
+                                  fit: BoxFit.cover,
+                                ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -184,13 +198,11 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                               MaterialButton(
                                 onPressed: () {
                                   setState(() {
-                                    if(productid==null){
+                                    if (productid == null) {
                                       _pickedImage.removeAt(activeindex);
-                                    }
-                                    else{
+                                    } else {
                                       _item.imageURL.removeAt(activeindex);
                                     }
-                                    
                                   });
                                 },
                                 color: Colors.transparent,
@@ -258,6 +270,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 child: TextFormField(
                   onSaved: (val) {
                     _item = Product(
+                      ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,
                       imageURL: _item.imageURL,
@@ -308,6 +321,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 child: TextFormField(
                   onSaved: (val) {
                     _item = Product(
+                      ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,
                       imageURL: _item.imageURL,
@@ -363,7 +377,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   }
                   return null;
                 },
-                value: productid!=null? initvalue["prodType"].toString() :null,
+                value:
+                    productid != null ? initvalue["prodType"].toString() : null,
                 items: ["Rent", "Sell"].map((String value) {
                   return DropdownMenuItem(
                     value: value,
@@ -376,6 +391,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 ),
                 onChanged: (val) {
                   _item = Product(
+                    ownerName: _item.ownerName,
                     isFavorite: false,
                     productPrice: _item.productPrice,
                     imageURL: _item.imageURL,
@@ -409,6 +425,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 child: TextFormField(
                   onSaved: (val) {
                     _item = Product(
+                      ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: int.parse(val.toString()),
                       imageURL: _item.imageURL,
@@ -455,7 +472,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
               child: DropdownButtonFormField<String>(
-                value:  productid!=null ? initvalue["prodCat"].toString() :null,
+                value:
+                    productid != null ? initvalue["prodCat"].toString() : null,
                 onSaved: (val) {},
                 items: categoriesTitles.map((String value) {
                   return DropdownMenuItem(
@@ -470,6 +488,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 onChanged: (val) {
                   setState(() {
                     _item = Product(
+                      ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,
                       imageURL: _item.imageURL,
@@ -502,7 +521,9 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: DropdownButtonFormField<String>(
-                  value:productid!=null? initvalue["prodSub"].toString():null,
+                  value: productid != null
+                      ? initvalue["prodSub"].toString()
+                      : null,
                   onSaved: (val) {},
                   items: subCategoriesTitle.map((String value) {
                     return DropdownMenuItem(
@@ -516,6 +537,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ),
                   onChanged: (val) {
                     _item = Product(
+                      ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,
                       imageURL: _item.imageURL,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
@@ -31,25 +32,36 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     var title = mapOfCategoriesAndSubcategories["category"] ?? "";
     var subCategory = mapOfCategoriesAndSubcategories["subcategory"] ?? "";
 
-    var gamingProducts = Provider.of<ProductProvider>(context)
+   
+    List<Widget> screens = [
+      StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("UserProducts").snapshots(),
+        builder: (context,snapshot) {
+          return FutureBuilder(
+            future: Provider.of<ProductProvider>(context).fetchProducts(),
+            builder: (context,snapshot) {
+               var gamingProducts = Provider.of<ProductProvider>(context)
         .filterByCategory(title, subCategory);
     var rentOnly = Provider.of<ProductProvider>(context)
         .filterRentOnlyByCategory(title, subCategory);
     var buyOnly = Provider.of<ProductProvider>(context)
         .filterBuyOnlyByCategory(title, subCategory);
-    List<Widget> screens = [
-      TabBarView(
-        children: [
-          ProductGrid(
-            product: gamingProducts,
-          ),
-          ProductGrid(
-            product: rentOnly,
-          ),
-          ProductGrid(
-            product: buyOnly,
-          ),
-        ],
+              return TabBarView(
+                children: [
+                  ProductGrid(
+                    product: gamingProducts,
+                  ),
+                  ProductGrid(
+                    product: rentOnly,
+                  ),
+                  ProductGrid(
+                    product: buyOnly,
+                  ),
+                ],
+              );
+            }
+          );
+        }
       ),
       
       const MyAdScreen(),

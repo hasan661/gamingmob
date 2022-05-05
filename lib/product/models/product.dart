@@ -11,7 +11,8 @@ class Product {
   bool isFavorite;
   final String ownerMobileNum;
   final String productCategory;
-  final String productSubCategory; 
+  final String productSubCategory;
+  final String ownerName; 
 
   Product({
     required this.imageURL,
@@ -24,6 +25,7 @@ class Product {
     required this.userID,
     required this.ownerMobileNum,
     required this.productCategory,
-    required this.productSubCategory
+    required this.productSubCategory,
+    required this.ownerName
   });
 }

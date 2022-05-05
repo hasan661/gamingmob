@@ -19,7 +19,9 @@ class ProductProvider with ChangeNotifier {
       for (var e in element["imageURL"]) {
         imageUrls.add(e.toString());
       }
+      
       _products.add(Product(
+        ownerName: element["ownerName"],
         imageURL: imageUrls,
         productDescripton: element["productDescripton"],
         productID: element.id,
@@ -121,6 +123,7 @@ class ProductProvider with ChangeNotifier {
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
       "isFavorite": false,
+      "ownerName":auth.currentUser!.displayName
     });
 
     _productItems.add(newProduct);

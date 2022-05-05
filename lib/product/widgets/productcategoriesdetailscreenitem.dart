@@ -16,7 +16,6 @@ class CategoriesDetailScreenItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
     var categoriesObject =
         Provider.of<CategoryProvider>(context, listen: false);
     List<SubCategories> listOfSubcategories =
@@ -40,41 +39,31 @@ class CategoriesDetailScreenItem extends StatelessWidget {
                     "category": title
                   });
             },
-            child: Container(
-              height: height * 0.2,
-              width: width * 0.4,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      listOfSubcategories[index].imageUrl,
-                      fit: BoxFit.cover,
-                      height: 100,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Column(
+                children: [
+                  Image.network(
+                    listOfSubcategories[index].imageUrl,
+                    fit: BoxFit.cover,
+                    height: 100,
+                    width: width*0.5,
+                  ),
+                  Container(
+                    height: 20,
+                    color: Colors.black,
+                    child: Center(
+                child: Text(
+                    listOfSubcategories[index].title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    Center(
-                      child: Container(
-                        width: width * 0.5,
-                        color: Colors.black,
-                        height: 20,
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        listOfSubcategories[index].title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                  ),
+                ],
               ),
             ),
           );

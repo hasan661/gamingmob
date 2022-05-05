@@ -11,55 +11,48 @@ class BlogProvider with ChangeNotifier {
 
   Future<void> fetchBlogs() async {
     List<Blog> fetchedBlogs = [];
-    var blogObj =
-        await FirebaseFirestore.instance.collection("Blogs").orderBy("createdAt", descending: true).snapshots().first;
+    var blogObj = await FirebaseFirestore.instance
+        .collection("Blogs")
+        .orderBy("createdAt", descending: true)
+        .snapshots()
+        .first;
     var objDocks = blogObj.docs;
-    try {
       for (var element in objDocks) {
-        
         fetchedBlogs.add(
           Blog(
-              id: element.id,
-              blogContent: BlogContent(element["content"]),
-              imageURL: element["imageURL"],
-              title: element["title"],
-              blogCreationDate: element["createdAt"],
-              userId: element["userID"],
-              userName: element["userName"]),
+            id: element.id,
+            blogContent: BlogContent(element["content"]),
+            imageURL: element["imageURL"],
+            title: element["title"],
+            blogCreationDate: element["createdAt"],
+            userId: element["userID"],
+            userName: element["userName"],
+          ),
         );
-        
       }
       _blogs = fetchedBlogs;
-    } catch (e) {
-      print(e);
-    }
+   
   }
 
-  Future<void> addBlogs(Blog item)async{
+  Future<void> addBlogs(Blog item) async {
     FirebaseFirestore.instance.collection("Blogs").doc().set({
-      "content":item.blogContent.content,
-      "createdAt":item.blogCreationDate,
-      "imageURL":item.imageURL,
-      "title":item.title,
-      "userID":item.userId,
-      "userName":item.userName
-      
-              
-
+      "content": item.blogContent.content,
+      "createdAt": item.blogCreationDate,
+      "imageURL": item.imageURL,
+      "title": item.title,
+      "userID": item.userId,
+      "userName": item.userName
     });
     _blogs.add(item);
     notifyListeners();
-    
-
   }
 
-  Blog getById(String id){
+  Blog getById(String id) {
     // print(id);
-    var a= _blogs.firstWhere((element) {
-      return element.id==id;
+    var a = _blogs.firstWhere((element) {
+      return element.id == id;
     });
-    
+
     return a;
   }
-
 }
