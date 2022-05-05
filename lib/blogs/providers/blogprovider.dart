@@ -11,28 +11,23 @@ class BlogProvider with ChangeNotifier {
 
   Future<void> fetchBlogs() async {
     List<Blog> fetchedBlogs = [];
-    List<Map<String, String>> listOfBlogContent = [];
     var blogObj =
-        await FirebaseFirestore.instance.collection("Blogs").snapshots().first;
+        await FirebaseFirestore.instance.collection("Blogs").orderBy("createdAt", descending: true).snapshots().first;
     var objDocks = blogObj.docs;
     try {
       for (var element in objDocks) {
-        for(var e in element["content"]){
-           listOfBlogContent.add({
-          "data": e["data"],
-          "type": e["type"]
-        });
-        }
+        
         fetchedBlogs.add(
           Blog(
               id: element.id,
-              blogContent: BlogContent(listOfBlogContent),
+              blogContent: BlogContent(element["content"]),
               imageURL: element["imageURL"],
               title: element["title"],
               blogCreationDate: element["createdAt"],
               userId: element["userID"],
               userName: element["userName"]),
         );
+        
       }
       _blogs = fetchedBlogs;
     } catch (e) {
@@ -58,18 +53,13 @@ class BlogProvider with ChangeNotifier {
 
   }
 
-  // Future testing() async {
-  //   try {
-  //     var data = await FirebaseFirestore.instance
-  //         .collection("testingwidget")
-  //         .get()
-  //         .then((value) {
-  //       var a = value.docs;
+  Blog getById(String id){
+    // print(id);
+    var a= _blogs.firstWhere((element) {
+      return element.id==id;
+    });
+    
+    return a;
+  }
 
-  //       return a.first.data();
-  //     });
-  //   } catch (e) {
-  //     print(e.toString() + "hasan");
-  //   }
-  // }
 }

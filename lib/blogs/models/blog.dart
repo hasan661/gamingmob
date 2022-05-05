@@ -21,7 +21,7 @@ class Blog {
 }
  
  class BlogContent{
-   List<Map<String,String>> content;
+   List content;
    BlogContent(this.content);
 
  }

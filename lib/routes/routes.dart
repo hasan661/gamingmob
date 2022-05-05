@@ -4,6 +4,7 @@ import 'package:gamingmob/authentication/screens/register_screen.dart';
 import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
 import 'package:gamingmob/authentication/widgets/verifymobilenumber.dart';
 import 'package:gamingmob/blogs/screens/addblogsscreen.dart';
+import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
 import 'package:gamingmob/internetcheckstream.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
@@ -25,7 +26,8 @@ getRoutes() {
     ProductCategoriesScreen.routeName:(ctx)=>const InterentCheckStream(child: ProductCategoriesScreen()),
     ProductCategoriesDetailScreen.routeName:(ctx)=>const InterentCheckStream(child: ProductCategoriesDetailScreen()),
     BlogHomeScreen.routeName:(ctx)=> const InterentCheckStream(child: BlogHomeScreen()),
-    AddBlogScreen.routeName:(ctx)=> const InterentCheckStream(child: AddBlogScreen())
+    AddBlogScreen.routeName:(ctx)=> const InterentCheckStream(child: AddBlogScreen()),
+    BlogDetailScreen.routeName:(ctx)=>const BlogDetailScreen()
     
   };
 }

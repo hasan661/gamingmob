@@ -56,7 +56,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
     for(int i=0;i<listOfBlogContent.length;i++){
       if(listOfBlogContent[i]["type"]=="image"){
-        var contentImageReference=fireStorgaeObj.child("GamingMob/BlogsContent/${homeScreenImage!.path + title}");
+        var contentImageReference=fireStorgaeObj.child("GamingMob/BlogsContent/${listOfBlogContent[i]["data"]}");
       await contentImageReference.putFile(File(listOfBlogContent[i]["data"].toString()));
        var url=await contentImageReference.getDownloadURL();
        listOfBlogContent[i]["data"]=url;
