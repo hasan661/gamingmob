@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gamingmob/blogs/models/blog.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddBlogsItem extends StatefulWidget {
-  AddBlogsItem(
+  const AddBlogsItem(
       {Key? key,
       required this.listOfBlogContent,
       required this.assigner,
