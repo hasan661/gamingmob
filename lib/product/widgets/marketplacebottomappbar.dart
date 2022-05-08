@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/screens/productcategoriesdetailscreen.dart';
+import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 
 class MarketPlaceBottomAppBar extends StatefulWidget {
   const MarketPlaceBottomAppBar(
@@ -26,7 +28,17 @@ class _MarketPlaceBottomAppBarState extends State<MarketPlaceBottomAppBar> {
         ),
       ),
       child: BottomNavigationBar(
-        onTap: (index) => {widget.selectedIndexValue(index)},
+        onTap: (index) => {
+          if(index==0 && index==widget.selectedIndex){
+            Navigator.of(context).pushReplacementNamed(ProductCategoriesScreen.routeName)
+            
+
+          }
+          else{
+            widget.selectedIndexValue(index),
+          }
+          
+        },
         iconSize: 30,
         selectedFontSize: 15,
         fixedColor: Colors.amber,

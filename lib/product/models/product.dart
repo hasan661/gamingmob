@@ -13,6 +13,7 @@ class Product {
   final String productCategory;
   final String productSubCategory;
   final String ownerName; 
+  final String ownerEmail;
 
   Product({
     required this.imageURL,
@@ -26,6 +27,7 @@ class Product {
     required this.ownerMobileNum,
     required this.productCategory,
     required this.productSubCategory,
-    required this.ownerName
+    required this.ownerName,
+    required this.ownerEmail
   });
 }

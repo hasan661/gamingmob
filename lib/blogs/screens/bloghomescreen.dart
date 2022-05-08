@@ -29,19 +29,17 @@ class _BlogHomeScreenState extends State<BlogHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _selectedIndex == 1
-          ? Align(
-              alignment: Alignment.bottomCenter,
-              child: FloatingActionButton(
-                elevation: 0,
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AddBlogScreen.routeName);
-                },
-                child: const Icon(Icons.add),
-              ),
-            )
-          : null,
       appBar: AppBar(
+        actions: [
+          _selectedIndex==1? TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddBlogScreen.routeName);
+              },
+              child: const Text(
+                "Write A Blog",
+                style: TextStyle(color: Colors.white),
+              )):Container()
+        ],
         title: const Text("Blogs"),
         centerTitle: true,
       ),

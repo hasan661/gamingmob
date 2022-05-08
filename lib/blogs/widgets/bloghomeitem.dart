@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
 import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class BlogHomeItem extends StatelessWidget {
@@ -50,12 +52,8 @@ class BlogHomeItem extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: width * 0.02,
-                                      right: width * 0.02,
-                                      top: 8.0),
-                                  child: Text(
+                                ListTile(
+                                  title: Text(
                                     blogItems[index].userName,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
@@ -63,15 +61,10 @@ class BlogHomeItem extends StatelessWidget {
                                       fontSize: 16,
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: width * 0.02,
-                                    right: width * 0.02,
-                                  ),
-                                  child: Text(
-                                    blogItems[index]
-                                        .blogCreationDate
+                                  subtitle: Text(
+                                    DateFormat("dd MM yy At hh:mm")
+                                        .format(
+                                            blogItems[index].blogCreationDate)
                                         .toString(),
                                     style: const TextStyle(
                                       color: Colors.grey,
@@ -91,9 +84,13 @@ class BlogHomeItem extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                     child: Column(
                                       children: [
-                                        Image.network(
-                                          blogItems[index].imageURL,
+                                        CachedNetworkImage(
+                                          imageUrl: blogItems[index].imageURL !=
+                                                  ""
+                                              ? blogItems[index].imageURL
+                                              : "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
                                           fit: BoxFit.cover,
+
                                           // height: 100,
                                         ),
                                         Container(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
-import 'package:gamingmob/product/widgets/appdrawer.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
 import 'package:gamingmob/product/widgets/producthomegrid.dart';
 import 'package:provider/provider.dart';
@@ -19,53 +18,49 @@ class ProductHomeScreen extends StatefulWidget {
 class _ProductHomeScreenState extends State<ProductHomeScreen> {
   var _selectedIndex = 0;
 
-  void selectedIndexValue(value){
+  void selectedIndexValue(value) {
     setState(() {
-      _selectedIndex=value;
+      _selectedIndex = value;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    
     var mapOfCategoriesAndSubcategories =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     var title = mapOfCategoriesAndSubcategories["category"] ?? "";
     var subCategory = mapOfCategoriesAndSubcategories["subcategory"] ?? "";
 
-   
     List<Widget> screens = [
       StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("UserProducts").snapshots(),
-        builder: (context,snapshot) {
-          return FutureBuilder(
-            future: Provider.of<ProductProvider>(context).fetchProducts(),
-            builder: (context,snapshot) {
-               var gamingProducts = Provider.of<ProductProvider>(context)
-        .filterByCategory(title, subCategory);
-    var rentOnly = Provider.of<ProductProvider>(context)
-        .filterRentOnlyByCategory(title, subCategory);
-    var buyOnly = Provider.of<ProductProvider>(context)
-        .filterBuyOnlyByCategory(title, subCategory);
-              return TabBarView(
-                children: [
-                  ProductGrid(
-                    product: gamingProducts,
-                  ),
-                  ProductGrid(
-                    product: rentOnly,
-                  ),
-                  ProductGrid(
-                    product: buyOnly,
-                  ),
-                ],
-              );
-            }
-          );
-        }
-      ),
-      
+          stream:
+              FirebaseFirestore.instance.collection("UserProducts").snapshots(),
+          builder: (context, snapshot) {
+            return FutureBuilder(
+                future: Provider.of<ProductProvider>(context).fetchProducts(),
+                builder: (context, snapshot) {
+                  var gamingProducts = Provider.of<ProductProvider>(context)
+                      .filterByCategory(title, subCategory);
+                  var rentOnly = Provider.of<ProductProvider>(context)
+                      .filterRentOnlyByCategory(title, subCategory);
+                  var buyOnly = Provider.of<ProductProvider>(context)
+                      .filterBuyOnlyByCategory(title, subCategory);
+                  return TabBarView(
+                    children: [
+                      ProductGrid(
+                        product: gamingProducts,
+                      ),
+                      ProductGrid(
+                        product: rentOnly,
+                      ),
+                      ProductGrid(
+                        product: buyOnly,
+                      ),
+                    ],
+                  );
+                });
+          }),
       const MyAdScreen(),
-      
     ];
     return DefaultTabController(
       length: 3,
@@ -83,8 +78,10 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                   ),
                 )
               : null,
-          drawer: const AppDrawer(),
-          bottomNavigationBar: MarketPlaceBottomAppBar(screens: screens, selectedIndexValue: selectedIndexValue, selectedIndex: _selectedIndex),
+          bottomNavigationBar: MarketPlaceBottomAppBar(
+              screens: screens,
+              selectedIndexValue: selectedIndexValue,
+              selectedIndex: _selectedIndex),
           appBar: AppBar(
             bottom: _selectedIndex == 0
                 ? const TabBar(
@@ -103,8 +100,8 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                   )
                 : null,
             centerTitle: true,
-            title: const Text(
-              "Gaming Mob",
+            title: Text(
+              subCategory ==""?title:subCategory,
             ),
           ),
           body: screens[_selectedIndex]),

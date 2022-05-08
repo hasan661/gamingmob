@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
@@ -59,8 +60,11 @@ class CategoriesScreenItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       child: Column(
                         children: [
-                          Image.network(
-                            categires[index].imageUrl,
+                          CachedNetworkImage(
+                            imageUrl: categires[index].imageUrl ,
+                            placeholderFadeInDuration: const Duration(seconds: 4),
+                            placeholder: (context, url)=>const Center(child: CircularProgressIndicator()),
+                            
                             fit: BoxFit.cover,
                             height: 100,
                             width: width*0.5,

@@ -11,6 +11,7 @@ class BlogProvider with ChangeNotifier {
   }
 
   Future<void> fetchBlogs() async {
+    try{
     List<Blog> fetchedBlogs = [];
     var blogObj = await FirebaseFirestore.instance
         .collection("Blogs")
@@ -19,21 +20,25 @@ class BlogProvider with ChangeNotifier {
         .first;
     var objDocks = blogObj.docs;
     for (var element in objDocks) {
-     
-
       fetchedBlogs.add(
         Blog(
+        
           id: element.id,
           blogContent: BlogContent(element["content"]),
           imageURL: element["imageURL"],
           title: element["title"],
-          blogCreationDate: element["createdAt"],
+          blogCreationDate: (element["createdAt"] as Timestamp).toDate(),
           userId: element["userID"],
           userName: element["userName"],
+          
         ),
       );
     }
     _blogs = fetchedBlogs;
+    }
+    catch(e){
+      print(e);
+    }
   }
 
   Future<void> addBlogs(Blog item) async {
@@ -66,8 +71,14 @@ class BlogProvider with ChangeNotifier {
   }
 
   Future<void> removeABlog(id) async {
-    FirebaseFirestore.instance.doc("Blogs/$id").delete();
+    print(id);
+    try{
+      FirebaseFirestore.instance.doc("Blogs/$id").delete();
     _blogs.removeWhere((element) => element.id == id);
     notifyListeners();
+    }
+    catch(E){
+      print(E.toString()+"hasan");
+    }
   }
 }

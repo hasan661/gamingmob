@@ -5,7 +5,7 @@ class Blog {
   final String title;
   final String imageURL;
   final BlogContent blogContent;
-  final Timestamp blogCreationDate;
+  final DateTime blogCreationDate;
   final String userId;
   final String userName;
 

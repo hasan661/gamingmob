@@ -19,7 +19,6 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        
         title: Text(
           product.productName,
         ),

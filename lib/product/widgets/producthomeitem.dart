@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/models/product.dart';
 import 'package:gamingmob/product/screens/productdetailscreen.dart';
@@ -21,7 +22,6 @@ class ProductHomeItem extends StatelessWidget {
         },
         splashColor: Colors.purple.withOpacity(0.1),
         child: Container(
-          // padding: EdZZZ,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,9 +32,12 @@ class ProductHomeItem extends StatelessWidget {
                 child: SizedBox(
                   height: 100,
                   child: Center(
-                    child: Image.network(
+                    child: CachedNetworkImage(
+                      imageUrl: gamingProducts[index].imageURL[0] ,
+                            placeholderFadeInDuration: const Duration(seconds: 4),
+                            placeholder: (context, url)=>const Center(child: CircularProgressIndicator()),
     
-                      gamingProducts[index].imageURL[0],
+                      
                     ),
                   ),
                 ),

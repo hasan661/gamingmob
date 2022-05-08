@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/models/product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -79,7 +80,7 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                       ),
                       title: const Text("Contact Via Email"),
                       onTap: () {
-                        _sendEmail("qhasan966@gmail.com");
+                        _sendEmail(widget.product.ownerEmail);
                       },
                     ),
                   ),
@@ -130,13 +131,16 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
           // carouselController: ,
           itemCount: widget.product.imageURL.length,
           itemBuilder: (ctx, index, _) {
-            return Image.network(
+            return CachedNetworkImage(imageUrl:
               widget.product.imageURL[index],
               width: widget.screenWidth,
+               placeholderFadeInDuration: const Duration(seconds: 4),
+                            placeholder: (context, url)=>const Center(child: CircularProgressIndicator()),
               fit: BoxFit.cover,
             );
           },
           options: CarouselOptions(
+            aspectRatio: 1/1,
             enableInfiniteScroll: false,
             // pageSnapping: false,
             onPageChanged: (index, reason) {
@@ -233,39 +237,32 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   top: 16,
                 ),
                 child: ListTile(
-                  leading: CircleAvatar(
-                    child: Image.network(
-                      "https://media.gq.com/photos/5e6128d2398289000862596e/1:1/w_805,h_805,c_limit/tom-hardy-lead-840-social.jpg",
-                    ),
-                  ),
+                  // leading: CircleAvatar(
+                  //   child: Image.network(
+                  //     "https://media.gq.com/photos/5e6128d2398289000862596e/1:1/w_805,h_805,c_limit/tom-hardy-lead-840-social.jpg",
+                  //   ),
+                  // ),
                   title: Text(
-                    "Name",
+                    widget.product.ownerName,
                     style: Theme.of(context).textTheme.headline3,
                   ),
-                  subtitle: const Text("Testing Guy"),
+                  
                   trailing: SizedBox(
                     height: 30,
                     width: 150,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showURLLaunchDialog();
+                      },
                       child: const Text(
-                        "View Profile",
+                        "Contact Owner",
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    showURLLaunchDialog();
-                  },
-                  child: const Text("Contact Owner")),
-            )
+          
           ],
         )
       ],

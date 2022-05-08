@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
 import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class MyBlogsScreen extends StatefulWidget {
   const MyBlogsScreen({Key? key}) : super(key: key);
@@ -10,6 +12,7 @@ class MyBlogsScreen extends StatefulWidget {
   @override
   State<MyBlogsScreen> createState() => _MyBlogsScreenState();
 }
+
 class _MyBlogsScreenState extends State<MyBlogsScreen> {
   @override
   Widget build(BuildContext context) {
@@ -65,6 +68,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       width: width * 0.12,
                                       child: IconButton(
                                         onPressed: () {
+                                          print(blogItems[index].id);
                                           Provider.of<BlogProvider>(context,
                                                   listen: false)
                                               .removeABlog(blogItems[index].id);
@@ -76,8 +80,8 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       ),
                                     ),
                                     subtitle: Text(
-                                      blogItems[index]
-                                          .blogCreationDate
+                                      DateFormat("dd MM yy At hh:mm"
+                                             ).format( blogItems[index].blogCreationDate)
                                           .toString(),
                                       style: const TextStyle(
                                         color: Colors.grey,
@@ -97,8 +101,8 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       borderRadius: BorderRadius.circular(20),
                                       child: Column(
                                         children: [
-                                          Image.network(
-                                            blogItems[index].imageURL,
+                                          CachedNetworkImage(
+                                            imageUrl:blogItems[index].imageURL!=""?blogItems[index].imageURL:"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
                                             fit: BoxFit.cover,
                                             // height: 100,
                                           ),

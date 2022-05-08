@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gamingmob/product/models/product.dart';
@@ -9,7 +11,8 @@ class ProductProvider with ChangeNotifier {
   List<Product> _productItems = [];
 
   Future<void> fetchProducts() async {
-    _productItems = [];
+    try{
+      _productItems = [];
     List<Product> _products = [];
     var obj = await db.collection("UserProducts").snapshots().first;
     var objDocks = obj.docs;
@@ -18,6 +21,7 @@ class ProductProvider with ChangeNotifier {
     for (var element in objDocks) {
       for (var e in element["imageURL"]) {
         imageUrls.add(e.toString());
+
       }
       
       _products.add(Product(
@@ -33,9 +37,15 @@ class ProductProvider with ChangeNotifier {
         productSubCategory: element["productSubCategory"],
         productPrice: element["productPrice"],
         isFavorite: element["isFavorite"],
+        ownerEmail: element["ownerEmail"]
       ));
+      imageUrls = [];
     }
     _productItems = _products;
+    }
+    catch(e){
+      print(e);
+    }
   }
 
   List<Product> get getAllProductItems {
@@ -106,6 +116,7 @@ class ProductProvider with ChangeNotifier {
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
       "isFavorite": false,
+      "ownerEmail":newProduct.ownerEmail
     });
     notifyListeners();
   }
@@ -123,7 +134,8 @@ class ProductProvider with ChangeNotifier {
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
       "isFavorite": false,
-      "ownerName":auth.currentUser!.displayName
+      "ownerName":auth.currentUser!.displayName,
+      "ownerEmail":auth.currentUser!.email
     });
 
     _productItems.add(newProduct);

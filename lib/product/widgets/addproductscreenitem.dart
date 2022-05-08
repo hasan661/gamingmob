@@ -10,8 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductScreenItem extends StatefulWidget {
-  const AddProductScreenItem({Key? key,}) : super(key: key);
-  
+  const AddProductScreenItem({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AddProductScreenItem> createState() => _AddProductScreenItemState();
@@ -22,10 +23,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   var activeindex = 0;
   List<String> imageUrl = [];
   void _pickImage() async {
-    final image = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      imageQuality: 20
-    );
+    final image = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 20);
     if (image == null) {
       return;
     }
@@ -37,6 +36,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   final _formkey = GlobalKey<FormState>();
 
   var _item = Product(
+    ownerEmail: "",
     imageURL: [],
     productDescripton: "",
     productID: DateTime.now().toString(),
@@ -53,6 +53,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   var prodName = TextEditingController();
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
+  var isLoading=false;
   var productid;
   var initvalue = {
     'imageURL': [],
@@ -96,14 +97,18 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     var height = MediaQuery.of(context).size.height;
 
     void _saveForm() async {
+      
       final isValid = _formkey.currentState!.validate();
       if (!isValid) {
         return;
       }
+      
       var userPhoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
       var userId = FirebaseAuth.instance.currentUser!.uid;
+      var userEmail=FirebaseAuth.instance.currentUser!.email;
       _item = Product(
-        ownerName: _item.ownerName,
+        ownerEmail: userEmail.toString(),
+          ownerName: _item.ownerName,
           imageURL: _item.imageURL,
           productDescripton: _item.productDescripton,
           productID: _item.productID,
@@ -113,6 +118,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           ownerMobileNum: userPhoneNumber ?? "",
           productCategory: _item.productCategory,
           productSubCategory: _item.productSubCategory);
+           _formkey.currentState!.save();
+           
+     
+      setState(() {
+        isLoading=true;
+      });
 
       for (int i = 0; i < _pickedImage.length; i++) {
         var ref = FirebaseStorage.instance.ref().child(
@@ -121,6 +132,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         imageUrl.add(await ref.getDownloadURL());
       }
       _item = Product(
+        ownerEmail: _item.ownerEmail,
         ownerName: _item.ownerName,
         imageURL: imageUrl,
         productDescripton: _item.productDescripton,
@@ -131,32 +143,37 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         ownerMobileNum: userPhoneNumber ?? "",
         productCategory: _item.productCategory,
         productSubCategory: _item.productSubCategory,
-        
       );
 
-      _formkey.currentState!.save();
       if (productid == null) {
-        Provider.of<ProductProvider>(context, listen: false).addproduct(_item);
+        await Provider.of<ProductProvider>(context, listen: false).addproduct(_item);
       } else {
-        Provider.of<ProductProvider>(context, listen: false)
+        await Provider.of<ProductProvider>(context, listen: false)
             .updateProduct(_item);
       }
+      
+      Navigator.of(context).pop();
     }
 
-    return SingleChildScrollView(
+    return isLoading? const Center(child: CircularProgressIndicator(),)  :SingleChildScrollView(
       child: Form(
         key: _formkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: width,
-              height: _pickedImage.isEmpty && _item.imageURL.isEmpty? height * 0.25:null,
-              decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.white),
-              ),
+              // color: Colors.amber,
+              width: width ,
+              height: (_pickedImage.isEmpty && _item.imageURL.isEmpty)
+                  ? height * 0.25
+                  : null,
+              // decoration: BoxDecoration(
+              //   border: Border.all(width: 2, color: Colors.white),
+              // ),
               child: _pickedImage.isNotEmpty || _item.imageURL.isNotEmpty
                   ? CarouselSlider.builder(
+
+                    
                       itemCount: productid != null
                           ? _item.imageURL.length
                           : _pickedImage.length,
@@ -168,11 +185,17 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                                   _item.imageURL[index],
                                   width: width,
                                   fit: BoxFit.cover,
+                                  
+                                  
                                 )
                               : Image.file(
                                   File(_pickedImage[index]!.path),
                                   width: width,
                                   fit: BoxFit.cover,
+                                  // scale: 100,
+                                  
+                                  
+                                  
                                 ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -224,6 +247,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                       ),
                       options: CarouselOptions(
                         enableInfiniteScroll: false,
+                        aspectRatio: 1/1,
+                        
                         // pageSnapping: false,
                         onPageChanged: (index, reason) {
                           setState(() {
@@ -283,6 +308,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                       ownerMobileNum: _item.ownerMobileNum,
                       productCategory: _item.productCategory,
                       productSubCategory: _item.productSubCategory,
+                      ownerEmail: _item.ownerEmail
                     );
                   },
                   validator: (value) {
@@ -334,6 +360,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                       ownerMobileNum: _item.ownerMobileNum,
                       productCategory: _item.productCategory,
                       productSubCategory: _item.productSubCategory,
+                      ownerEmail: _item.ownerEmail
                     );
                   },
                   validator: (value) {
@@ -392,6 +419,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 ),
                 onChanged: (val) {
                   _item = Product(
+                    ownerEmail: _item.ownerEmail,
                     ownerName: _item.ownerName,
                     isFavorite: false,
                     productPrice: _item.productPrice,
@@ -426,6 +454,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 child: TextFormField(
                   onSaved: (val) {
                     _item = Product(
+                      ownerEmail: _item.ownerEmail,
                       ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: int.parse(val.toString()),
@@ -489,6 +518,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                 onChanged: (val) {
                   setState(() {
                     _item = Product(
+                      ownerEmail: _item.ownerEmail,
                       ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,
@@ -538,6 +568,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ),
                   onChanged: (val) {
                     _item = Product(
+                      ownerEmail: _item.ownerEmail,
                       ownerName: _item.ownerName,
                       isFavorite: false,
                       productPrice: _item.productPrice,

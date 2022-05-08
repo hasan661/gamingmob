@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,54 +17,55 @@ class AddBlogsItem extends StatefulWidget {
 }
 
 class _AddBlogsItemState extends State<AddBlogsItem> {
-  // var _isInit=true;
+  final _key = GlobalKey<FormState>();
+  var isLoading = false;
+  Future<void> onSaveButtonClick() async {
+    var isValid = _key.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    setState(() {
+      isLoading=true;
+    });
 
-  // @override
-  // void didChangeDependencies() {
-    
-  //   if(_isInit){
-  //     var id=ModalRoute.of(context)!.settings.arguments;
-  //     if(id!=null){
-        
-  //       var initObj=Provider.of<BlogProvider>(context).getById(id.toString());
-  //       print(initObj.title.runtimeType);
-  //       title.text=initObj.title;
+    var homeImageUrl = "";
+    var currentUser = FirebaseAuth.instance.currentUser;
+    var userID = currentUser!.uid;
+    var userName = currentUser.displayName;
+    var fireStorgaeObj = FirebaseStorage.instance.ref();
+    if (homeImage != null) {
+      var homeImageReference = fireStorgaeObj
+          .child("GamingMob/BlogsHome/${homeImage!.path + title.text}");
+      await homeImageReference.putFile(File(homeImage!.path));
+      homeImageUrl = await homeImageReference.getDownloadURL();
+    }
 
-  //       List<Map<String,dynamic>> listOfObj=[];
-        
-  //       for(int i=0;i<initObj.blogContent.content.length;i++){
-         
-  //         listOfObj.add(initObj.blogContent.content[i]);
-  //         if(listOfObj[i]["type"]=="image"){
-  //           listOfObj[i]["data"]=File(listOfObj[i]["data"]).path;
+    for (int i = 0; i < listOfContent.length; i++) {
+      if (listOfContent[i]["type"] == "image") {
+        var contentImageReference = fireStorgaeObj
+            .child("GamingMob/BlogsContent/${listOfContent[i]["data"]}");
+        await contentImageReference
+            .putFile(File(listOfContent[i]["data"].toString()));
+        var url = await contentImageReference.getDownloadURL();
+        listOfContent[i]["data"] = url;
+      } else {
+        listOfContent[i]["data"] = listOfContent[i]["data"].text;
+      }
+    }
+    var item = Blog(
+      id: "",
+      blogContent: BlogContent(listOfContent),
+      imageURL: homeImageUrl,
+      title: title.text,
+      blogCreationDate: DateTime.now(),
+      userId: userID,
+      userName: userName ?? "",
+    );
 
+    await Provider.of<BlogProvider>(context, listen: false).addBlogs(item);
+    Navigator.of(context).pop();
+  }
 
-  //         }
-          
-  //         else{
-  //           var a=TextEditingController();
-  //           a.text=listOfObj[i]["data"];
-  //           listOfObj[i]["data"]=a;
-  //         }
-  //       }
-        
-  //       listOfContent=listOfObj;
-  //       print("object");
-  //       homeImage=File(initObj.imageURL);
-        
-      
-
-
-
-  //     }
-  //     _isInit=false;
-
-
-  //     super.didChangeDependencies();
-
-  //   }
-
-  // }
   var textBoxText = TextEditingController();
   File? image;
   File? homeImage;
@@ -100,269 +99,276 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
 
     var height = MediaQuery.of(context).size.height;
 
-    return ListView(
-      children: [
-        Container(
-          width: width,
-          height: homeImage == null ? height * 0.25 : null,
-          decoration: BoxDecoration(
-            border: Border.all(width: 2, color: Colors.white),
-          ),
-          child: homeImage == null
-              ? MaterialButton(
-                  onPressed: () {
-                    pickHomeImage();
-                  },
-                  color: Colors.grey,
-                  textColor: Colors.white,
-                  child: const Icon(
-                    Icons.add,
-                    size: 40,
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Form(
+            key: _key,
+            child: ListView(
+              children: [
+                Container(
+                  width: width,
+                  height: homeImage == null ? height * 0.25 : null,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.white),
                   ),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(0),
-                    ),
-                  ),
-                )
-              : Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Image.file(
-                      File(homeImage!.path),
-                      fit: BoxFit.cover,
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            homeImage = null;
-                          });
-                        },
-                        icon: const Icon(Icons.cancel))
-                  ],
-                ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
-          child: Text(
-            "Blog Title",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: SizedBox(
-            height: height * 0.076,
-            child: TextFormField(
-              controller: title,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Please enter the product name";
-                }
-                return null;
-              },
-              keyboardType: TextInputType.name,
-              textInputAction: TextInputAction.next,
-              toolbarOptions:
-                  const ToolbarOptions(cut: true, copy: true, paste: true),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
-          child: Text(
-            "Blog Content",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    File? a;
-                    listOfContent.add({"type": "image", "data": a});
-                  });
-                },
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                child: const Icon(
-                  Icons.camera_alt,
-                  size: 40,
-                ),
-                padding: const EdgeInsets.all(16),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                ),
-              ),
-              MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    var data = TextEditingController();
-                    listOfContent.add({"type": "text", "data": data});
-                  });
-                },
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                child: const Icon(
-                  Icons.edit,
-                  size: 40,
-                ),
-                padding: const EdgeInsets.all(16),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: listOfContent.length,
-            itemBuilder: (context, index) {
-              return listOfContent[index]["type"] == "text"
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          TextFormField(
-                            controller: listOfContent[index]["data"],
-                            onSaved: (val) {},
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            textInputAction: TextInputAction.next,
-                            toolbarOptions: const ToolbarOptions(
-                                cut: true, copy: true, paste: true),
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: "Type here",
+                  child: homeImage == null
+                      ? MaterialButton(
+                          onPressed: () {
+                            pickHomeImage();
+                          },
+                          color: Colors.grey,
+                          textColor: Colors.white,
+                          child: const Icon(
+                            Icons.add,
+                            size: 40,
+                          ),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0),
                             ),
                           ),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      children: [
-                        listOfContent[index]["data"] == null
-                            ? Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.05),
-                                width: width,
-                                height: listOfContent[index]["data"] == null
-                                    ? height * 0.25
-                                    : null,
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 2, color: Colors.white),
-                                ),
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    pickAnImage(index);
-                                  },
-                                  color: Colors.grey,
-                                  textColor: Colors.white,
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 40,
-                                  ),
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(0),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Image.file(
-                                    File(listOfContent[index]["data"]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      listOfContent.removeAt(index);
-                                    },
-                                    icon: const Icon(Icons.cancel),
-                                  )
-                                ],
-                              ),
-                        SizedBox(
-                          height: height * 0.1,
+                        )
+                      : Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Image.file(
+                              File(homeImage!.path),
+                              fit: BoxFit.cover,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeImage = null;
+                                  });
+                                },
+                                icon: const Icon(Icons.cancel))
+                          ],
                         ),
-                      ],
-                    );
-            },
-          ),
-        ),
-        TextButton.icon(
-          onPressed: () async {
-            var currentUser = FirebaseAuth.instance.currentUser;
-            var userID = currentUser!.uid;
-            var userName = currentUser.displayName;
-            var fireStorgaeObj = FirebaseStorage.instance.ref();
-            var homeImageReference = fireStorgaeObj
-                .child("GamingMob/BlogsHome/${homeImage!.path + title.text}");
-            await homeImageReference.putFile(File(homeImage!.path));
-
-            var homeImageUrl = await homeImageReference.getDownloadURL();
-
-            for (int i = 0; i < listOfContent.length; i++) {
-              if (listOfContent[i]["type"] == "image") {
-                var contentImageReference = fireStorgaeObj.child(
-                    "GamingMob/BlogsContent/${listOfContent[i]["data"]}");
-                await contentImageReference
-                    .putFile(File(listOfContent[i]["data"].toString()));
-                var url = await contentImageReference.getDownloadURL();
-                listOfContent[i]["data"] = url;
-              } else {
-                listOfContent[i]["data"] = listOfContent[i]["data"].text;
-              }
-            }
-            var item = Blog(
-              id: "",
-              blogContent: BlogContent(listOfContent),
-              imageURL: homeImageUrl,
-              title: title.text,
-              blogCreationDate: Timestamp.now(),
-              userId: userID,
-              userName: userName ?? "",
-            );
-
-            Provider.of<BlogProvider>(context, listen: false).addBlogs(item);
-          },
-          icon: const Icon(Icons.save),
-          label: const Text("Save"),
-        )
-      ],
-    );
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: 10),
+                  child: Text(
+                    "Blog Title",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  child: SizedBox(
+                    height: height * 0.076,
+                    child: TextFormField(
+                      controller: title,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter the blog title";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      toolbarOptions: const ToolbarOptions(
+                          cut: true, copy: true, paste: true),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * 0.05, vertical: 10),
+                  child: Text(
+                    "Blog Content",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            File? a;
+                            listOfContent.add({"type": "image", "data": a});
+                          });
+                        },
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 40,
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            var data = TextEditingController();
+                            listOfContent.add({"type": "text", "data": data});
+                          });
+                        },
+                        color: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        child: const Icon(
+                          Icons.edit,
+                          size: 40,
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: listOfContent.length,
+                    itemBuilder: (context, index) {
+                      return listOfContent[index]["type"] == "text"
+                          ? Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    TextFormField(
+                                      controller: listOfContent[index]["data"],
+                                      
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      textInputAction: TextInputAction.next,
+                                      toolbarOptions: const ToolbarOptions(
+                                          cut: true, copy: true, paste: true),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        contentPadding: EdgeInsets.only(
+                                            left: 15,
+                                            bottom: 11,
+                                            top: 11,
+                                            right: 15),
+                                        hintText: "Type here",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      listOfContent.removeAt(index);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.cancel),
+                                )
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                listOfContent[index]["data"] == null
+                                    ? Stack(
+                                        children: [
+                                          Container(
+                                            width: width,
+                                            height: listOfContent[index]
+                                                        ["data"] ==
+                                                    null
+                                                ? height * 0.25
+                                                : null,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  color: Colors.white),
+                                            ),
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                pickAnImage(index);
+                                              },
+                                              color: Colors.grey,
+                                              textColor: Colors.white,
+                                              child: const Icon(
+                                                Icons.add,
+                                                size: 40,
+                                              ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                listOfContent.removeAt(index);
+                                              });
+                                            },
+                                            icon: const Icon(Icons.cancel),
+                                          )
+                                        ],
+                                      )
+                                    : Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          Image.file(
+                                            File(listOfContent[index]["data"]),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              listOfContent.removeAt(index);
+                                            },
+                                            icon: const Icon(Icons.cancel),
+                                          )
+                                        ],
+                                      ),
+                                SizedBox(
+                                  height: height * 0.1,
+                                ),
+                              ],
+                            );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: listOfContent.isEmpty ? height * 0.2 : 0,
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    onSaveButtonClick();
+                  },
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save"),
+                )
+              ],
+            ),
+          );
   }
 }

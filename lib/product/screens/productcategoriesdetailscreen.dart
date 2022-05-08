@@ -54,7 +54,11 @@ class _ProductCategoriesDetailScreenState
         selectedIndexValue: selectedtIndexValueAssigner,
         selectedIndex: _selectedIndex,
       ),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(title),
+        centerTitle: true,
+
+      ),
       body: screens[_selectedIndex],
     );
   }
