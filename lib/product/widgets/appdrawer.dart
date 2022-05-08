@@ -20,14 +20,6 @@ class AppDrawer extends StatelessWidget {
             // backgroundColor: ,
           ),
           const Divider(),
-          const ListTile(
-            leading: Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            title: Text("Home", style: TextStyle(color: Colors.white)),
-          ),
-          const Divider(),
           ListTile(
             onTap: () {
               Navigator.of(context)

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gamingmob/blogs/models/blog.dart';
 
@@ -17,21 +18,22 @@ class BlogProvider with ChangeNotifier {
         .snapshots()
         .first;
     var objDocks = blogObj.docs;
-      for (var element in objDocks) {
-        fetchedBlogs.add(
-          Blog(
-            id: element.id,
-            blogContent: BlogContent(element["content"]),
-            imageURL: element["imageURL"],
-            title: element["title"],
-            blogCreationDate: element["createdAt"],
-            userId: element["userID"],
-            userName: element["userName"],
-          ),
-        );
-      }
-      _blogs = fetchedBlogs;
-   
+    for (var element in objDocks) {
+     
+
+      fetchedBlogs.add(
+        Blog(
+          id: element.id,
+          blogContent: BlogContent(element["content"]),
+          imageURL: element["imageURL"],
+          title: element["title"],
+          blogCreationDate: element["createdAt"],
+          userId: element["userID"],
+          userName: element["userName"],
+        ),
+      );
+    }
+    _blogs = fetchedBlogs;
   }
 
   Future<void> addBlogs(Blog item) async {
@@ -54,5 +56,18 @@ class BlogProvider with ChangeNotifier {
     });
 
     return a;
+  }
+
+  List<Blog> getListById() {
+    return _blogs
+        .where((element) =>
+            element.userId == FirebaseAuth.instance.currentUser!.uid)
+        .toList();
+  }
+
+  Future<void> removeABlog(id) async {
+    FirebaseFirestore.instance.doc("Blogs/$id").delete();
+    _blogs.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 }

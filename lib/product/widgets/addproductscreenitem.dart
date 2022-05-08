@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductScreenItem extends StatefulWidget {
-  const AddProductScreenItem({Key? key}) : super(key: key);
+  const AddProductScreenItem({Key? key,}) : super(key: key);
+  
 
   @override
   State<AddProductScreenItem> createState() => _AddProductScreenItemState();
@@ -22,7 +23,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   List<String> imageUrl = [];
   void _pickImage() async {
     final image = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
       imageQuality: 20
     );
     if (image == null) {
@@ -150,7 +151,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           children: [
             Container(
               width: width,
-              height: height * 0.25,
+              height: _pickedImage.isEmpty && _item.imageURL.isEmpty? height * 0.25:null,
               decoration: BoxDecoration(
                 border: Border.all(width: 2, color: Colors.white),
               ),
