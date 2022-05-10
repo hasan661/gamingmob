@@ -47,6 +47,25 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
     if (!isValid) {
       return;
     }
+
+    if (listOfContent.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Blog cannot be empty"),
+      ));
+
+      return;
+    }
+   for(var element in listOfContent){
+    //  print(element.data.text.toString()+"hasan");
+     if(element.data==null || element.data.text==""){
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Blog cannot be empty"),
+      ));
+      return;
+
+     }
+     return;
+   }
     setState(() {
       isLoading = true;
     });
@@ -62,7 +81,6 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       await homeImageReference.putFile(File(homeImage!.path));
       homeImageUrl = await homeImageReference.getDownloadURL();
     }
-    
 
     for (int i = 0; i < listOfContent.length; i++) {
       if (listOfContent[i].type == "image") {
@@ -75,7 +93,6 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
           listOfContent[i].data = url;
         } catch (_) {}
       } else {
-        
         listOfContent[i].data = listOfContent[i].data.runtimeType == String
             ? TextEditingController(text: listOfContent[i].data).text
             : listOfContent[i].data.text;
@@ -84,7 +101,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
     var item = Blog(
       id: id ?? "",
       blogContent: listOfContent,
-      imageURL:  homeImageUrl,
+      imageURL: homeImageUrl,
       title: title.text,
       blogCreationDate: DateTime.now(),
       userId: userID,
@@ -144,7 +161,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                 Container(
                   width: width,
                   height: homeImage == null && initHomeImage == null ||
-                          initHomeImage == "" && id==null
+                          initHomeImage == "" && id == null
                       ? height * 0.25
                       : null,
                   decoration: BoxDecoration(

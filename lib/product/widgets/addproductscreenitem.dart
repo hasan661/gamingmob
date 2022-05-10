@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -86,8 +87,11 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     super.didChangeDependencies();
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+    // var timer;
     var categoriesTitles =
         Provider.of<CategoryProvider>(context).categoriesTitle;
     var subCategoriesTitle = Provider.of<CategoryProvider>(context)
@@ -97,8 +101,25 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     var height = MediaQuery.of(context).size.height;
 
     void _saveForm() async {
-      final isValid = _formkey.currentState!.validate();
-      if (!isValid) {
+      // var isValid;
+       var isValid = _formkey.currentState!.validate();
+       
+       
+       
+      var timer = Timer.periodic(const Duration(seconds: 3), (_) {
+        
+      });
+      timer.cancel();
+       if (!isValid) {
+          return;
+        }
+
+      
+   
+      if (!(_pickedImage.isNotEmpty || _item.imageURL.isNotEmpty)) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Image is required"),
+        ));
         return;
       }
 
@@ -132,21 +153,20 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         await ref.putFile(File(_pickedImage[i]!.path));
         _item.imageURL.add(await ref.getDownloadURL());
       }
-    
+
       _item = Product(
-        ownerEmail: _item.ownerEmail,
-        ownerName: _item.ownerName,
-        imageURL: _item.imageURL,
-        productDescripton: _item.productDescripton,
-        productID: _item.productID,
-        productName: _item.productName,
-        productType: _item.productType,
-        userID: userId,
-        ownerMobileNum: userPhoneNumber ?? "",
-        productCategory: _item.productCategory,
-        productSubCategory: _item.productSubCategory,
-        productPrice: _item.productPrice
-      );
+          ownerEmail: _item.ownerEmail,
+          ownerName: _item.ownerName,
+          imageURL: _item.imageURL,
+          productDescripton: _item.productDescripton,
+          productID: _item.productID,
+          productName: _item.productName,
+          productType: _item.productType,
+          userID: userId,
+          ownerMobileNum: userPhoneNumber ?? "",
+          productCategory: _item.productCategory,
+          productSubCategory: _item.productSubCategory,
+          productPrice: _item.productPrice);
 
       if (productid == null) {
         await Provider.of<ProductProvider>(context, listen: false)
@@ -313,7 +333,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                               ownerEmail: _item.ownerEmail);
                         },
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value==null || value.isEmpty ) {
                             return "Please enter the product name";
                           }
                           return null;
@@ -400,7 +420,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: DropdownButtonFormField<String>(
                       validator: (value) {
-                        if (value == null) {
+                        // print(value);
+                        if (value == null || value.isEmpty) {
                           return "It is required";
                         }
                         return null;
@@ -503,6 +524,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                     child: DropdownButtonFormField<String>(
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "You must define a category";
+                        }
+                        return null;
+                      },
                       value: productid != null
                           ? initvalue["prodCat"].toString()
                           : null,
@@ -554,6 +581,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                       child: DropdownButtonFormField<String>(
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return "Subcategory must be defined";
+                          }
+                          return null;
+                        },
                         value: productid != null
                             ? initvalue["prodSub"].toString()
                             : null,
