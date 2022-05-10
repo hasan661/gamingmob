@@ -7,43 +7,48 @@ class BlogProvider with ChangeNotifier {
   List<Blog> _blogs = [];
 
   List<Blog> get allBlogs {
-    return _blogs;
+    var id = FirebaseAuth.instance.currentUser!.uid;
+    return _blogs.where((element) => element.userId != id).toList();
   }
 
   Future<void> fetchBlogs() async {
-    try{
-    List<Blog> fetchedBlogs = [];
-    var blogObj = await FirebaseFirestore.instance
-        .collection("Blogs")
-        .orderBy("createdAt", descending: true)
-        .snapshots()
-        .first;
-    var objDocks = blogObj.docs;
-    for (var element in objDocks) {
-      fetchedBlogs.add(
-        Blog(
-        
-          id: element.id,
-          blogContent: BlogContent(element["content"]),
-          imageURL: element["imageURL"],
-          title: element["title"],
-          blogCreationDate: (element["createdAt"] as Timestamp).toDate(),
-          userId: element["userID"],
-          userName: element["userName"],
-          
-        ),
-      );
-    }
-    _blogs = fetchedBlogs;
-    }
-    catch(e){
-      print(e);
+    try {
+      List<Blog> fetchedBlogs = [];
+      var blogObj = await FirebaseFirestore.instance
+          .collection("Blogs")
+          .orderBy("createdAt", descending: true)
+          .snapshots()
+          .first;
+      var objDocks = blogObj.docs;
+      for (var element in objDocks) {
+        List<BlogContent> list = [];
+        element["content"].forEach((el) {
+          list.add(BlogContent(data: el["data"], type: el["type"]));
+        });
+
+        fetchedBlogs.add(
+          Blog(
+            id: element.id,
+            blogContent: list,
+            imageURL: element["imageURL"],
+            title: element["title"],
+            blogCreationDate: (element["createdAt"] as Timestamp).toDate(),
+            userId: element["userID"],
+            userName: element["userName"],
+          ),
+        );
+      }
+      _blogs = fetchedBlogs;
+    } catch (e) {
+      print(e.toString() + "hasan");
     }
   }
 
   Future<void> addBlogs(Blog item) async {
     FirebaseFirestore.instance.collection("Blogs").doc().set({
-      "content": item.blogContent.content,
+      "content": item.blogContent
+          .map((e) => {"data": e.data, "type": e.type})
+          .toList(),
       "createdAt": item.blogCreationDate,
       "imageURL": item.imageURL,
       "title": item.title,
@@ -71,14 +76,31 @@ class BlogProvider with ChangeNotifier {
   }
 
   Future<void> removeABlog(id) async {
-    print(id);
-    try{
+    try {
       FirebaseFirestore.instance.doc("Blogs/$id").delete();
-    _blogs.removeWhere((element) => element.id == id);
+      _blogs.removeWhere((element) => element.id == id);
+      notifyListeners();
+    } catch (E) {
+      print(E.toString() + "hasan");
+    }
+  }
+  Future<void> updateBlog(Blog newBlog) async{
+    print(newBlog.id.toString()+"asahasan");
+    
+   try{
+      FirebaseFirestore.instance.collection("Blogs").doc(newBlog.id).update({
+      "imageURL": newBlog.imageURL,
+      "title":newBlog.title,
+      "content":newBlog.blogContent
+          .map((e) => {"data": e.data, "type": e.type})
+          .toList()
+     
+    });
+   }
+   catch(E){
+     print(E);
+   }
+    
     notifyListeners();
-    }
-    catch(E){
-      print(E.toString()+"hasan");
-    }
   }
 }

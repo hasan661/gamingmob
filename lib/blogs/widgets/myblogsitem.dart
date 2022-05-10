@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
+import 'package:gamingmob/blogs/screens/addblogsscreen.dart';
 import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -65,18 +66,24 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       ),
                                     ),
                                     trailing: SizedBox(
-                                      width: width * 0.12,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          print(blogItems[index].id);
-                                          Provider.of<BlogProvider>(context,
-                                                  listen: false)
-                                              .removeABlog(blogItems[index].id);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Theme.of(context).errorColor,
-                                        ),
+                                      width: width * 0.24,
+                                      child: Row(
+                                        children: [
+                                          IconButton(onPressed: (){
+                                            Navigator.of(context).pushNamed(AddBlogScreen.routeName,arguments: blogItems[index].id);
+                                          }, icon: const Icon(Icons.edit)),
+                                          IconButton(
+                                            onPressed: () {
+                                              Provider.of<BlogProvider>(context,
+                                                      listen: false)
+                                                  .removeABlog(blogItems[index].id);
+                                            },
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Theme.of(context).errorColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     subtitle: Text(

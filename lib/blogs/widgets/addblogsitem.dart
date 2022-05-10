@@ -17,6 +17,29 @@ class AddBlogsItem extends StatefulWidget {
 }
 
 class _AddBlogsItemState extends State<AddBlogsItem> {
+  var id;
+  String? initHomeImage;
+  var isInit = true;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (isInit) {
+      id = ModalRoute.of(context)!.settings.arguments;
+      if (id != null) {
+        var initBlogItem =
+            Provider.of<BlogProvider>(context).getById(id.toString());
+        initHomeImage = initBlogItem.imageURL;
+        title.text = initBlogItem.title;
+        listOfContent = initBlogItem.blogContent;
+        for (var i in listOfContent) {
+          if (i.type == "text") {
+            i.data = TextEditingController(text: i.data);
+          }
+        }
+      }
+    }
+  }
+
   final _key = GlobalKey<FormState>();
   var isLoading = false;
   Future<void> onSaveButtonClick() async {
@@ -25,7 +48,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       return;
     }
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
 
     var homeImageUrl = "";
@@ -39,30 +62,40 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       await homeImageReference.putFile(File(homeImage!.path));
       homeImageUrl = await homeImageReference.getDownloadURL();
     }
+    
 
     for (int i = 0; i < listOfContent.length; i++) {
-      if (listOfContent[i]["type"] == "image") {
+      if (listOfContent[i].type == "image") {
         var contentImageReference = fireStorgaeObj
-            .child("GamingMob/BlogsContent/${listOfContent[i]["data"]}");
-        await contentImageReference
-            .putFile(File(listOfContent[i]["data"].toString()));
-        var url = await contentImageReference.getDownloadURL();
-        listOfContent[i]["data"] = url;
+            .child("GamingMob/BlogsContent/${listOfContent[i].data}");
+        try {
+          await contentImageReference
+              .putFile(File(listOfContent[i].data.toString()));
+          var url = await contentImageReference.getDownloadURL();
+          listOfContent[i].data = url;
+        } catch (_) {}
       } else {
-        listOfContent[i]["data"] = listOfContent[i]["data"].text;
+        
+        listOfContent[i].data = listOfContent[i].data.runtimeType == String
+            ? TextEditingController(text: listOfContent[i].data).text
+            : listOfContent[i].data.text;
       }
     }
     var item = Blog(
-      id: "",
-      blogContent: BlogContent(listOfContent),
-      imageURL: homeImageUrl,
+      id: id ?? "",
+      blogContent: listOfContent,
+      imageURL:  homeImageUrl,
       title: title.text,
       blogCreationDate: DateTime.now(),
       userId: userID,
       userName: userName ?? "",
     );
+    if (id == null) {
+      await Provider.of<BlogProvider>(context, listen: false).addBlogs(item);
+    } else {
+      await Provider.of<BlogProvider>(context, listen: false).updateBlog(item);
+    }
 
-    await Provider.of<BlogProvider>(context, listen: false).addBlogs(item);
     Navigator.of(context).pop();
   }
 
@@ -70,7 +103,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
   File? image;
   File? homeImage;
   var title = TextEditingController();
-  List<Map<String, dynamic>> listOfContent = [];
+  List<BlogContent> listOfContent = [];
 
   void pickAnImage(index) async {
     final imageDummy = await ImagePicker()
@@ -79,7 +112,8 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       image = File(imageDummy!.path);
       listOfContent.removeAt(index);
 
-      listOfContent.insert(index, {"type": "image", "data": image!.path});
+      listOfContent.insert(
+          index, BlogContent(data: image!.path, type: "image"));
 
       image = null;
     });
@@ -109,27 +143,48 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
               children: [
                 Container(
                   width: width,
-                  height: homeImage == null ? height * 0.25 : null,
+                  height: homeImage == null && initHomeImage == null ||
+                          initHomeImage == "" && id==null
+                      ? height * 0.25
+                      : null,
                   decoration: BoxDecoration(
                     border: Border.all(width: 2, color: Colors.white),
                   ),
                   child: homeImage == null
-                      ? MaterialButton(
-                          onPressed: () {
-                            pickHomeImage();
-                          },
-                          color: Colors.grey,
-                          textColor: Colors.white,
-                          child: const Icon(
-                            Icons.add,
-                            size: 40,
-                          ),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(0),
-                            ),
-                          ),
-                        )
+                      ? initHomeImage == null || initHomeImage == ""
+                          ? MaterialButton(
+                              onPressed: () {
+                                pickHomeImage();
+                              },
+                              color: Colors.grey,
+                              textColor: Colors.white,
+                              child: const Icon(
+                                Icons.add,
+                                size: 40,
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0),
+                                ),
+                              ),
+                            )
+                          : Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Image.network(
+                                  initHomeImage.toString(),
+                                  fit: BoxFit.cover,
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      initHomeImage = null;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.cancel),
+                                )
+                              ],
+                            )
                       : Stack(
                           alignment: Alignment.topRight,
                           children: [
@@ -202,7 +257,8 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                         onPressed: () {
                           setState(() {
                             File? a;
-                            listOfContent.add({"type": "image", "data": a});
+                            listOfContent
+                                .add(BlogContent(data: a, type: "image"));
                           });
                         },
                         color: Theme.of(context).primaryColor,
@@ -222,7 +278,8 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                         onPressed: () {
                           setState(() {
                             var data = TextEditingController();
-                            listOfContent.add({"type": "text", "data": data});
+                            listOfContent
+                                .add(BlogContent(data: data, type: "text"));
                           });
                         },
                         color: Theme.of(context).primaryColor,
@@ -248,7 +305,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                     shrinkWrap: true,
                     itemCount: listOfContent.length,
                     itemBuilder: (context, index) {
-                      return listOfContent[index]["type"] == "text"
+                      return listOfContent[index].type == "text"
                           ? Stack(
                               alignment: Alignment.centerRight,
                               children: [
@@ -256,8 +313,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     TextFormField(
-                                      controller: listOfContent[index]["data"],
-                                      
+                                      controller: listOfContent[index].data,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: null,
                                       textInputAction: TextInputAction.next,
@@ -291,13 +347,13 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                             )
                           : Column(
                               children: [
-                                listOfContent[index]["data"] == null
+                                listOfContent[index].data == null ||
+                                        listOfContent[index].data == ""
                                     ? Stack(
                                         children: [
                                           Container(
                                             width: width,
-                                            height: listOfContent[index]
-                                                        ["data"] ==
+                                            height: listOfContent[index].data ==
                                                     null
                                                 ? height * 0.25
                                                 : null,
@@ -337,13 +393,30 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                                     : Stack(
                                         alignment: Alignment.topRight,
                                         children: [
-                                          Image.file(
-                                            File(listOfContent[index]["data"]),
-                                            fit: BoxFit.cover,
-                                          ),
+                                          id == null
+                                              ? Image.file(
+                                                  File(listOfContent[index]
+                                                      .data),
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : listOfContent[index]
+                                                      .data
+                                                      .toString()
+                                                      .startsWith("/")
+                                                  ? Image.file(
+                                                      File(listOfContent[index]
+                                                          .data),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.network(
+                                                      listOfContent[index]
+                                                          .data),
                                           IconButton(
                                             onPressed: () {
-                                              listOfContent.removeAt(index);
+                                              setState(() {
+                                                print("object");
+                                                listOfContent.removeAt(index);
+                                              });
                                             },
                                             icon: const Icon(Icons.cancel),
                                           )

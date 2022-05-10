@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Blog {
   final String id;
   final String title;
   final String imageURL;
-  final BlogContent blogContent;
+  final List<BlogContent> blogContent;
   final DateTime blogCreationDate;
   final String userId;
   final String userName;
@@ -21,7 +19,8 @@ class Blog {
 }
  
  class BlogContent{
-   List content;
-   BlogContent(this.content);
+   final String type;
+   dynamic data;
+   BlogContent({required this.data, required this.type});
 
  }

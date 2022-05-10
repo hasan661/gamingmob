@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gamingmob/product/models/product.dart';
@@ -48,9 +46,11 @@ class ProductProvider with ChangeNotifier {
     }
   }
 
-  List<Product> get getAllProductItems {
-    return _productItems;
-  }
+  // List<Product> get getAllProductItems {
+  //   var userID=auth.currentUser!.uid;
+  //   print(_productItems.where((element) => element.userID!=userID).toList());
+  //   return _productItems.where((element) => element.userID!=userID).toList();
+  // }
 
   List<Product> get userProducts {
     var id = auth.currentUser!.uid;
@@ -58,35 +58,38 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> filterByCategory(String category, String subCategory) {
+    var id = auth.currentUser!.uid;
     if (subCategory == "All") {
       return _productItems
-          .where((element) => element.productCategory == category)
+          .where((element) => element.productCategory == category && element.userID!=id)
           .toList();
     }
 
     return _productItems
         .where((element) =>
             element.productCategory == category &&
-            element.productSubCategory == subCategory)
+            element.productSubCategory == subCategory && element.userID!=id)
         .toList();
   }
 
   List<Product> filterRentOnlyByCategory(String category, String subCategory) {
+    var id = auth.currentUser!.uid;
     var p = _productItems
         .where((element) =>
             element.productType == "Rent" &&
             element.productCategory == category &&
-            element.productSubCategory == subCategory)
+            element.productSubCategory == subCategory && element.userID!=id)
         .toList();
     return p;
   }
 
   List<Product> filterBuyOnlyByCategory(String category, String subCategory) {
+    var id = auth.currentUser!.uid;
     return _productItems
         .where((element) =>
             element.productType == "Sell" &&
             element.productCategory == category &&
-            element.productSubCategory == subCategory)
+            element.productSubCategory == subCategory && element.userID!=id)
         .toList();
   }
 
@@ -118,10 +121,12 @@ class ProductProvider with ChangeNotifier {
       "isFavorite": false,
       "ownerEmail":newProduct.ownerEmail
     });
+    
     notifyListeners();
   }
 
   Future<void> addproduct(Product newProduct) async {
+    print(newProduct.productPrice);
     // var firestoreObject = FirebaseFirestore.instance;
     await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,

@@ -32,19 +32,19 @@ class BlogDetailScreen extends StatelessWidget {
              SizedBox(
               height: height * 0.02,
             ),
-            ...blog.blogContent.content.map((e) {
+            ...blog.blogContent.map((e) {
               
              
-              if(e["type"]=="image"){
+              if(e.type=="image"){
                 return Column(
-                  children: [Image.network(e["data"].toString()), SizedBox(height: height*0.02,)],
+                  children: [Image.network(e.data.toString()), SizedBox(height: height*0.02,)],
                 );
               }
               else{
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(e["data"].toString(), maxLines: null,),
+                    Text(e.data.toString(), maxLines: null,),
                     SizedBox(height: height*0.02,)
                   ],
                 );

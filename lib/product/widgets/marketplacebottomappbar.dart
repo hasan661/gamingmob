@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gamingmob/product/screens/productcategoriesdetailscreen.dart';
 import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 
 class MarketPlaceBottomAppBar extends StatefulWidget {

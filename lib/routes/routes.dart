@@ -27,7 +27,7 @@ getRoutes() {
     ProductCategoriesDetailScreen.routeName:(ctx)=>const InterentCheckStream(child: ProductCategoriesDetailScreen()),
     BlogHomeScreen.routeName:(ctx)=> const InterentCheckStream(child: BlogHomeScreen()),
     AddBlogScreen.routeName:(ctx)=> const InterentCheckStream(child: AddBlogScreen()),
-    BlogDetailScreen.routeName:(ctx)=>const BlogDetailScreen()
+    BlogDetailScreen.routeName:(ctx)=>const InterentCheckStream(child: BlogDetailScreen())
     
   };
 }
