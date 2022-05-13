@@ -17,6 +17,7 @@ class AddBlogsItem extends StatefulWidget {
 }
 
 class _AddBlogsItemState extends State<AddBlogsItem> {
+  var homeImageUrl = "";
   var id;
   String? initHomeImage;
   var isInit = true;
@@ -55,22 +56,12 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
 
       return;
     }
-   for(var element in listOfContent){
-    //  print(element.data.text.toString()+"hasan");
-     if(element.data==null || element.data.text==""){
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Blog cannot be empty"),
-      ));
-      return;
-
-     }
-     return;
-   }
+  
     setState(() {
       isLoading = true;
     });
 
-    var homeImageUrl = "";
+    
     var currentUser = FirebaseAuth.instance.currentUser;
     var userID = currentUser!.uid;
     var userName = currentUser.displayName;
@@ -81,6 +72,7 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       await homeImageReference.putFile(File(homeImage!.path));
       homeImageUrl = await homeImageReference.getDownloadURL();
     }
+    
 
     for (int i = 0; i < listOfContent.length; i++) {
       if (listOfContent[i].type == "image") {
@@ -98,10 +90,11 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
             : listOfContent[i].data.text;
       }
     }
+    
     var item = Blog(
       id: id ?? "",
       blogContent: listOfContent,
-      imageURL: homeImageUrl,
+      imageURL: id==null || initHomeImage==null || initHomeImage==""? homeImageUrl: initHomeImage.toString(),
       title: title.text,
       blogCreationDate: DateTime.now(),
       userId: userID,
@@ -431,7 +424,6 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
                                           IconButton(
                                             onPressed: () {
                                               setState(() {
-                                                print("object");
                                                 listOfContent.removeAt(index);
                                               });
                                             },

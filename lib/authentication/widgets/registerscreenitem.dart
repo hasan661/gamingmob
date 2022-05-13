@@ -152,6 +152,7 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
             SizedBox(
               height: height * 0.076,
               child: TextFormField(
+                obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Password is missing";
@@ -178,6 +179,7 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
             SizedBox(
               height: height * 0.076,
               child: TextFormField(
+                obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "please confirm your password";

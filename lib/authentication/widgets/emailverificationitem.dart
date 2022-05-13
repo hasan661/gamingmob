@@ -45,8 +45,10 @@ class EmailVerificationItem extends StatelessWidget {
                   onPressed: () {
                     Provider.of<AuthProvider>(context, listen: false).sendEmailVerification(context);
                   },
+                  
                   child: const Text("Resend Email"),
                   style: ButtonStyle(
+                    
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).primaryColor.withOpacity(1)),
                     shape: MaterialStateProperty.all(

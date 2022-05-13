@@ -109,7 +109,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       child: Column(
                                         children: [
                                           CachedNetworkImage(
-                                            imageUrl:blogItems[index].imageURL!=""?blogItems[index].imageURL:"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
+                                            imageUrl:blogItems[index].imageURL!="" && blogItems[index].imageURL!="null"?blogItems[index].imageURL:"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
                                             fit: BoxFit.cover,
                                             // height: 100,
                                           ),

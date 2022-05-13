@@ -16,13 +16,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   var emailController = TextEditingController();
 
-  var passwordController = TextEditingController();
 
+  var passwordController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance;
     Provider.of<AuthProvider>(context);
-    return StreamBuilder<User?>(
+    return  StreamBuilder<User?>(
       stream: user.authStateChanges(),
       builder: (ctx, snapshot) {
         if (snapshot.hasData &&

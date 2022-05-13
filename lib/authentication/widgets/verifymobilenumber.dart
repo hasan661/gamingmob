@@ -102,17 +102,19 @@ class _MobileVerificationState extends State<MobileVerification> {
                   ),
                   const SizedBox(height: 40),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                     child: const Text(
-                      "Resend Code",
+                      "Check Number If No Code Recieved",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               )),
-          const SizedBox(
-            height: 40,
+          SizedBox(
+            height: height * 0.18,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -124,8 +126,9 @@ class _MobileVerificationState extends State<MobileVerification> {
                   try {
                     await Provider.of<AuthProvider>(context, listen: false)
                         .verifyOTP(otp.text);
-                        Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-                  } on FirebaseException catch   (e) {
+                    Navigator.of(context)
+                        .pushReplacementNamed(LoginScreen.routeName);
+                  } on FirebaseException catch (e) {
                     if (e.code == "credential-already-in-use") {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -140,7 +143,6 @@ class _MobileVerificationState extends State<MobileVerification> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Something Went Wrong")));
                   }
-                  
                 },
                 child: const Text("Verify and continue"),
                 style: ButtonStyle(

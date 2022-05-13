@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/slidescreen.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
+import 'package:gamingmob/forum/providers/forumprovider.dart';
 import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => BlogProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => ForumProvider(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

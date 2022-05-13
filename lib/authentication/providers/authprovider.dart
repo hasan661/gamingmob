@@ -51,9 +51,10 @@ class AuthProvider with ChangeNotifier {
       await user.sendEmailVerification();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
-            e.toString(),
+          "Try Again"
+            
           ),
         ),
       );

@@ -46,7 +46,7 @@ class _MarketPlaceBottomAppBarState extends State<MarketPlaceBottomAppBar> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: "Home",
+            label: "Products Home",
           ),
          
           BottomNavigationBarItem(

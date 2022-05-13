@@ -126,7 +126,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addproduct(Product newProduct) async {
-    print(newProduct.productPrice);
     // var firestoreObject = FirebaseFirestore.instance;
     await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,

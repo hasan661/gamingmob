@@ -18,15 +18,16 @@ class LoginScreenItem extends StatefulWidget {
 
 class _LoginScreenItemState extends State<LoginScreenItem> {
   onLoginButtonPressed() async {
-    
     var currentUser = FirebaseAuth.instance.currentUser;
     try {
       if (currentUser == null) {
         await Provider.of<AuthProvider>(context, listen: false)
             .login(emailController, passwordController);
-      } else if (currentUser.email==emailController.text && !currentUser.emailVerified) {
+      } else if (currentUser.email == emailController.text &&
+          !currentUser.emailVerified) {
         Navigator.of(context).pushNamed(EmailVerification.routeName);
-      } else if (currentUser.email==emailController.text && currentUser.phoneNumber == null) {
+      } else if (currentUser.email == emailController.text &&
+          currentUser.phoneNumber == null) {
         Navigator.of(context).pushNamed(MobileNumberInput.routeName);
       } else {
         await Provider.of<AuthProvider>(context, listen: false)
@@ -39,8 +40,7 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
             content: Text("invalid password"),
           ),
         );
-      }
-      else if (e.code=="user-not-found"){
+      } else if (e.code == "user-not-found") {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Email does not exist"),
@@ -91,51 +91,50 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                   padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: height * 0.076,
-                        child: TextFormField(
-                          controller: emailController,
-                          textInputAction: TextInputAction.next,
-                          toolbarOptions: const ToolbarOptions(
-                              cut: true, copy: true, paste: true),
-                          decoration: InputDecoration(
-                            hintText: "Email",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                      TextFormField(
+                        controller: emailController,
+                        textInputAction: TextInputAction.next,
+                        toolbarOptions: const ToolbarOptions(
+                            cut: true, copy: true, paste: true),
+                        decoration: InputDecoration(
+                          
+                          hintText: "Email",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          constraints: BoxConstraints(
+                            minHeight: height * 0.076,
                           ),
                         ),
+                        
                       ),
                       SizedBox(
                         height: height * 0.009,
                       ),
-                      SizedBox(
-                        height: height * 0.076,
-                        child: TextFormField(
-                          controller: passwordController,
-                          textInputAction: TextInputAction.next,
-                          toolbarOptions: const ToolbarOptions(
-                              cut: true, copy: true, paste: true),
-                          decoration: InputDecoration(
-                            hintText: "Password",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                      TextFormField(
+                        controller: passwordController,
+                        textInputAction: TextInputAction.next,
+                        toolbarOptions: const ToolbarOptions(
+                            cut: true, copy: true, paste: true),
+                        decoration: InputDecoration(
+                          hintText: "Password",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          constraints: BoxConstraints(
+                            minHeight: height * 0.076,
                           ),
                         ),
                       ),
                       SizedBox(
                         height: height * (0.009 + 0.05),
                       ),
-                      SizedBox(
-                        height: height * 0.06,
-                        width: width,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            onLoginButtonPressed();
-                          },
-                          child: const Text("Login"),
-                          style: ButtonStyle(
+                      ElevatedButton(
+                        onPressed: () async {
+                          onLoginButtonPressed();
+                        },
+                        child: const Text("Login"),
+                        style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Theme.of(context).primaryColor.withOpacity(1)),
                             shape: MaterialStateProperty.all(
@@ -143,8 +142,8 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                          ),
-                        ),
+                            fixedSize: MaterialStateProperty.all(
+                                Size(width, height * 0.06))),
                       ),
                       SizedBox(
                         height: height * 0.05,
@@ -161,12 +160,10 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: height * 0.01, bottom: height * 0.01),
+                            top: height * 0.01, bottom: height * 0.04),
                         child: const Text("Use Social To Login"),
                       ),
-                      SizedBox(
-                        height: height * 0.03,
-                      ),
+                    
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
