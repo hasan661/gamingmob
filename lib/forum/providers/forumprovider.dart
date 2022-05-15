@@ -4,9 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gamingmob/forum/models/forum.dart';
 
 class ForumProvider with ChangeNotifier {
-  List<Forum> _forumsList = [
-    
-  ];
+  List<Forum> _forumsList = [];
 
   List<Forum> get forums {
     return _forumsList;

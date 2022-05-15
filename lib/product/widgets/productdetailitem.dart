@@ -178,10 +178,11 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
               ),
               Consumer<ProductProvider>(
                 builder: (context, productItem, _) => IconButton(
-                  onPressed: () {
-                    setState(() {
-                      productItem.toggleFavorites(widget.id);
-                    });
+                  onPressed: () async{
+                    
+                      await productItem.toggleFavorites(widget.id);
+                      print(widget.id);
+                    
                   },
                   icon: productItem.filterbyid(widget.id).isFavorite
                       ? Icon(
