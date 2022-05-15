@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/forum/models/forum.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';
@@ -16,6 +17,7 @@ class AddForumScreen extends StatefulWidget {
 }
 
 class _AddForumScreenState extends State<AddForumScreen> {
+  var imageUrl;
   final _formKey = GlobalKey<FormState>();
   var _forumItem = Forum(
     comments: [],
@@ -60,13 +62,29 @@ class _AddForumScreenState extends State<AddForumScreen> {
     final height = MediaQuery.of(context).size.height;
     var auth = FirebaseAuth.instance.currentUser;
     var forumObj = Provider.of<ForumProvider>(context);
-    _postForum() {
+    _postForum() async {
       var isValid = _formKey.currentState!.validate();
       if (!isValid) {
         return;
       }
       _formKey.currentState!.save();
-
+      var fireStorgaeObj = FirebaseStorage.instance.ref();
+      if (imageFile != null) {
+        var homeImageReference = fireStorgaeObj
+            .child("GamingMob/BlogsHome/${imageFile!.path + forumText.text}");
+        await homeImageReference.putFile(File(imageFile!.path));
+        imageUrl = await homeImageReference.getDownloadURL();
+      }
+      _forumItem = Forum(
+          comments: _forumItem.comments,
+          forumId: _forumItem.forumId,
+          userID: _forumItem.userID,
+          userName: _forumItem.userName,
+          forumText: _forumItem.forumText,
+          likeList: _forumItem.likeList,
+          imageURL: imageUrl,
+          createdAt: _forumItem.createdAt,
+          userImageUrl: _forumItem.userImageUrl);
       forumObj.addForum(_forumItem);
     }
 
@@ -85,37 +103,36 @@ class _AddForumScreenState extends State<AddForumScreen> {
             width: width,
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Card(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                          backgroundImage: NetworkImage(auth!.photoURL ??
+                              "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f")),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(auth.displayName.toString())
+                    ],
+                  ),
+                ),
+                Card(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                  backgroundImage: NetworkImage(auth!
-                                          .photoURL ??
-                                      "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f")),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(auth.displayName.toString())
-                            ],
-                          ),
-                        ),
                         Form(
                           key: _formKey,
                           child: SizedBox(
                             height: height * 0.4,
                             child: TextFormField(
-                              controller: forumText,
                               maxLines: 30,
+                              controller: forumText,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "What's on your mind?",
+                                border: InputBorder.none,
+                                hintText: "    What's on your mind?",
                               ),
                               validator: (val) {
                                 if (val!.isEmpty) {
@@ -137,7 +154,8 @@ class _AddForumScreenState extends State<AddForumScreen> {
                               },
                             ),
                           ),
-                        )
+                        ),
+                        if (imageFile != null) Image.file(File(imageFile!.path))
                       ],
                     ),
                   ),
@@ -181,6 +199,9 @@ class _AddForumScreenState extends State<AddForumScreen> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: height * 0.1,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.05),

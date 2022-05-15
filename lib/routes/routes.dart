@@ -8,7 +8,7 @@ import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
 import 'package:gamingmob/eventmanagement/screens/eventhomescreen.dart';
 import 'package:gamingmob/forum/screens/forumhomescreen.dart';
-import 'package:gamingmob/forum/widgets/addforumscreen.dart';
+import 'package:gamingmob/forum/screens/addforumscreen.dart';
 import 'package:gamingmob/internetcheckstream.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/productcategoriesdetailscreen.dart';

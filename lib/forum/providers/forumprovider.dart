@@ -1,50 +1,64 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gamingmob/forum/models/forum.dart';
 
 class ForumProvider with ChangeNotifier {
-  final List<Forum> _forumsList = [
-    Forum(
-      likeList: [],
-      comments: [
-        Comments(
-          commentID: "1",
-          commentUserId: "2",
-          commentUserName: "Hasan",
-          commentContent: "Why are you like that thomas",
-          commentedAt: DateTime.now(),
-        )
-      ],
-      forumId: "1",
-      userID: "1",
-      userName: "Thommas Shelby",
-      forumText: "I will continue till I find a man whom I cannot defeat",
-      imageURL:
-          "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FConsoles%20And%20Controllers.jpg?alt=media&token=fb1eafb5-70a4-4087-a919-6e7f5467dcb6",
-      createdAt: DateTime.now(),
-      userImageUrl: "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fdownload%20(2).jpg?alt=media&token=304f1edb-23d4-45b1-9fce-f224128c8a1a"
-    ),
-    Forum(
-      likeList: [],
-      comments: [
-       
-      ],
-      forumId: "1",
-      userID: "1",
-      userName: "Thommas Shelby",
-      forumText: "I will continue till I find a man whom I cannot defeat",
-      imageURL:
-          "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FConsoles%20And%20Controllers.jpg?alt=media&token=fb1eafb5-70a4-4087-a919-6e7f5467dcb6",
-      createdAt: DateTime.now(),
-      userImageUrl: null
-    ),
+  List<Forum> _forumsList = [
+    
   ];
 
   List<Forum> get forums {
     return _forumsList;
   }
+  Future<void> fetchForums()async{
+   try{
+      List<Forum> fetchedForums = [];
+      var forumObj = await FirebaseFirestore.instance
+          .collection("Forums")
+          .orderBy("createdAt", descending: true)
+          .snapshots()
+          .first;
+      var objDocks = forumObj.docs;
+      for (var element in objDocks) {
+        List<Comments> comments=[];
+        List<Likes> likes=[];
+        element["comments"].forEach((e){
+          comments.add(Comments(commentID: e.commentsId, commentUserId: e.commentUserId, commentUserName: e.commentUserName, commentContent: e.commentContent, commentedAt: e.commentedAt));
+        });
+        element["likeList"].forEach((e){
+          likes.add(Likes(likeID: e.likeID, likeUserId: e.likeUserId, likeUserName: e.likeUserName));
+        });
+        
+        
+
+        fetchedForums.add(
+         
+         Forum(comments: comments, forumId: element.id, userID: element["userId"], userName: element["userName"], forumText: element["forumText"], likeList: likes, imageURL: element["imageURL"], createdAt: (element["createdAt"] as Timestamp).toDate(), userImageUrl: element["userImageUrl"]=="null"?null:element["userImageUrl"])
+        );
+         
+      }
+      print(fetchedForums);
+      _forumsList = fetchedForums;
+   }
+   catch(e){
+     print(e.toString()+"hasan");
+   }
+  }
 
   Future<void> addForum(Forum forum) async{
-    _forumsList.add(Forum(comments: forum.comments, forumId: forum.forumId, userID: forum.userID, userName: forum.userName, forumText: forum.forumText, likeList: forum.likeList, imageURL: forum.imageURL, createdAt: forum.createdAt, userImageUrl: forum.userImageUrl));
+    var currentUser=FirebaseAuth.instance.currentUser;
+     await FirebaseFirestore.instance.collection("Forums").doc().set({
+      'userId':currentUser!.uid,
+      'comments':forum.comments,
+      'forumText':forum.forumText,
+      'likeList':forum.likeList,
+      'imageURL':forum.imageURL,
+      'createdAt':forum.createdAt,
+      'userImageUrl':forum.userImageUrl,
+      'userName':currentUser.displayName
+    });
+    _forumsList.add(Forum(comments: forum.comments, forumId: forum.forumId, userID: currentUser.uid, userName: currentUser.displayName??"", forumText: forum.forumText, likeList: forum.likeList, imageURL: forum.imageURL, createdAt: forum.createdAt, userImageUrl: currentUser.photoURL));
     notifyListeners();
   }
 }
