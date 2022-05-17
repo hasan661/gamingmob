@@ -4,7 +4,7 @@ class Forum {
   final String userID;
   final List<Comments> comments;
   final String forumText;
-  final List<Likes> likeList;
+  final List<String> likeList;
   String? imageURL;
   final DateTime createdAt;
   String? userImageUrl;
@@ -29,7 +29,8 @@ class Comments {
   final String commentUserId;
   final String commentContent;
   final DateTime commentedAt;
-  List<Likes> isLiked=[];
+  List<String> isLiked=[];
+  List<Comments> comments=[];
   Comments({
     required this.commentID,
     required this.commentUserId,
@@ -37,13 +38,7 @@ class Comments {
     required this.commentContent,
     required this.commentedAt,
     
+    
   });
 }
 
-class Likes{
-  final String likeID;
-  final String likeUserId;
-  final String likeUserName;
-  Likes({required this.likeID, required this.likeUserId, required this.likeUserName});
-
-}

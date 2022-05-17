@@ -17,7 +17,7 @@ class AddForumScreen extends StatefulWidget {
 }
 
 class _AddForumScreenState extends State<AddForumScreen> {
-  var imageUrl;
+  String? imageUrl;
   final _formKey = GlobalKey<FormState>();
   var _forumItem = Forum(
     comments: [],
@@ -90,11 +90,11 @@ class _AddForumScreenState extends State<AddForumScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "Add Forum",
-        ),
+        key: UniqueKey(),
+        title: const Text("Add Forum", style: TextStyle(color: Colors.white),),
+      centerTitle: true,
       ),
+      
       body: SingleChildScrollView(
         child: Container(
           margin:

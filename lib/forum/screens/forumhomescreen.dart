@@ -32,6 +32,7 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      
       bottomNavigationBar: ForumBottomAppBar(screens: screens, selectedIndex: _selectedIndex, selectedIndexValue: selectedIndexValue),
         appBar: AppBar(
           title: const Text("Forum Home"),
