@@ -1,123 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/forum/providers/forumprovider.dart';
+import 'package:gamingmob/forum/widgets/stackforcomments.dart';
+import 'package:provider/provider.dart';
+class Comments{
+ 
+  morecomments(context, width, id){
+     var height=MediaQuery.of(context).size.height;
+      var comments=Provider.of<ForumProvider>(context, listen: false).getCommentsById(id);
 
-class Comments {
-  morecomments(context, width) {
     showModalBottomSheet(
         isScrollControlled: true,
+        constraints: BoxConstraints(maxHeight: height*0.95),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         context: context,
-        builder: (ctx) => Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsetsDirectional.only(start: 50, end: 20),
-                    child: SizedBox(
-                      width: width * 0.9,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Card(
-                            child: ListTile(
-                              leading: const CircleAvatar(),
-                              title: RichText(
-                                // softWrap: true,
-                                text: const TextSpan(
-                                    text: "Alishba Mubeen",
-                                    style: TextStyle(
-                                        // fontSize: 13,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    children: [
-                                      TextSpan(
-                                        text:
-                                            " This looks amazing and a good initiative to build a community. Keep it up",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      )
-                                    ]),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                width: width - 150,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    Text("2m ago"),
-                                    Text("*"),
-                                    Text("Appreciate"),
-                                    Text("*"),
-                                    Text("Reply"),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            width: width * 0.75,
-                            child: Column(
-                              // crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Card(
-                                  child: ListTile(
-                                    leading: const CircleAvatar(),
-                                    title: RichText(
-                                      // softWrap: true,
-                                      text: const TextSpan(
-                                          text: "Alishba Mubeen",
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  " This looks amazing and a good initiative to build a community. Keep it up",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            )
-                                          ]),
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SizedBox(
-                                      width: width - 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          Text("2m ago"),
-                                          Text("*"),
-                                          Text("Appreciate"),
-                                          Text("*"),
-                                          Text("Reply"),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ));
+        builder: (ctx) => StackForComments(listOfComments: comments,id:id));
   }
+
 }

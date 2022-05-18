@@ -127,12 +127,23 @@ class _AddForumScreenState extends State<AddForumScreen> {
                           child: SizedBox(
                             height: height * 0.4,
                             child: TextFormField(
+                              
+                              
                               maxLines: 30,
                               controller: forumText,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "    What's on your mind?",
+                              border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        contentPadding: EdgeInsets.only(
+                                            left: 15,
+                                            bottom: 11,
+                                            top: 11,
+                                            right: 15),
+                                hintText: "What's on your mind?",
                               ),
                               validator: (val) {
                                 if (val!.isEmpty) {

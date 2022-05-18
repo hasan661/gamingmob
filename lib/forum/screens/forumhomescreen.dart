@@ -31,15 +31,17 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
   @override
   Widget build(BuildContext context) {
     
-    return Scaffold(
-      
-      bottomNavigationBar: ForumBottomAppBar(screens: screens, selectedIndex: _selectedIndex, selectedIndexValue: selectedIndexValue),
-        appBar: AppBar(
-          title: const Text("Forum Home"),
-          centerTitle: true,
-          
-        ),
-        drawer: const AppDrawer(),
-        body: screens[_selectedIndex]);
+    return SafeArea(
+      child: Scaffold(
+        
+        bottomNavigationBar: ForumBottomAppBar(screens: screens, selectedIndex: _selectedIndex, selectedIndexValue: selectedIndexValue),
+          appBar: AppBar(
+            title: const Text("Forum Home"),
+            centerTitle: true,
+            
+          ),
+          drawer: const AppDrawer(),
+          body: screens[_selectedIndex]),
+    );
   }
 }

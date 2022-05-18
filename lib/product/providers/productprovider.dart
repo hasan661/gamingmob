@@ -11,6 +11,7 @@ class ProductProvider with ChangeNotifier {
   Future<void> fetchProducts() async {
     try{
       var currentUser=auth.currentUser;
+      
      
     List<Product> _products = [];
     var obj = await db.collection("UserProducts").snapshots().first;
@@ -146,7 +147,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addproduct(Product newProduct) async {
-    var currentUser=auth.currentUser;
     // var firestoreObject = FirebaseFirestore.instance;
     await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,

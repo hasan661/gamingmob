@@ -23,11 +23,7 @@ class ForumHomeItem extends StatelessWidget {
         return FutureBuilder(
           future: Provider.of<ForumProvider>(context,listen: false).fetchForums(),
           builder: (context, snapshot) {
-            if(snapshot.connectionState==ConnectionState.waiting){
-              return const Center(child: CircularProgressIndicator(),);
-              
-            }
-           else{
+            
               var listofForums =
             Provider.of<ForumProvider>(context,).forums;
             return Column(
@@ -155,7 +151,7 @@ class ForumHomeItem extends StatelessWidget {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Comments().morecomments(context, width);
+                                            Comments().morecomments(context, width, listofForums[index].forumId);
                                           },
                                           child: Row(
                                             children: [
@@ -186,7 +182,7 @@ class ForumHomeItem extends StatelessWidget {
               ],
             );
            }
-          }
+          
         );
       }
     );

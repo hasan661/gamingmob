@@ -29,14 +29,16 @@ class Comments {
   final String commentUserId;
   final String commentContent;
   final DateTime commentedAt;
-  List<String> isLiked=[];
-  List<Comments> comments=[];
+  List<String> isLiked;
+  List<Comments> comments;
   Comments({
     required this.commentID,
     required this.commentUserId,
     required this.commentUserName,
     required this.commentContent,
     required this.commentedAt,
+    this.comments=const[],
+    this.isLiked=const [],
     
     
   });

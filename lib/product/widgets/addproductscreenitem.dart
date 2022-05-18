@@ -14,7 +14,6 @@ class AddProductScreenItem extends StatefulWidget {
   const AddProductScreenItem({
     Key? key,
   }) : super(key: key);
-
   @override
   State<AddProductScreenItem> createState() => _AddProductScreenItemState();
 }
@@ -55,7 +54,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
   var isLoading = false;
-  var productid;
+  dynamic productid;
   var initvalue = {
     'imageURL': [],
     "prodType": "",
