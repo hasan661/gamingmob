@@ -7,8 +7,10 @@ class ProductProvider with ChangeNotifier {
   var db = FirebaseFirestore.instance;
   var auth = FirebaseAuth.instance;
   List<Product> _productItems = [];
+  var page=14;
 
   Future<void> fetchProducts() async {
+    
     try{
       var currentUser=auth.currentUser;
       
@@ -28,8 +30,7 @@ class ProductProvider with ChangeNotifier {
 
       }
       var isFavoriteObj = await db.collection("UserProductFavorites").doc(currentUser!.uid+element.id).get();
-      // print(isFavoriteObj["isFavorite"]);
-      print(element.id);
+  
       try{
         _products.add(Product(
         ownerName: element["ownerName"],
@@ -74,7 +75,7 @@ class ProductProvider with ChangeNotifier {
     _productItems = _products;
    }
     catch(e){
-      print(e);
+      rethrow;
     }
     // notifyListeners();
   }
@@ -111,7 +112,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> filterBuyOnlyByCategory(String category, String subCategory) {
-    var id = auth.currentUser!.uid;
     return _productItems
         .where((element) =>
             element.productType == "Sell" &&
@@ -177,7 +177,7 @@ class ProductProvider with ChangeNotifier {
 
   Future<void> addproduct(Product newProduct) async {
     
-   for(var i=0;i<5;i++){
+
       await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,
       "productDescripton": newProduct.productDescripton,
@@ -193,7 +193,7 @@ class ProductProvider with ChangeNotifier {
       "ownerEmail":auth.currentUser!.email
       ,"ownerImage":auth.currentUser!.photoURL??""
     });
-   }
+   
     
      
 

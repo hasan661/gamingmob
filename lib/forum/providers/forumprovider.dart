@@ -24,7 +24,6 @@ class ForumProvider with ChangeNotifier {
         var comments =await FirebaseFirestore.instance.collection("Forums").doc(element.id).collection("comments").snapshots().first;
         List<Comments> commentss = [];
         List<String> likes = [];
-        print(comments.docs.toString()+"wow");
         for (var e in comments.docs) {
           // List<Comments> subComments=[];
           // e["comments"].forEach((ele){
@@ -63,17 +62,16 @@ class ForumProvider with ChangeNotifier {
                 ? null
                 : element["userImageUrl"]));
       }
-      print(fetchedForums);
       _forumsList = fetchedForums;
       notifyListeners();
     } catch (e) {
-      print(e.toString() + "hasan");
+      rethrow;
     }
   }
 
   Future<void> addForum(Forum forum) async {
     var currentUser = FirebaseAuth.instance.currentUser;
-   for(var i=0;i<5;i++){
+   
       await FirebaseFirestore.instance.collection("Forums").doc().set({
       'userId': currentUser!.uid,
       'comments': forum.comments,
@@ -85,7 +83,7 @@ class ForumProvider with ChangeNotifier {
       'userName': currentUser.displayName,
     
     });
-   }
+   
 
     // _forumsList.add(Forum(
     //     comments: forum.comments,
@@ -121,8 +119,6 @@ class ForumProvider with ChangeNotifier {
     var forum = _forumsList
         .firstWhere((element) => element.forumId == forumId)
         .likeList;
-    print(forum);
-
     if (forum.contains(user!.uid)) {
       forum.remove(user.uid);
     } else {

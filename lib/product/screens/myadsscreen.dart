@@ -70,7 +70,6 @@ class MyAdScreen extends StatelessWidget {
                 );
               } else {
                 var userProducts = Provider.of<ProductProvider>(context, listen: false).userProducts;
-                print(userProducts);
                 if(userProducts.isEmpty){
                   return const Center(child: Text("No Products Yet", style: TextStyle(color: Colors.black),),);
                 }

@@ -15,7 +15,6 @@ class _UserProfileTabState extends State<UserProfileTab> {
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     return Column(
       children: [
         const SizedBox(
@@ -86,11 +85,11 @@ class _UserProfileTabState extends State<UserProfileTab> {
               visible: selectedIndex == 0,
             ),
             Visibility(
-              child: MyBlogsScreen(routeFrom: "profile"),
+              child: const MyBlogsScreen(routeFrom: "profile"),
               visible: selectedIndex == 1,
             ),
             Visibility(
-              child: MyForums(routeFrom: "profile"),
+              child: const MyForums(routeFrom: "profile"),
               maintainState: true,
               visible: selectedIndex == 2,
             ),

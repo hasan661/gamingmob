@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/forum/models/forum.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';

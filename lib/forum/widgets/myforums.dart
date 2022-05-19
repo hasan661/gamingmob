@@ -8,8 +8,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class MyForums extends StatelessWidget {
-  MyForums({Key? key, required this.routeFrom}) : super(key: key);
-  String routeFrom;
+  const MyForums({Key? key, required this.routeFrom}) : super(key: key);
+  final String routeFrom;
 
   @override
   Widget build(BuildContext context) {

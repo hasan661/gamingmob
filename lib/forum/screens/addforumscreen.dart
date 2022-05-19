@@ -17,7 +17,7 @@ class AddForumScreen extends StatefulWidget {
 }
 
 class _AddForumScreenState extends State<AddForumScreen> {
-  var forumID;
+  dynamic forumID;
   String? imageUrl;
   final _formKey = GlobalKey<FormState>();
   var _forumItem = Forum(
@@ -66,7 +66,6 @@ class _AddForumScreenState extends State<AddForumScreen> {
   void didChangeDependencies() {
 if(isInit){
       forumID = ModalRoute.of(context)!.settings.arguments;
-      print(forumID);
     if (forumID != null) {
       var initForumItem=Provider.of<ForumProvider>(context, listen:  false).getForumByID(forumID);
       forumText.text=initForumItem.forumText;

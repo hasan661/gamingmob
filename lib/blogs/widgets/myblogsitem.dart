@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class MyBlogsScreen extends StatefulWidget {
-  MyBlogsScreen({Key? key, required this.routeFrom}) : super(key: key);
-  String routeFrom;
+  const MyBlogsScreen({Key? key, required this.routeFrom}) : super(key: key);
+  final String routeFrom;
 
   @override
   State<MyBlogsScreen> createState() => _MyBlogsScreenState();

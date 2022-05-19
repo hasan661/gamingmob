@@ -40,7 +40,7 @@ class BlogProvider with ChangeNotifier {
       }
       _blogs = fetchedBlogs;
     } catch (e) {
-      print(e.toString() + "hasan");
+      rethrow;
     }
   }
 
@@ -82,11 +82,10 @@ class BlogProvider with ChangeNotifier {
       _blogs.removeWhere((element) => element.id == id);
       notifyListeners();
     } catch (E) {
-      print(E.toString() + "hasan");
+      rethrow;
     }
   }
   Future<void> updateBlog(Blog newBlog) async{
-    print(newBlog.id.toString()+"asahasan");
     
    try{
       FirebaseFirestore.instance.collection("Blogs").doc(newBlog.id).update({
@@ -99,7 +98,8 @@ class BlogProvider with ChangeNotifier {
     });
    }
    catch(E){
-     print(E);
+    //  print(E);
+    rethrow;
    }
     
     notifyListeners();

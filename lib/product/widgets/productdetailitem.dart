@@ -181,7 +181,6 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   onPressed: () async{
                     
                       await productItem.toggleFavorites(widget.id);
-                      print(widget.id);
                     
                   },
                   icon: productItem.filterbyid(widget.id).isFavorite

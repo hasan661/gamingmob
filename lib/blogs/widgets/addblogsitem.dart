@@ -18,7 +18,7 @@ class AddBlogsItem extends StatefulWidget {
 
 class _AddBlogsItemState extends State<AddBlogsItem> {
   var homeImageUrl = "";
-  var id;
+  dynamic id;
   String? initHomeImage;
   var isInit = true;
   @override
