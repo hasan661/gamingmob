@@ -6,7 +6,6 @@ import 'package:gamingmob/authentication/widgets/verifymobilenumber.dart';
 import 'package:gamingmob/blogs/screens/addblogsscreen.dart';
 import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
-import 'package:gamingmob/eventmanagement/screens/eventhomescreen.dart';
 import 'package:gamingmob/forum/screens/forumhomescreen.dart';
 import 'package:gamingmob/forum/screens/addforumscreen.dart';
 import 'package:gamingmob/internetcheckstream.dart';
@@ -42,8 +41,6 @@ getRoutes() {
     ForumHomeScreen.routeName:(ctx)=>const InterentCheckStream(child: ForumHomeScreen()),
     AddForumScreen.routeName:(ctx)=>const InterentCheckStream(child: AddForumScreen()),
 
-    //Event Screens
-    EventHomeScreen.routeName:(ctx)=> const InterentCheckStream(child: EventHomeScreen()),
 
     //UserProfile
     UserProfileScreen.routeName:(ctx)=>const UserProfileScreen()

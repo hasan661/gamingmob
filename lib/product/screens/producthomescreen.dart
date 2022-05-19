@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
+import 'package:gamingmob/product/widgets/customsearchdelegate.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
 import 'package:gamingmob/product/widgets/producthomegrid.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +100,11 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                     ],
                   )
                 : null,
+                actions: [
+                  IconButton(onPressed: (){
+                    showSearch(context: context, delegate: CustomSearchDelegate());
+                  }, icon: const Icon(Icons.search))
+                ],
             centerTitle: true,
             title: Text(
               subCategory ==""?title:subCategory,

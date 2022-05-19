@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
+import 'package:gamingmob/product/widgets/customsearchdelegate.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
 import 'package:gamingmob/product/widgets/productcategoriesdetailscreenitem.dart';
 
@@ -56,6 +57,11 @@ class _ProductCategoriesDetailScreenState
       ),
       appBar: AppBar(
         title: Text(title),
+        actions: [
+                  IconButton(onPressed: (){
+                    showSearch(context: context, delegate: CustomSearchDelegate());
+                  }, icon: const Icon(Icons.search))
+                ],
         centerTitle: true,
 
       ),

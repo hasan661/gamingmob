@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gamingmob/product/providers/productprovider.dart';
 import 'package:gamingmob/product/screens/addproductscreen.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
+import 'package:gamingmob/product/widgets/customsearchdelegate.dart';
 import 'package:gamingmob/product/widgets/marketplacebottomappbar.dart';
 import 'package:gamingmob/product/widgets/productcategoriesscreenitem.dart';
+import 'package:provider/provider.dart';
 
 class ProductCategoriesScreen extends StatefulWidget {
   const ProductCategoriesScreen({Key? key}) : super(key: key);
@@ -51,6 +54,16 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
               selectedIndexValue: selectedIndexValue,
               selectedIndex: _selectedIndex),
           appBar: AppBar(
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: CustomSearchDelegate(),
+                    );
+                  },
+                  icon: const Icon(Icons.search))
+            ],
             bottom: _selectedIndex == 0
                 ? const TabBar(
                     labelColor: Colors.white,
@@ -69,7 +82,17 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
               "Gaming Mob",
             ),
           ),
-          body: screens[_selectedIndex]),
+          body: FutureBuilder(
+              future: Provider.of<ProductProvider>(context, listen: false)
+                  .fetchProducts(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return screens[_selectedIndex];
+              })),
     );
   }
 }

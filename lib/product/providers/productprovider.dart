@@ -79,6 +79,9 @@ class ProductProvider with ChangeNotifier {
     }
     // notifyListeners();
   }
+  List<Product> get all{
+    return _productItems;
+  }
 
   List<Product> get userProducts {
     var id = auth.currentUser!.uid;

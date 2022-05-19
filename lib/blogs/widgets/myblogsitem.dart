@@ -33,12 +33,19 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                 } else {
                   var blogItems =
                       Provider.of<BlogProvider>(context).getListById();
-                  if(blogItems.isEmpty){
-                    return const Center(child: Text("No Blogs Yet", style: TextStyle(color: Colors.black),),);
+                  if (blogItems.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No Blogs Yet",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
                   }
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: widget.routeFrom=="profile"? const NeverScrollableScrollPhysics():null,
+                    physics: widget.routeFrom == "profile"
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
                     itemCount: blogItems.length,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -75,26 +82,34 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       width: width * 0.24,
                                       child: Row(
                                         children: [
-                                          IconButton(onPressed: (){
-                                            Navigator.of(context).pushNamed(AddBlogScreen.routeName,arguments: blogItems[index].id);
-                                          }, icon: const Icon(Icons.edit)),
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                    AddBlogScreen.routeName,
+                                                    arguments:
+                                                        blogItems[index].id);
+                                              },
+                                              icon: const Icon(Icons.edit)),
                                           IconButton(
                                             onPressed: () {
                                               Provider.of<BlogProvider>(context,
                                                       listen: false)
-                                                  .removeABlog(blogItems[index].id);
+                                                  .removeABlog(
+                                                      blogItems[index].id);
                                             },
                                             icon: Icon(
                                               Icons.delete,
-                                              color: Theme.of(context).errorColor,
+                                              color:
+                                                  Theme.of(context).errorColor,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
                                     subtitle: Text(
-                                      DateFormat("dd MM yy At hh:mm"
-                                             ).format( blogItems[index].blogCreationDate)
+                                      DateFormat("dd MM yy At hh:mm")
+                                          .format(
+                                              blogItems[index].blogCreationDate)
                                           .toString(),
                                       style: const TextStyle(
                                         color: Colors.grey,
@@ -115,7 +130,13 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                                       child: Column(
                                         children: [
                                           CachedNetworkImage(
-                                            imageUrl:blogItems[index].imageURL!="" && blogItems[index].imageURL!="null"?blogItems[index].imageURL:"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
+                                            imageUrl: blogItems[index]
+                                                            .imageURL !=
+                                                        "" &&
+                                                    blogItems[index].imageURL !=
+                                                        "null"
+                                                ? blogItems[index].imageURL
+                                                : "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg?alt=media&token=744697d4-20e2-4bf2-9046-c5a83c6f6859",
                                             fit: BoxFit.cover,
                                             // height: 100,
                                           ),
