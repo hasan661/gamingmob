@@ -25,7 +25,7 @@ class _ProductCategoriesScreenState extends State<ProductCategoriesScreen> {
 
   List<Widget> screens = [
     const CategoriesScreenItem(),
-    const MyAdScreen(),
+    const MyAdScreen(routeFrom: "prod"),
   ];
   @override
   Widget build(BuildContext context) {

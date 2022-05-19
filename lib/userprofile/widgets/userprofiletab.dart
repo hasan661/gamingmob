@@ -82,15 +82,15 @@ class _UserProfileTabState extends State<UserProfileTab> {
         IndexedStack(
           children: <Widget>[
             Visibility(
-              child: const MyAdScreen(),
+              child: const MyAdScreen(routeFrom: "profile"),
               visible: selectedIndex == 0,
             ),
             Visibility(
-              child: const MyBlogsScreen(),
+              child: MyBlogsScreen(routeFrom: "profile"),
               visible: selectedIndex == 1,
             ),
             Visibility(
-              child: const MyForums(),
+              child: MyForums(routeFrom: "profile"),
               maintainState: true,
               visible: selectedIndex == 2,
             ),

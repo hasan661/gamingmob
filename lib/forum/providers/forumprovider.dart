@@ -73,7 +73,8 @@ class ForumProvider with ChangeNotifier {
 
   Future<void> addForum(Forum forum) async {
     var currentUser = FirebaseAuth.instance.currentUser;
-    await FirebaseFirestore.instance.collection("Forums").doc().set({
+   for(var i=0;i<5;i++){
+      await FirebaseFirestore.instance.collection("Forums").doc().set({
       'userId': currentUser!.uid,
       'comments': forum.comments,
       'forumText': forum.forumText,
@@ -84,6 +85,7 @@ class ForumProvider with ChangeNotifier {
       'userName': currentUser.displayName,
     
     });
+   }
 
     // _forumsList.add(Forum(
     //     comments: forum.comments,

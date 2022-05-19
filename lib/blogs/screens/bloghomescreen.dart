@@ -16,7 +16,7 @@ class BlogHomeScreen extends StatefulWidget {
 class _BlogHomeScreenState extends State<BlogHomeScreen> {
   final List<Widget> screens = [
     const BlogHomeItem(),
-    const MyBlogsScreen(),
+    MyBlogsScreen(routeFrom: "blog"),
   ];
   var _selectedIndex = 0;
 

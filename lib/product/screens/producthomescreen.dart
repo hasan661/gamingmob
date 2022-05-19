@@ -60,7 +60,7 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                   );
                 });
           }),
-      const MyAdScreen(),
+      MyAdScreen(routeFrom: "prod"),
     ];
     return DefaultTabController(
       length: 3,

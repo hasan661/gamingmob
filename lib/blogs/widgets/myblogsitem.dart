@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class MyBlogsScreen extends StatefulWidget {
-  const MyBlogsScreen({Key? key}) : super(key: key);
+  MyBlogsScreen({Key? key, required this.routeFrom}) : super(key: key);
+  String routeFrom;
 
   @override
   State<MyBlogsScreen> createState() => _MyBlogsScreenState();
@@ -37,7 +38,7 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                   }
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: widget.routeFrom=="profile"? const NeverScrollableScrollPhysics():null,
                     itemCount: blogItems.length,
                     itemBuilder: (context, index) {
                       return Padding(

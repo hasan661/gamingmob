@@ -16,7 +16,7 @@ class ForumHomeScreen extends StatefulWidget {
 class _ForumHomeScreenState extends State<ForumHomeScreen> {
    final List<Widget> screens = [
     const ForumHomeItem(),
-    const MyForums()
+    MyForums(routeFrom: "forum",)
     
   ];
 

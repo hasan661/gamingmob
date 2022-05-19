@@ -33,7 +33,7 @@ class _ProductCategoriesDetailScreenState
         id: id,
         title: title,
       ),
-      const MyAdScreen(),
+      const MyAdScreen(routeFrom: "prod"),
     ];
 
     return Scaffold(

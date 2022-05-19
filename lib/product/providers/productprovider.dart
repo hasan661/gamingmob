@@ -177,7 +177,8 @@ class ProductProvider with ChangeNotifier {
 
   Future<void> addproduct(Product newProduct) async {
     
-    await db.collection("UserProducts").doc().set({
+   for(var i=0;i<5;i++){
+      await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,
       "productDescripton": newProduct.productDescripton,
       "productName": newProduct.productName,
@@ -192,6 +193,7 @@ class ProductProvider with ChangeNotifier {
       "ownerEmail":auth.currentUser!.email
       ,"ownerImage":auth.currentUser!.photoURL??""
     });
+   }
     
      
 

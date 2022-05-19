@@ -45,7 +45,7 @@ class BlogProvider with ChangeNotifier {
   }
 
   Future<void> addBlogs(Blog item) async {
-    FirebaseFirestore.instance.collection("Blogs").doc().set({
+      FirebaseFirestore.instance.collection("Blogs").doc().set({
       "content": item.blogContent
           .map((e) => {"data": e.data, "type": e.type})
           .toList(),
@@ -55,7 +55,8 @@ class BlogProvider with ChangeNotifier {
       "userID": item.userId,
       "userName": item.userName
     });
-    _blogs.add(item);
+   
+    // _blogs.add(item);
     notifyListeners();
   }
 

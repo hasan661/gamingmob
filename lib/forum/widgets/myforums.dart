@@ -8,7 +8,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 
 class MyForums extends StatelessWidget {
-  const MyForums({Key? key}) : super(key: key);
+  MyForums({Key? key, required this.routeFrom}) : super(key: key);
+  String routeFrom;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class MyForums extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.loose,
                       child: ListView.builder(
-                          // physics: const NeverScrollableScrollPhysics(),
+                          physics: routeFrom=="profile"? const NeverScrollableScrollPhysics():null,
                           shrinkWrap: true,
                           itemCount: listofForums.length,
                           itemBuilder: (ctx, index) {
