@@ -46,7 +46,9 @@ class _StackForCommentsState extends State<StackForComments> {
                               width: width * 0.9,
                               child: Card(
                                 child: ListTile(
-                                  leading: const CircleAvatar(),
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(widget.listOfComments[index].commentedUserImage ?? "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
+                                  ),
                                   title: RichText(
                                     // softWrap: true,
                                     text: TextSpan(

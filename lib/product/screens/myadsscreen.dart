@@ -25,49 +25,52 @@ class MyAdScreen extends StatelessWidget {
                 );
               } else {
                 var userProducts = productObj.userProducts;
+                if(userProducts.isEmpty){
+                  return const Center(child: Text("No Products Yet", style: TextStyle(color: Colors.black),),);
+                }
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: userProducts.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: userProducts[index].imageURL.isEmpty
-                                  ? null
-                                  : NetworkImage(
-                                      userProducts[index].imageURL[0],
-                                    ),
-                            ),
-                            title: Text(userProducts[index].productName),
-                            trailing: SizedBox(
-                              width: width * 0.24,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-
-                                      productObj.deleteProduct(
-                                          userProducts[index].productID);
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Theme.of(context).errorColor,
-                                    ),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: userProducts.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: userProducts[index].imageURL.isEmpty
+                                ? null
+                                : NetworkImage(
+                                    userProducts[index].imageURL[0],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushNamed(AddProductScreen.routeName, arguments: userProducts[index].productID);
-                                    },
-                                    icon: const Icon(Icons.edit),
-                                  )
-                                ],
-                              ),
+                          ),
+                          title: Text(userProducts[index].productName),
+                          trailing: SizedBox(
+                            width: width * 0.24,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+    
+                                    productObj.deleteProduct(
+                                        userProducts[index].productID);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Theme.of(context).errorColor,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(AddProductScreen.routeName, arguments: userProducts[index].productID);
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                )
+                              ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 );

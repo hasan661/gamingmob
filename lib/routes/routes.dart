@@ -15,6 +15,7 @@ import 'package:gamingmob/product/screens/productcategoriesdetailscreen.dart';
 import 'package:gamingmob/product/screens/productdetailscreen.dart';
 import 'package:gamingmob/product/screens/producthomescreen.dart';
 import 'package:gamingmob/product/screens/productscategoryscreen.dart';
+import 'package:gamingmob/userprofile/screens/userprofilescreen.dart';
 
 getRoutes() {
   return {
@@ -43,6 +44,9 @@ getRoutes() {
 
     //Event Screens
     EventHomeScreen.routeName:(ctx)=> const InterentCheckStream(child: EventHomeScreen()),
+
+    //UserProfile
+    UserProfileScreen.routeName:(ctx)=>const UserProfileScreen()
 
     
   };

@@ -16,6 +16,7 @@ class ProductProvider with ChangeNotifier {
     List<Product> _products = [];
     var obj = await db.collection("UserProducts").snapshots().first;
     var objDocks = obj.docs;
+    
     List<String> imageUrls = [];
     
    
@@ -40,7 +41,8 @@ class ProductProvider with ChangeNotifier {
         productSubCategory: element["productSubCategory"],
         productPrice: element["productPrice"],
         ownerEmail: element["ownerEmail"],
-        isFavorite: isFavoriteObj["isFavorite"]
+        isFavorite: isFavoriteObj["isFavorite"] ?? false,
+        
       ));
       imageUrls = [];
     }
@@ -49,6 +51,7 @@ class ProductProvider with ChangeNotifier {
     catch(e){
       print(e);
     }
+    // notifyListeners();
   }
 
   List<Product> get userProducts {
@@ -147,7 +150,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addproduct(Product newProduct) async {
-    // var firestoreObject = FirebaseFirestore.instance;
+    
     await db.collection("UserProducts").doc().set({
       "imageURL": newProduct.imageURL,
       "productDescripton": newProduct.productDescripton,
@@ -162,9 +165,10 @@ class ProductProvider with ChangeNotifier {
       "ownerName":auth.currentUser!.displayName,
       "ownerEmail":auth.currentUser!.email
     });
+    
      
 
-    _productItems.add(newProduct);
+    _productItems.add(Product(imageURL: newProduct.imageURL, productDescripton: newProduct.productDescripton, productID: newProduct.productID, productName: newProduct.productName, productType: newProduct.productType, userID: auth.currentUser!.uid, ownerMobileNum: auth.currentUser!.phoneNumber??"", productCategory: newProduct.productCategory, productSubCategory: newProduct.productSubCategory, ownerName: auth.currentUser!.displayName??"", ownerEmail: auth.currentUser!.email??""));
 
     notifyListeners();
   }

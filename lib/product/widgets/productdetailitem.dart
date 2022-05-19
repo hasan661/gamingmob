@@ -238,14 +238,14 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   top: 16,
                 ),
                 child: ListTile(
-                  // leading: CircleAvatar(
-                  //   child: Image.network(
-                  //     "https://media.gq.com/photos/5e6128d2398289000862596e/1:1/w_805,h_805,c_limit/tom-hardy-lead-840-social.jpg",
-                  //   ),
-                  // ),
+                  leading: CircleAvatar(
+                    child: Image.network(
+                      "https://media.gq.com/photos/5e6128d2398289000862596e/1:1/w_805,h_805,c_limit/tom-hardy-lead-840-social.jpg",
+                    ),
+                  ),
                   title: Text(
                     widget.product.ownerName,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: TextStyle(color: Colors.black),
                   ),
                   
                   trailing: SizedBox(

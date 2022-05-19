@@ -29,6 +29,7 @@ class Comments {
   final String commentUserId;
   final String commentContent;
   final DateTime commentedAt;
+  final String? commentedUserImage;
   List<String> isLiked;
   List<Comments> comments;
   Comments({
@@ -39,6 +40,7 @@ class Comments {
     required this.commentedAt,
     this.comments=const[],
     this.isLiked=const [],
+    this.commentedUserImage
     
     
   });

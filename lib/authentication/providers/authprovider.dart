@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class AuthProvider with ChangeNotifier {
   bool isEmailVerified = false;
@@ -43,6 +45,7 @@ class AuthProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
   Future sendEmailVerification(context) async {
     try {
       verificationID = null;
@@ -52,10 +55,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-          "Try Again"
-            
-          ),
+          content: Text("Try Again"),
         ),
       );
     }
@@ -70,8 +70,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  
-
   emailVerified() {
     return isEmailVerified;
   }
@@ -79,7 +77,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> registerPhone(phoneNumberController) async {
     await FirebaseAuth.instance.currentUser!.reload();
     var userInfo = auth.currentUser;
-
+  
     await auth.verifyPhoneNumber(
       phoneNumber: "+92" + phoneNumberController.text,
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
@@ -110,8 +108,18 @@ class AuthProvider with ChangeNotifier {
     return verificationID == null;
   }
 
-  Future<void> logoutUser()async{
+  Future<void> logoutUser() async {
     await FirebaseAuth.instance.signOut();
+    notifyListeners();
+  }
+
+  Future<void> updateProfileUrl(file) async {
+    var storageReference = FirebaseStorage.instance.ref();
+    var ref = storageReference.child(
+        "GamingMob/BlogsHome/${file!.path + storageReference.toString()}");
+    await ref.putFile(File(file.path));
+    var url = await ref.getDownloadURL();
+    await auth.currentUser!.updatePhotoURL(url);
     notifyListeners();
   }
 }

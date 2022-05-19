@@ -32,7 +32,12 @@ class _MyBlogsScreenState extends State<MyBlogsScreen> {
                 } else {
                   var blogItems =
                       Provider.of<BlogProvider>(context).getListById();
+                  if(blogItems.isEmpty){
+                    return const Center(child: Text("No Blogs Yet", style: TextStyle(color: Colors.black),),);
+                  }
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: blogItems.length,
                     itemBuilder: (context, index) {
                       return Padding(

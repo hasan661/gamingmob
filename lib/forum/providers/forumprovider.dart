@@ -42,6 +42,7 @@ class ForumProvider with ChangeNotifier {
               commentUserName: e["commentUserName"],
               commentContent: e["commentContent"],
               commentedAt: (e["commentedAt"] as Timestamp).toDate(),
+              commentedUserImage: e["commentedUserImageUrl"]
             ),
           );
         }
@@ -79,8 +80,9 @@ class ForumProvider with ChangeNotifier {
       'likeList': forum.likeList,
       'imageURL': forum.imageURL,
       'createdAt': forum.createdAt,
-      'userImageUrl': forum.userImageUrl,
-      'userName': currentUser.displayName
+      'userImageUrl': currentUser.photoURL,
+      'userName': currentUser.displayName,
+    
     });
     // _forumsList.add(Forum(
     //     comments: forum.comments,
@@ -129,14 +131,21 @@ class ForumProvider with ChangeNotifier {
       commentUserName: user.displayName ?? "",
       commentContent: obj.commentContent,
       commentedAt: obj.commentedAt,
+      commentedUserImage: user.photoURL
     ));
     await FirebaseFirestore.instance.collection("Forums").doc(id).collection("comments").add(({
       "commentContent": obj.commentContent,
       "commentUserId":user.uid,
       "commentUserName":user.displayName,
-      "commentedAt":Timestamp.now()
+      "commentedAt":Timestamp.now(),
+      "commentedUserImageUrl":user.photoURL
+      
           
     }));
     notifyListeners();
+  }
+  List<Forum> getUserForums(){
+    var id=FirebaseAuth.instance.currentUser!.uid;
+    return _forumsList.where((element) => element.userID==id).toList();
   }
 }

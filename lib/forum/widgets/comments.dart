@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';
 import 'package:gamingmob/forum/widgets/stackforcomments.dart';
 import 'package:provider/provider.dart';
-class Comments{
+class MoreComments{
  
   morecomments(context, width, id){
      var height=MediaQuery.of(context).size.height;
