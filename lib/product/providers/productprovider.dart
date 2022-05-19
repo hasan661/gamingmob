@@ -28,7 +28,10 @@ class ProductProvider with ChangeNotifier {
 
       }
       var isFavoriteObj = await db.collection("UserProductFavorites").doc(currentUser!.uid+element.id).get();
-      _products.add(Product(
+      // print(isFavoriteObj["isFavorite"]);
+      print(element.id);
+      try{
+        _products.add(Product(
         ownerName: element["ownerName"],
         imageURL: imageUrls, 
         productDescripton: element["productDescripton"],
@@ -41,9 +44,31 @@ class ProductProvider with ChangeNotifier {
         productSubCategory: element["productSubCategory"],
         productPrice: element["productPrice"],
         ownerEmail: element["ownerEmail"],
-        isFavorite: isFavoriteObj["isFavorite"] ?? false,
+        isFavorite: isFavoriteObj["isFavorite"]?? false,
+        ownerImage: element["ownerImage"]
         
       ));
+      }
+      catch(e){
+         _products.add(Product(
+        ownerName: element["ownerName"],
+        imageURL: imageUrls, 
+        productDescripton: element["productDescripton"],
+        productID: element.id,
+        productName: element["productName"],
+        productType: element["productType"],
+        userID: element["userID"],
+        ownerMobileNum: element["ownerMobileNum"],
+        productCategory: element["productCategory"],
+        productSubCategory: element["productSubCategory"],
+        productPrice: element["productPrice"],
+        ownerEmail: element["ownerEmail"],
+        isFavorite: false,
+        ownerImage: element["ownerImage"]
+        
+      ));
+
+      }
       imageUrls = [];
     }
     _productItems = _products;
@@ -55,8 +80,8 @@ class ProductProvider with ChangeNotifier {
   }
 
   List<Product> get userProducts {
-    // var id = auth.currentUser!.uid;
-    return _productItems;
+    var id = auth.currentUser!.uid;
+    return _productItems.where((element) => element.userID==id).toList();
   }
 
   List<Product> filterByCategory(String category, String subCategory) {
@@ -143,7 +168,8 @@ class ProductProvider with ChangeNotifier {
       "productCategory": newProduct.productCategory,
       "productSubCategory": newProduct.productSubCategory,
       "isFavorite": false,
-      "ownerEmail":newProduct.ownerEmail
+      "ownerEmail":newProduct.ownerEmail,
+      "ownerImage":auth.currentUser!.photoURL??""
     });
     
     notifyListeners();
@@ -164,11 +190,12 @@ class ProductProvider with ChangeNotifier {
       
       "ownerName":auth.currentUser!.displayName,
       "ownerEmail":auth.currentUser!.email
+      ,"ownerImage":auth.currentUser!.photoURL??""
     });
     
      
 
-    _productItems.add(Product(imageURL: newProduct.imageURL, productDescripton: newProduct.productDescripton, productID: newProduct.productID, productName: newProduct.productName, productType: newProduct.productType, userID: auth.currentUser!.uid, ownerMobileNum: auth.currentUser!.phoneNumber??"", productCategory: newProduct.productCategory, productSubCategory: newProduct.productSubCategory, ownerName: auth.currentUser!.displayName??"", ownerEmail: auth.currentUser!.email??""));
+    // _productItems.add(Product(imageURL: newProduct.imageURL, productDescripton: newProduct.productDescripton, productID: newProduct.productID, productName: newProduct.productName, productType: newProduct.productType, userID: auth.currentUser!.uid, ownerMobileNum: auth.currentUser!.phoneNumber??"", productCategory: newProduct.productCategory, productSubCategory: newProduct.productSubCategory, ownerName: auth.currentUser!.displayName??"", ownerEmail: auth.currentUser!.email??""));
 
     notifyListeners();
   }

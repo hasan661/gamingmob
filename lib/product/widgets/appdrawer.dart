@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/login_screen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
-import 'package:gamingmob/eventmanagement/screens/eventhomescreen.dart';
 import 'package:gamingmob/forum/screens/forumhomescreen.dart';
 import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 import 'package:gamingmob/userprofile/screens/userprofilescreen.dart';

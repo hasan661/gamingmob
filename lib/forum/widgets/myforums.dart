@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gamingmob/forum/models/forum.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';
 import 'package:gamingmob/forum/screens/addforumscreen.dart';
 import 'package:gamingmob/forum/widgets/comments.dart';
@@ -63,7 +62,7 @@ class MyForums extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.loose,
                       child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
+                          // physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: listofForums.length,
                           itemBuilder: (ctx, index) {
@@ -124,8 +123,47 @@ class MyForums extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
-                                              const Icon(
-                                                Icons.more_horiz,
+                                              PopupMenuButton(
+                                                
+                                                itemBuilder: (ctx) {
+                                                  return [
+                                                    const PopupMenuItem(
+                                                      
+                                                      value: "hasan",
+                                                     
+                                                      child: Text(
+                                                        "Update",
+                                                      ),
+                                                      // value: FilterOptions.Favorites,
+                                                    ),
+                                                    const PopupMenuItem(
+                                                      value: "Mudassir",
+                                                     
+                                                      child:
+                                                          Text("Delete"),
+                                                      // value: FilterOptions.All,
+                                                    )
+                                                  ];
+                                                },
+                                                onSelected: (value) {
+                                                  if(value=="Mudassir"){
+                                                     Provider.of<ForumProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .deletForum(
+                                                                listofForums[
+                                                                        index]
+                                                                    .forumId);
+
+                                                  }
+                                                  else{
+                                                     Navigator.of(context).pushNamed(AddForumScreen.routeName, arguments: listofForums[index].forumId);
+
+                                                  }
+                                                },
+                                                icon: const Icon(
+                                                  Icons.more_horiz,
+                                                ),
                                               ),
                                             ],
                                           ),

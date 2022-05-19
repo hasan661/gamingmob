@@ -116,7 +116,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> updateProfileUrl(file) async {
     var storageReference = FirebaseStorage.instance.ref();
     var ref = storageReference.child(
-        "GamingMob/BlogsHome/${file!.path + storageReference.toString()}");
+        "GamingMob/ProfileImages/${auth.currentUser!.uid}");
     await ref.putFile(File(file.path));
     var url = await ref.getDownloadURL();
     await auth.currentUser!.updatePhotoURL(url);

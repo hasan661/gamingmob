@@ -84,6 +84,7 @@ class ForumProvider with ChangeNotifier {
       'userName': currentUser.displayName,
     
     });
+
     // _forumsList.add(Forum(
     //     comments: forum.comments,
     //     forumId: forum.forumId,
@@ -95,6 +96,22 @@ class ForumProvider with ChangeNotifier {
     //     createdAt: forum.createdAt,
     //     userImageUrl: currentUser.photoURL));
     notifyListeners();
+  }
+  Future<void> updateForum(forumID ,Forum forum)async{
+    var user=FirebaseAuth.instance.currentUser;
+     FirebaseFirestore.instance.collection("Forums").doc(forumID).update({
+      'userId': user!.uid,
+      'comments': forum.comments,
+      'forumText': forum.forumText,
+      'likeList': forum.likeList,
+      'imageURL': forum.imageURL,
+      'createdAt': forum.createdAt,
+      'userImageUrl': user.photoURL,
+      'userName': user.displayName,
+    });
+    notifyListeners();
+
+
   }
 
   Future<void> likeAForum(forumId) async {
@@ -147,5 +164,13 @@ class ForumProvider with ChangeNotifier {
   List<Forum> getUserForums(){
     var id=FirebaseAuth.instance.currentUser!.uid;
     return _forumsList.where((element) => element.userID==id).toList();
+  }
+  Future<void> deletForum(id)async{
+    FirebaseFirestore.instance.doc("Forums/$id").delete();
+    notifyListeners();
+
+  }
+  Forum getForumByID(id){
+    return _forumsList.firstWhere((element) => element.forumId==id);
   }
 }

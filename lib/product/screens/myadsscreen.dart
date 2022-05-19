@@ -11,12 +11,12 @@ class MyAdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var productObj = Provider.of<ProductProvider>(context);
+   
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection("UserProducts").snapshots(),
       builder: (context,snapshot) {
-        return FutureBuilder(
+        return Consumer<ProductProvider>(builder: (context, value, child) => FutureBuilder(
             future: Provider.of<ProductProvider>(context).fetchProducts(),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -24,7 +24,8 @@ class MyAdScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                var userProducts = productObj.userProducts;
+                var userProducts = Provider.of<ProductProvider>(context, listen: false).userProducts;
+                print(userProducts);
                 if(userProducts.isEmpty){
                   return const Center(child: Text("No Products Yet", style: TextStyle(color: Colors.black),),);
                 }
@@ -52,7 +53,7 @@ class MyAdScreen extends StatelessWidget {
                                 IconButton(
                                   onPressed: () {
     
-                                    productObj.deleteProduct(
+                                    Provider.of<ProductProvider>(context, listen: false).deleteProduct(
                                         userProducts[index].productID);
                                   },
                                   icon: Icon(
@@ -75,7 +76,7 @@ class MyAdScreen extends StatelessWidget {
                   ],
                 );
               }
-            });
+            }),);
       }
     );
   }

@@ -17,6 +17,7 @@ class AddForumScreen extends StatefulWidget {
 }
 
 class _AddForumScreenState extends State<AddForumScreen> {
+  var forumID;
   String? imageUrl;
   final _formKey = GlobalKey<FormState>();
   var _forumItem = Forum(
@@ -32,6 +33,11 @@ class _AddForumScreenState extends State<AddForumScreen> {
   );
   File? imageFile;
   final forumText = TextEditingController();
+  var initValues = {
+    "forumText": "",
+    "imageURL": "",
+  };
+  var isInit = true;
 
   _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
@@ -57,6 +63,26 @@ class _AddForumScreenState extends State<AddForumScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+if(isInit){
+      forumID = ModalRoute.of(context)!.settings.arguments;
+      print(forumID);
+    if (forumID != null) {
+      var initForumItem=Provider.of<ForumProvider>(context, listen:  false).getForumByID(forumID);
+      forumText.text=initForumItem.forumText;
+      initValues["imageURL"]=initForumItem.imageURL??"";
+       
+      
+    }
+    isInit=false;
+   
+    
+}
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -68,7 +94,8 @@ class _AddForumScreenState extends State<AddForumScreen> {
         return;
       }
       _formKey.currentState!.save();
-      var fireStorgaeObj = FirebaseStorage.instance.ref();
+      if(forumID==null){
+        var fireStorgaeObj = FirebaseStorage.instance.ref();
       if (imageFile != null) {
         var homeImageReference = fireStorgaeObj
             .child("GamingMob/BlogsHome/${imageFile!.path + forumText.text}");
@@ -86,15 +113,45 @@ class _AddForumScreenState extends State<AddForumScreen> {
           createdAt: _forumItem.createdAt,
           userImageUrl: _forumItem.userImageUrl);
       forumObj.addForum(_forumItem);
+
+      }
+      else if(initValues["imageURL"]!=""){
+        forumObj.updateForum(forumID, Forum(comments: _forumItem.comments, forumId: _forumItem.forumId, userID: _forumItem.userID, userName: _forumItem.userName, forumText: forumText.text, likeList: _forumItem.likeList, imageURL: initValues["imageURL"], createdAt: _forumItem.createdAt, userImageUrl: _forumItem.userImageUrl));
+
+      }
+      else{
+           var fireStorgaeObj = FirebaseStorage.instance.ref();
+      if (imageFile != null) {
+        var homeImageReference = fireStorgaeObj
+            .child("GamingMob/BlogsHome/${imageFile!.path + forumText.text}");
+        await homeImageReference.putFile(File(imageFile!.path));
+        imageUrl = await homeImageReference.getDownloadURL();
+      }
+      _forumItem = Forum(
+          comments: _forumItem.comments,
+          forumId: _forumItem.forumId,
+          userID: _forumItem.userID,
+          userName: _forumItem.userName,
+          forumText: _forumItem.forumText,
+          likeList: _forumItem.likeList,
+          imageURL: imageUrl,
+          createdAt: _forumItem.createdAt,
+          userImageUrl: _forumItem.userImageUrl);
+      forumObj.updateForum(forumID,_forumItem, );
+
+
+      }
     }
 
     return Scaffold(
       appBar: AppBar(
         key: UniqueKey(),
-        title: const Text("Add Forum", style: TextStyle(color: Colors.white),),
-      centerTitle: true,
+        title: const Text(
+          "Add Forum",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
-      
       body: SingleChildScrollView(
         child: Container(
           margin:
@@ -127,22 +184,18 @@ class _AddForumScreenState extends State<AddForumScreen> {
                           child: SizedBox(
                             height: height * 0.4,
                             child: TextFormField(
-                              
-                              
+                              // initialValue: initValues["forumText"],
                               maxLines: 30,
                               controller: forumText,
                               keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
-                              border: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        errorBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                        contentPadding: EdgeInsets.only(
-                                            left: 15,
-                                            bottom: 11,
-                                            top: 11,
-                                            right: 15),
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                contentPadding: EdgeInsets.only(
+                                    left: 15, bottom: 11, top: 11, right: 15),
                                 hintText: "What's on your mind?",
                               ),
                               validator: (val) {
@@ -166,7 +219,31 @@ class _AddForumScreenState extends State<AddForumScreen> {
                             ),
                           ),
                         ),
-                        if (imageFile != null) Image.file(File(imageFile!.path))
+                        if(initValues["imageURL"]!="")
+                          Stack(
+                            children: [
+                            
+                              Image.network(initValues["imageURL"]??""),
+                                IconButton(onPressed: (){
+                                setState(() {
+                                  initValues["imageURL"]="";
+                                });
+
+                              }, icon: const Icon(Icons.cancel)),
+                            ],
+                          )
+                        
+                        else if (imageFile != null) Stack(
+                          children: [
+                            Image.file(File(imageFile!.path)),
+                              IconButton(onPressed: (){
+                                setState(() {
+                                  imageFile=null;
+                                });
+
+                              }, icon: const Icon(Icons.cancel)),
+                          ],
+                        )
                       ],
                     ),
                   ),

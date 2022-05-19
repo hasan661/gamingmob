@@ -239,13 +239,13 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                 ),
                 child: ListTile(
                   leading: CircleAvatar(
-                    child: Image.network(
-                      "https://media.gq.com/photos/5e6128d2398289000862596e/1:1/w_805,h_805,c_limit/tom-hardy-lead-840-social.jpg",
+                    backgroundImage: NetworkImage(
+                      widget.product.ownerImage??"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
                     ),
                   ),
                   title: Text(
                     widget.product.ownerName,
-                    style: TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black),
                   ),
                   
                   trailing: SizedBox(
