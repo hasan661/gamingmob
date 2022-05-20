@@ -56,7 +56,7 @@ class _ProductCategoriesDetailScreenState
         selectedIndex: _selectedIndex,
       ),
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title), 
         actions: [
                   IconButton(onPressed: (){
                     showSearch(context: context, delegate: CustomSearchDelegate());

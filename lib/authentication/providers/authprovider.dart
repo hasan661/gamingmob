@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   bool isEmailVerified = false;
@@ -109,6 +110,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> logoutUser() async {
+    googleSignIn.disconnect();
+
     await FirebaseAuth.instance.signOut();
     notifyListeners();
   }
@@ -122,4 +125,30 @@ class AuthProvider with ChangeNotifier {
     await auth.currentUser!.updatePhotoURL(url);
     notifyListeners();
   }
+
+  final googleSignIn=GoogleSignIn();
+
+  GoogleSignInAccount? _user;
+
+  GoogleSignInAccount get user=>_user!;
+
+  Future<void> googleLogin()async{
+    final googleUser=await googleSignIn.signIn();
+
+    if(googleUser==null){
+      return;
+    }
+    _user=googleUser;
+
+    final googleAuth=await googleUser.authentication;
+
+    final credentials=GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credentials);
+
+  }
+  
 }

@@ -5,6 +5,7 @@ import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/email_verfication.dart';
 import 'package:gamingmob/authentication/screens/register_screen.dart';
 import 'package:gamingmob/authentication/widgets/mobilenumberinput.dart';
+import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,15 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
     }
   }
 
+  onGoogleButtonPressed() async {
+    var currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser!.phoneNumber == null || currentUser.phoneNumber == "") {
+      Navigator.of(context).pushNamed(MobileNumberInput.routeName);
+    } else {
+      Navigator.of(context).pushNamed(ProductCategoriesScreen.routeName);
+    }
+  }
+
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   @override
@@ -97,7 +107,6 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                         toolbarOptions: const ToolbarOptions(
                             cut: true, copy: true, paste: true),
                         decoration: InputDecoration(
-                          
                           hintText: "Email",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -106,7 +115,6 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                             minHeight: height * 0.076,
                           ),
                         ),
-                        
                       ),
                       SizedBox(
                         height: height * 0.009,
@@ -151,11 +159,30 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Helper.getSocialLogin(height, "google.png"),
+                          GestureDetector(
+                            onTap: () async {
+                              await Provider.of<AuthProvider>(context,
+                                      listen: false)
+                                  .googleLogin();
+                              onGoogleButtonPressed();
+                            },
+                            child: Helper.getSocialLogin(
+                              height,
+                              "google.png",
+                            ),
+                          ),
                           SizedBox(
                             width: width * 0.05,
                           ),
-                          Helper.getSocialLogin(height, "facebook.png")
+                          GestureDetector(
+                            onTap: (){
+                              
+                            },
+                            child: Helper.getSocialLogin(
+                              height,
+                              "facebook.png",
+                            ),
+                          )
                         ],
                       ),
                       Padding(
@@ -163,7 +190,6 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                             top: height * 0.01, bottom: height * 0.04),
                         child: const Text("Use Social To Login"),
                       ),
-                    
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
