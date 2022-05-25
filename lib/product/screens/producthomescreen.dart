@@ -33,19 +33,20 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
     var subCategory = mapOfCategoriesAndSubcategories["subcategory"] ?? "";
 
     List<Widget> screens = [
-      StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection("UserProducts").snapshots(),
+      FutureBuilder(
+          future: Provider.of<ProductProvider>(context).fetchProducts(),
           builder: (context, snapshot) {
-            return FutureBuilder(
-                future: Provider.of<ProductProvider>(context).fetchProducts(),
+            var gamingProducts = Provider.of<ProductProvider>(context)
+                .filterByCategory(title, subCategory);
+            var rentOnly = Provider.of<ProductProvider>(context)
+                .filterRentOnlyByCategory(title, subCategory);
+            var buyOnly = Provider.of<ProductProvider>(context)
+                .filterBuyOnlyByCategory(title, subCategory);
+            return StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("UserProducts")
+                    .snapshots(),
                 builder: (context, snapshot) {
-                  var gamingProducts = Provider.of<ProductProvider>(context)
-                      .filterByCategory(title, subCategory);
-                  var rentOnly = Provider.of<ProductProvider>(context)
-                      .filterRentOnlyByCategory(title, subCategory);
-                  var buyOnly = Provider.of<ProductProvider>(context)
-                      .filterBuyOnlyByCategory(title, subCategory);
                   return TabBarView(
                     children: [
                       ProductGrid(
@@ -100,14 +101,17 @@ class _ProductHomeScreenState extends State<ProductHomeScreen> {
                     ],
                   )
                 : null,
-                actions: [
-                  IconButton(onPressed: (){
-                    showSearch(context: context, delegate: CustomSearchDelegate());
-                  }, icon: const Icon(Icons.search))
-                ],
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                        context: context, delegate: CustomSearchDelegate());
+                  },
+                  icon: const Icon(Icons.search))
+            ],
             centerTitle: true,
             title: Text(
-              subCategory ==""?title:subCategory,
+              subCategory == "" ? title : subCategory,
             ),
           ),
           body: screens[_selectedIndex]),

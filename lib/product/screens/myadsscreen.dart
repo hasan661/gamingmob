@@ -13,77 +13,87 @@ class MyAdScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    Widget getWidget(userProducts){
-      return   ListView.builder(
-                      physics: routeFrom=="profile"?const NeverScrollableScrollPhysics():null,
-                      shrinkWrap: true,
-                      itemCount: userProducts.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: userProducts[index].imageURL.isEmpty
-                                ? null
-                                : NetworkImage(
-                                    userProducts[index].imageURL[0],
-                                  ),
-                          ),
-                          title: Text(userProducts[index].productName),
-                          trailing: SizedBox(
-                            width: width * 0.24,
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                      
-                                    Provider.of<ProductProvider>(context, listen: false).deleteProduct(
-                                        userProducts[index].productID);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Theme.of(context).errorColor,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(AddProductScreen.routeName, arguments: userProducts[index].productID);
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
+    Widget getWidget(userProducts) {
+      return ListView.builder(
+        physics: routeFrom == "profile"
+            ? const NeverScrollableScrollPhysics()
+            : null,
+        shrinkWrap: true,
+        itemCount: userProducts.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: userProducts[index].imageURL.isEmpty
+                  ? null
+                  : NetworkImage(
+                      userProducts[index].imageURL[0],
+                    ),
+            ),
+            title: Text(userProducts[index].productName),
+            trailing: SizedBox(
+              width: width * 0.24,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .deleteProduct(userProducts[index].productID);
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: Theme.of(context).errorColor,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                          AddProductScreen.routeName,
+                          arguments: userProducts[index].productID);
+                    },
+                    icon: const Icon(Icons.edit),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      );
     }
-   
 
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection("UserProducts").snapshots(),
-      builder: (context,snapshot) {
-        return Consumer<ProductProvider>(builder: (context, value, child) => FutureBuilder(
-            future: Provider.of<ProductProvider>(context).fetchProducts(),
-            builder: (ctx, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                var userProducts = Provider.of<ProductProvider>(context, listen: false).userProducts;
-                if(userProducts.isEmpty){
-                  return const Center(child: Text("No Products Yet", style: TextStyle(color: Colors.black),),);
+    return FutureBuilder(
+        future: Provider.of<ProductProvider>(context).fetchProducts(),
+        builder: (context, snapshot) {
+          return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("UserProducts")
+                  .snapshots(),
+              builder: (context, snapshots) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  var userProducts =
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .userProducts;
+                  if (userProducts.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No Products Yet",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      routeFrom == "profile"
+                          ? getWidget(userProducts)
+                          : Expanded(child: getWidget(userProducts))
+                    ],
+                  );
                 }
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    routeFrom=="profile"?
-                    getWidget(userProducts):Expanded(child: getWidget(userProducts))
-                  
-                  ],
-                );
-              }
-            }),);
-      }
-    );
+              });
+        });
   }
 }

@@ -19,12 +19,11 @@ class AddProductScreenItem extends StatefulWidget {
 }
 
 class _AddProductScreenItemState extends State<AddProductScreenItem> {
-  final List<File?> _pickedImage = [];
+  final List<dynamic> _pickedImage = [];
   var activeindex = 0;
-  List<String> imageUrl = [];
-  void _pickImage() async {
-    final image = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 20);
+
+  void _pickImage(ImageSource a) async {
+    final image = await ImagePicker().pickImage(source: a, imageQuality: 20);
     if (image == null) {
       return;
     }
@@ -34,6 +33,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   }
 
   final _formkey = GlobalKey<FormState>();
+  dynamic productid;
 
   var _item = Product(
     ownerEmail: "",
@@ -54,9 +54,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
   var isLoading = false;
-  dynamic productid;
   var initvalue = {
-    'imageURL': [],
     "prodType": "",
     "prodCat": "",
     "prodSub": ""
@@ -71,7 +69,6 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         _item = Provider.of<ProductProvider>(context, listen: false)
             .filterbyid(productid.toString());
         initvalue = {
-          "imageURL": _item.imageURL,
           'prodType': _item.productType,
           'prodCat': _item.productCategory,
           'prodSub': _item.productSubCategory,
@@ -79,6 +76,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         prodName.text = _item.productName;
         prodDes.text = _item.productDescripton;
         prodPrice.text = _item.productPrice.toString();
+        _pickedImage.addAll(_item.imageURL.map((e) => e));
+        
       }
 
       _isInit = false;
@@ -86,11 +85,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     super.didChangeDependencies();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
-    // var timer;
     var categoriesTitles =
         Provider.of<CategoryProvider>(context).categoriesTitle;
     var subCategoriesTitle = Provider.of<CategoryProvider>(context)
@@ -100,22 +96,17 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     var height = MediaQuery.of(context).size.height;
 
     void _saveForm() async {
-      // var isValid;
-       var isValid = _formkey.currentState!.validate();
-       
-       
-       
-      var timer = Timer.periodic(const Duration(seconds: 3), (_) {
-        
-      });
-      timer.cancel();
-       if (!isValid) {
-          return;
-        }
-
       
-   
-      if (!(_pickedImage.isNotEmpty || _item.imageURL.isNotEmpty)) {
+      // var isValid;
+      var isValid = _formkey.currentState!.validate();
+
+      var timer = Timer.periodic(const Duration(seconds: 3), (_) {});
+      timer.cancel();
+      if (!isValid) {
+        return;
+      }
+
+      if (!(_pickedImage.isNotEmpty)) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Image is required"),
         ));
@@ -125,7 +116,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
       var userPhoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
       var userId = FirebaseAuth.instance.currentUser!.uid;
       var userEmail = FirebaseAuth.instance.currentUser!.email;
-      _item.imageURL.addAll(imageUrl.map((e) => e));
+     
+      print("!");
       _item = Product(
         ownerEmail: userEmail.toString(),
         ownerName: _item.ownerName,
@@ -147,16 +139,18 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
       });
 
       for (int i = 0; i < _pickedImage.length; i++) {
-        var ref = FirebaseStorage.instance.ref().child(
-            "GamingMob/Products/${_item.userID + _item.productName + _item.productDescripton}/$i");
-        await ref.putFile(File(_pickedImage[i]!.path));
-        _item.imageURL.add(await ref.getDownloadURL());
+        if (_pickedImage[i].runtimeType.toString() != "String") {
+          var ref = FirebaseStorage.instance.ref().child(
+              "GamingMob/Products/${_item.userID + _item.productName + _item.productDescripton}/$i");
+          await ref.putFile(File(_pickedImage[i]!.path));
+          _pickedImage[i]=await ref.getDownloadURL();
+        }
+       
       }
-
       _item = Product(
           ownerEmail: _item.ownerEmail,
           ownerName: _item.ownerName,
-          imageURL: _item.imageURL,
+          imageURL: _pickedImage,
           productDescripton: _item.productDescripton,
           productID: _item.productID,
           productName: _item.productName,
@@ -167,15 +161,49 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           productSubCategory: _item.productSubCategory,
           productPrice: _item.productPrice);
 
-      if (productid == null) {
+      if(productid==null){
         await Provider.of<ProductProvider>(context, listen: false)
-            .addproduct(_item);
-      } else {
-        await Provider.of<ProductProvider>(context, listen: false)
-            .updateProduct(_item);
+          .addproduct(_item);
+      }
+      else{
+         await Provider.of<ProductProvider>(context, listen: false)
+          .updateProduct(_item);
+
       }
 
       Navigator.of(context).pop();
+    }
+
+    showModal() {
+      showModalBottomSheet(
+          context: context,
+          builder: (ctx) {
+            return SizedBox(
+              height: height * 0.17,
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () {
+                      _pickImage(ImageSource.gallery);
+                    },
+                    leading: const Icon(
+                      Icons.image_outlined,
+                    ),
+                    title: const Text("Gallery"),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      _pickImage(ImageSource.camera);
+                    },
+                    leading: const Icon(
+                      Icons.camera,
+                    ),
+                    title: const Text("Camera"),
+                  ),
+                ],
+              ),
+            );
+          });
     }
 
     return isLoading
@@ -188,41 +216,35 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  Container(
+                    color: Colors.black,
                     // color: Colors.amber,
                     width: width,
-                    height: (_pickedImage.isEmpty && _item.imageURL.isEmpty)
-                        ? height * 0.25
-                        : null,
+                    height: _pickedImage.isEmpty ? height * 0.25 : null,
                     // decoration: BoxDecoration(
                     //   border: Border.all(width: 2, color: Colors.white),
                     // ),
-                    child: _pickedImage.isNotEmpty || _item.imageURL.isNotEmpty
+                    child: _pickedImage.isNotEmpty
                         ? CarouselSlider.builder(
-                            itemCount: productid != null
-                                ? _item.imageURL.length
-                                : _pickedImage.length,
+                            itemCount: _pickedImage.length,
                             itemBuilder: (ctx, index, _) => Stack(
                               alignment: Alignment.center,
                               children: [
-                                productid != null
-                                    ? Image.network(
-                                        _item.imageURL[index],
-                                        width: width,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Image.file(
+                                _pickedImage[index].runtimeType.toString() !=
+                                        "String"
+                                    ? Image.file(
                                         File(_pickedImage[index]!.path),
                                         width: width,
                                         fit: BoxFit.cover,
                                         // scale: 100,
-                                      ),
+                                      )
+                                    : Image.network(_pickedImage[index]),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        _pickImage();
+                                        showModal();
                                       },
                                       color: Colors.transparent,
                                       textColor: Colors.white,
@@ -242,12 +264,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                                     MaterialButton(
                                       onPressed: () {
                                         setState(() {
-                                          if (productid == null) {
-                                            _pickedImage.removeAt(activeindex);
-                                          } else {
-                                            _item.imageURL
-                                                .removeAt(activeindex);
-                                          }
+                                          _pickedImage.removeAt(activeindex);
                                         });
                                       },
                                       color: Colors.transparent,
@@ -281,7 +298,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                           )
                         : MaterialButton(
                             onPressed: () {
-                              _pickImage();
+                              showModal();
                             },
                             color: Colors.grey,
                             textColor: Colors.white,
@@ -332,7 +349,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                               ownerEmail: _item.ownerEmail);
                         },
                         validator: (value) {
-                          if (value==null || value.isEmpty ) {
+                          if (value == null || value.isEmpty) {
                             return "Please enter the product name";
                           }
                           return null;
@@ -586,7 +603,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                           }
                           return null;
                         },
-                        value: productid != null
+                        value: productid != null &&
+                                initvalue["prodCat"] == "Gaming CDs"
                             ? initvalue["prodSub"].toString()
                             : null,
                         onSaved: (val) {},

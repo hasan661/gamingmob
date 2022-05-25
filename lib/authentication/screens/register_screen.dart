@@ -13,19 +13,15 @@ class RegisterScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: SizedBox(
-            height: height,
-            width: width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: height * 0.25,
-                  child: Helper.appLogo,
-                ),
-                const RegisterScreenItem()
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: height * 0.25,
+                child: Helper.appLogo,
+              ),
+              const RegisterScreenItem()
+            ],
           ),
         ),
       ),

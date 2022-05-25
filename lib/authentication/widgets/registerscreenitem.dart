@@ -17,7 +17,14 @@ class RegisterScreenItem extends StatefulWidget {
 class _RegisterScreenItemState extends State<RegisterScreenItem> {
   void scaffold(text) {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("$text")));
+        .showSnackBar(SnackBar(content: Text("$text"), backgroundColor: Theme.of(context).errorColor,
+            duration: const Duration(days: 365),
+            // content:const Text("invalid password"),
+            action: SnackBarAction(label: "Close",onPressed: (){
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              
+              
+            },textColor: Colors.white)));
   }
 
   final firstName = TextEditingController();
@@ -66,15 +73,14 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-      child: Form(
-        key: _formkey,
-        child: Column(
-          children: [
-            SizedBox(
-              height: height * 0.076,
-              child: TextFormField(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        child: Form(
+          key: _formkey,
+          child: Column(
+            children: [
+              TextFormField(
                 
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -93,13 +99,10 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.009,
-            ),
-            SizedBox(
-              height: height * 0.076,
-              child: TextFormField(
+              SizedBox(
+                height: height * 0.009,
+              ),
+              TextFormField(
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please provide your last name";
@@ -117,13 +120,10 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.009,
-            ),
-            SizedBox(
-              height: height * 0.076,
-              child: TextFormField(
+              SizedBox(
+                height: height * 0.009,
+              ),
+              TextFormField(
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please provide an email";
@@ -145,13 +145,10 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.009,
-            ),
-            SizedBox(
-              height: height * 0.076,
-              child: TextFormField(
+              SizedBox(
+                height: height * 0.009,
+              ),
+              TextFormField(
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -172,13 +169,10 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.009,
-            ),
-            SizedBox(
-              height: height * 0.076,
-              child: TextFormField(
+              SizedBox(
+                height: height * 0.009,
+              ),
+              TextFormField(
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -199,72 +193,72 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.019,
-            ),
-            SizedBox(
-              height: height * 0.06,
-              width: width,
-              child: ElevatedButton(
-                onPressed: () async {
-                  onRegisterButtonPressed();
-                },
-                child: const Text("Continue"),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColor.withOpacity(1)),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+              SizedBox(
+                height: height * 0.019,
+              ),
+              SizedBox(
+                height: height * 0.06,
+                width: width,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    onRegisterButtonPressed();
+                  },
+                  child: const Text("Continue"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor.withOpacity(1)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height * 0.03,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Helper.getSocialLogin(height, "google.png"),
-                SizedBox(
-                  width: width * 0.05,
-                ),
-                Helper.getSocialLogin(height, "facebook.png")
-              ],
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: height * 0.01, bottom: height * 0.01),
-              child: const Text("Use Social To Login"),
-            ),
-            SizedBox(
-              height: height * 0.03,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  "Already Have An Account?",
-                  style: TextStyle(color: Colors.black),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, LoginScreen.routeName);
-                  },
-                  child: Text(
-                    "Login Now",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor.withOpacity(1)),
+              SizedBox(
+                height: height * 0.03,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Helper.getSocialLogin(height, "google.png"),
+                  SizedBox(
+                    width: width * 0.05,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Helper.getSocialLogin(height, "facebook.png")
+                ],
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: height * 0.01, bottom: height * 0.01),
+                child: const Text("Use Social To Login"),
+              ),
+              SizedBox(
+                height: height * 0.03,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    "Already Have An Account?",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(
+                          context, LoginScreen.routeName);
+                    },
+                    child: Text(
+                      "Login Now",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor.withOpacity(1)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

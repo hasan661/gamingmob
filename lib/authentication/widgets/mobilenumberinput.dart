@@ -19,7 +19,9 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
   var phoneNumberController = TextEditingController();
   onVerifyButtonPressed(authProvider) async {
     var isValid = _formkey.currentState!.validate();
-    if (isValid) {
+    if (!isValid) {
+      return;
+    }
       setState(() {
         isLoading = true;
       });
@@ -29,9 +31,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
       });
 
       Navigator.of(context).pushNamed(MobileVerification.routeName);
-    } else {
-      return;
-    }
+    
   }
 
   @override

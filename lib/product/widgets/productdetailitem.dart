@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/models/product.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -230,6 +231,7 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                 ],
               ),
             ),
+            if(widget.product.userID!=FirebaseAuth.instance.currentUser!.uid)
             Card(
               // elevation: 20,
               child: Padding(

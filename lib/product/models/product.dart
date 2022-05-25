@@ -5,7 +5,7 @@ class Product {
   final String userID;
   final String productType;
   final String productName;
-  final List<String> imageURL;
+  final List<dynamic> imageURL;
   final int productPrice;
   final String productDescripton;
   bool isFavorite;

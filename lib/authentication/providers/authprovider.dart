@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthProvider with ChangeNotifier {
   bool isEmailVerified = false;
@@ -54,6 +55,7 @@ class AuthProvider with ChangeNotifier {
 
       await user.sendEmailVerification();
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Try Again"),
@@ -78,7 +80,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> registerPhone(phoneNumberController) async {
     await FirebaseAuth.instance.currentUser!.reload();
     var userInfo = auth.currentUser;
-  
+
     await auth.verifyPhoneNumber(
       phoneNumber: "+92" + phoneNumberController.text,
       verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
@@ -118,37 +120,44 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> updateProfileUrl(file) async {
     var storageReference = FirebaseStorage.instance.ref();
-    var ref = storageReference.child(
-        "GamingMob/ProfileImages/${auth.currentUser!.uid}");
+    var ref = storageReference
+        .child("GamingMob/ProfileImages/${auth.currentUser!.uid}");
     await ref.putFile(File(file.path));
     var url = await ref.getDownloadURL();
     await auth.currentUser!.updatePhotoURL(url);
     notifyListeners();
   }
 
-  final googleSignIn=GoogleSignIn();
+  final googleSignIn = GoogleSignIn();
 
   GoogleSignInAccount? _user;
 
-  GoogleSignInAccount get user=>_user!;
+  GoogleSignInAccount get user => _user!;
 
-  Future<void> googleLogin()async{
-    final googleUser=await googleSignIn.signIn();
+  Future<void> googleLogin() async {
+    final googleUser = await googleSignIn.signIn();
 
-    if(googleUser==null){
+    if (googleUser == null) {
       return;
     }
-    _user=googleUser;
+    _user = googleUser;
 
-    final googleAuth=await googleUser.authentication;
+    final googleAuth = await googleUser.authentication;
 
-    final credentials=GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken
-    );
+    final credentials = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
     await FirebaseAuth.instance.signInWithCredential(credentials);
-
   }
-  
+
+  Future<void> signInWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+    print(loginResult);
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    notifyListeners();
+  }
 }
