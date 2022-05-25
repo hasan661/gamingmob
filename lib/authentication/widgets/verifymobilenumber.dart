@@ -130,18 +130,41 @@ class _MobileVerificationState extends State<MobileVerification> {
                         .pushReplacementNamed(LoginScreen.routeName);
                   } on FirebaseException catch (e) {
                     if (e.code == "credential-already-in-use") {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Contact number already in use"),
-                        ),
-                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text("Contact number already in use"),
+                        backgroundColor: Theme.of(context).errorColor,
+                        duration: const Duration(days: 365),
+
+                        // content:const Text("invalid password"),
+                        action: SnackBarAction(
+                            label: "Close",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                            textColor: Colors.white),
+                      ));
                       Future.delayed(const Duration(seconds: 5)).then((value) {
                         Navigator.of(context).pop();
                       });
                     }
                   } catch (_) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Something Went Wrong")));
+                      SnackBar(
+                        content: const Text("Something Went Wrong"),
+                        backgroundColor: Theme.of(context).errorColor,
+                        duration: const Duration(days: 365),
+
+                        // content:const Text("invalid password"),
+                        action: SnackBarAction(
+                            label: "Close",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                            textColor: Colors.white),
+                      ),
+                    );
                   }
                 },
                 child: const Text("Verify and continue"),

@@ -64,7 +64,21 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
         await launch(whatsappURlAndroid);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Whatsapp Not Installed")));
+          SnackBar(
+            content: const Text("Whatsapp Not Installed"),
+            backgroundColor: Theme.of(context).errorColor,
+                        duration: const Duration(days: 365),
+
+                        // content:const Text("invalid password"),
+                        action: SnackBarAction(
+                            label: "Close",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                            textColor: Colors.white),
+          ),
+        );
       }
     }
 
@@ -132,16 +146,17 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
           // carouselController: ,
           itemCount: widget.product.imageURL.length,
           itemBuilder: (ctx, index, _) {
-            return CachedNetworkImage(imageUrl:
-              widget.product.imageURL[index],
+            return CachedNetworkImage(
+              imageUrl: widget.product.imageURL[index],
               width: widget.screenWidth,
-               placeholderFadeInDuration: const Duration(seconds: 4),
-                            placeholder: (context, url)=>const Center(child: CircularProgressIndicator()),
+              placeholderFadeInDuration: const Duration(seconds: 4),
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
               fit: BoxFit.cover,
             );
           },
           options: CarouselOptions(
-            aspectRatio: 1/1,
+            aspectRatio: 1 / 1,
             enableInfiniteScroll: false,
             // pageSnapping: false,
             onPageChanged: (index, reason) {
@@ -179,10 +194,8 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
               ),
               Consumer<ProductProvider>(
                 builder: (context, productItem, _) => IconButton(
-                  onPressed: () async{
-                    
-                      await productItem.toggleFavorites(widget.id);
-                    
+                  onPressed: () async {
+                    await productItem.toggleFavorites(widget.id);
                   },
                   icon: productItem.filterbyid(widget.id).isFavorite
                       ? Icon(
@@ -231,40 +244,39 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                 ],
               ),
             ),
-            if(widget.product.userID!=FirebaseAuth.instance.currentUser!.uid)
-            Card(
-              // elevation: 20,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 16,
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      widget.product.ownerImage??"https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
+            if (widget.product.userID != FirebaseAuth.instance.currentUser!.uid)
+              Card(
+                // elevation: 20,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 16,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        widget.product.ownerImage ??
+                            "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    widget.product.ownerName,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  
-                  trailing: SizedBox(
-                    height: 30,
-                    width: 150,
-                    child: TextButton(
-                      onPressed: () {
-                        showURLLaunchDialog();
-                      },
-                      child: const Text(
-                        "Contact Owner",
+                    title: Text(
+                      widget.product.ownerName,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    trailing: SizedBox(
+                      height: 30,
+                      width: 150,
+                      child: TextButton(
+                        onPressed: () {
+                          showURLLaunchDialog();
+                        },
+                        child: const Text(
+                          "Contact Owner",
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          
           ],
         )
       ],

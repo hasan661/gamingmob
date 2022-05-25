@@ -107,8 +107,19 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
       }
 
       if (!(_pickedImage.isNotEmpty)) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Image is required"),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Theme.of(context).errorColor,
+                        duration: const Duration(days: 365),
+
+                        // content:const Text("invalid password"),
+                        action: SnackBarAction(
+                            label: "Close",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                            },
+                            textColor: Colors.white),
+          content: const Text("Image is required"),
         ));
         return;
       }

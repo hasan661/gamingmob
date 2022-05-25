@@ -50,18 +50,27 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
     }
 
     if (listOfContent.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Blog cannot be empty"),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Theme.of(context).errorColor,
+        duration: const Duration(days: 365),
+
+        // content:const Text("invalid password"),
+        action: SnackBarAction(
+            label: "Close",
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+            textColor: Colors.white),
+        content: const Text("Blog cannot be empty"),
       ));
 
       return;
     }
-  
+
     setState(() {
       isLoading = true;
     });
 
-    
     var currentUser = FirebaseAuth.instance.currentUser;
     var userID = currentUser!.uid;
     var userName = currentUser.displayName;
@@ -72,7 +81,6 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
       await homeImageReference.putFile(File(homeImage!.path));
       homeImageUrl = await homeImageReference.getDownloadURL();
     }
-    
 
     for (int i = 0; i < listOfContent.length; i++) {
       if (listOfContent[i].type == "image") {
@@ -90,11 +98,13 @@ class _AddBlogsItemState extends State<AddBlogsItem> {
             : listOfContent[i].data.text;
       }
     }
-    
+
     var item = Blog(
       id: id ?? "",
       blogContent: listOfContent,
-      imageURL: id==null || initHomeImage==null || initHomeImage==""? homeImageUrl: initHomeImage.toString(),
+      imageURL: id == null || initHomeImage == null || initHomeImage == ""
+          ? homeImageUrl
+          : initHomeImage.toString(),
       title: title.text,
       blogCreationDate: DateTime.now(),
       userId: userID,

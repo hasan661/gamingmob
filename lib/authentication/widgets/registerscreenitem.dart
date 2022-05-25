@@ -16,15 +16,18 @@ class RegisterScreenItem extends StatefulWidget {
 
 class _RegisterScreenItemState extends State<RegisterScreenItem> {
   void scaffold(text) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("$text"), backgroundColor: Theme.of(context).errorColor,
-            duration: const Duration(days: 365),
-            // content:const Text("invalid password"),
-            action: SnackBarAction(label: "Close",onPressed: (){
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("$text"),
+        backgroundColor: Theme.of(context).errorColor,
+        duration: const Duration(days: 365),
+
+        // content:const Text("invalid password"),
+        action: SnackBarAction(
+            label: "Close",
+            onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              
-              
-            },textColor: Colors.white)));
+            },
+            textColor: Colors.white)));
   }
 
   final firstName = TextEditingController();
@@ -55,8 +58,7 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
           scaffold("Please check your internet connection");
         } else if (e.code == "email-already-in-use") {
           scaffold("Email already in use");
-        }
-        else{
+        } else {
           scaffold(e.code);
         }
       } catch (_) {
@@ -81,7 +83,6 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
           child: Column(
             children: [
               TextFormField(
-                
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Please provide your first name";
