@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comment_tree/comment_tree.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/forum/models/forum.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';
@@ -16,218 +19,287 @@ class StackForComments extends StatefulWidget {
 
 class _StackForCommentsState extends State<StackForComments> {
   var newComment = TextEditingController();
+  var subComment=TextEditingController();
 
   var a = true;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
 
     return Consumer<ForumProvider>(
       builder: ((context, value, child) {
-        return SizedBox(
-          height: height,
-          child: Stack(
-            children: [
-              SizedBox(
-                height: height * 0.83,
-                child: ListView.builder(
-                    itemCount: widget.listOfComments.length,
-                    itemBuilder: (ctx, index) {
-                      return Container(
-                        padding: const EdgeInsetsDirectional.only(
-                            start: 50, end: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              width: width * 0.9,
-                              child: Card(
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(widget.listOfComments[index].commentedUserImage ?? "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
-                                  ),
-                                  title: RichText(
-                                    // softWrap: true,
-                                    text: TextSpan(
-                                        text: widget.listOfComments[index]
-                                            .commentUserName,
-                                        style: const TextStyle(
-                                            // fontSize: 13,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                        children: [
-                                          TextSpan(
-                                            text: " " +
-                                                widget.listOfComments[index]
-                                                    .commentContent,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          )
-                                        ]),
-                                  ),
-                                ),
+        return StreamBuilder(
+          stream: FirebaseFirestore.instance
+            .collection("Forums")
+            .orderBy("createdAt", descending: true)
+            .snapshots(),
+          builder: (context, snapshot) {
+          return SizedBox(
+            height: height,
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: height * 0.83,
+                  child: ListView.builder(
+                      itemCount: widget.listOfComments.length,
+                      itemBuilder: (ctx, index) {
+                        print(widget.listOfComments[index].comments);
+                        return Container(
+                          child: CommentTreeWidget<Comment, Comment>(
+                            Comment(
+                                avatar: widget.listOfComments[index]
+                                        .commentedUserImage ??
+                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
+                                userName: widget
+                                    .listOfComments[index].commentUserName,
+                                content: widget
+                                    .listOfComments[index].commentContent),
+                                    
+                            [
+                              ...widget.listOfComments[index].comments.map(
+                                  (e) => Comment(
+                                      avatar: e.commentedUserImage,
+                                      userName: e.commentUserName,
+                                      content: e.commentContent)),
+                              Comment(
+                                  avatar: FirebaseAuth
+                                      .instance.currentUser!.photoURL,
+                                  userName: FirebaseAuth
+                                      .instance.currentUser!.displayName,
+                                  content: ""),
+                            ],
+                            treeThemeData: TreeThemeData(
+                                lineColor: Theme.of(context).primaryColor,
+                                lineWidth: 3),
+                            avatarRoot: (context, data) => PreferredSize(
+                              child: CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage(widget
+                                        .listOfComments[index]
+                                        .commentedUserImage ??
+                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
+                              preferredSize: const Size.fromRadius(18),
                             ),
-                            SizedBox(
-                              width: width * 0.6,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                            avatarChild: (context, data) => PreferredSize(
+                              child: CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage(widget
+                                        .listOfComments[index]
+                                        .commentedUserImage ??
+                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
+                              ),
+                              preferredSize: const Size.fromRadius(12),
+                            ),
+                            contentChild: (context, data) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                      "${DateTime.now().difference(widget.listOfComments[index].commentedAt).inMinutes} minutes ago"),
-                                  const Text("Like"),
-                                  const Text("Reply"),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          FirebaseAuth
+                                              .instance.currentUser!.displayName
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        data.content != ""
+                                            ? Text(
+                                                '${data.content}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .caption
+                                                    ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Colors.black),
+                                              )
+                                            : TextField(
+                                              controller: subComment ,
+                                                decoration: InputDecoration(
+                                                suffixIcon: GestureDetector(
+                                                  onTap: () {
+                                                    print(widget.listOfComments[index].commentID+"Hasan");
+                                                    Provider.of<ForumProvider>(context, listen: false).addSubComment(widget.id, widget.listOfComments[index].commentID, Comments(commentID: "", commentUserId: "", commentUserName: "", commentContent: subComment.text, commentedAt: DateTime.now()) );
+                                                  },
+                                                  child: Icon(
+                                                    Icons.send,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40),
+                                                ),
+                                              )),
+                                      ],
+                                    ),
+                                  ),
+                                  DefaultTextStyle(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption!
+                                        .copyWith(
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        children: const [
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Like'),
+                                          SizedBox(
+                                            width: 24,
+                                          ),
+                                          Text('Reply'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            ),
-                            // ListView.builder(
-                            //     shrinkWrap: true,
-                            //     physics: const NeverScrollableScrollPhysics(),
-                            //     itemCount: widget
-                            //             .listOfComments[index].comments.length +
-                            //         1,
-                            //     itemBuilder: (ctx, index2) {
-                            //       if (index2 ==
-                            //           widget.listOfComments[index].comments
-                            //               .length) {
-                                            
-                            //         return SizedBox(
-                            //          width: width * 0.6,
-                            //           child: Card(
-                            //             child: ListTile(
-                            //               leading: const CircleAvatar(),
-                            //               title: Row(
-
-                            //                 mainAxisAlignment:
-                            //                     MainAxisAlignment.end,
-                            //                     crossAxisAlignment: CrossAxisAlignment.start,
-                            //                 children: [
-                            //                   Text(
-                            //                     FirebaseAuth
-                            //                             .instance
-                            //                             .currentUser!
-                            //                             .displayName ??
-                            //                         "",
-                            //                     style: const TextStyle(
-                            //                       // fontSize: 13,
-                            //                       color: Colors.black,
-                            //                       fontWeight: FontWeight.bold,
-                            //                     ),
-                            //                   ),
-                                             
-                            //                 ],
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         );
-                            //       }
-                            //      else{
-                            //         return Column(
-                            //         crossAxisAlignment: CrossAxisAlignment.end,
-                            //         children: [
-                            //           SizedBox(
-                            //             width: width * 0.6,
-                            //             child: Card(
-                            //               child: ListTile(
-                            //                 leading: const CircleAvatar(),
-                            //                 title: RichText(
-                            //                   // softWrap: true,
-                            //                   text: TextSpan(
-                            //                       text: widget
-                            //                           .listOfComments[index]
-                            //                           .comments[index2]
-                            //                           .commentUserName,
-                            //                       style: const TextStyle(
-                            //                           fontSize: 13,
-                            //                           color: Colors.black,
-                            //                           fontWeight:
-                            //                               FontWeight.bold),
-                            //                       children: [
-                            //                         TextSpan(
-                            //                           text: widget
-                            //                               .listOfComments[index]
-                            //                               .comments[index2]
-                            //                               .commentContent,
-                            //                           style: const TextStyle(
-                            //                             fontWeight:
-                            //                                 FontWeight.normal,
-                            //                           ),
-                            //                         )
-                            //                       ]),
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ),
-                            //           SizedBox(
-                            //             width: width * 0.6,
-                            //             child: Row(
-                            //               mainAxisAlignment:
-                            //                   MainAxisAlignment.spaceBetween,
-                            //               children: [
-                            //                 Text(
-                            //                     "${DateTime.now().difference(widget.listOfComments[index].comments[index2].commentedAt).inMinutes} minutes ago"),
-                            //                 const Text("Like"),
-                            //                 const Text("Reply"),
-                            //               ],
-                            //             ),
-                            //           ),
-                            //           SizedBox(
-                            //             height: height * 0.02,
-                            //           ),
-                            //         ],
-                            //       );
-                            //      }
-                            //     })
-                          ],
+                              );
+                            },
+                            contentRoot: (context, data) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.listOfComments[index]
+                                              .commentUserName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          '${data.content}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  DefaultTextStyle(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption!
+                                        .copyWith(
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        children: const [
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text('Like'),
+                                          SizedBox(
+                                            width: 24,
+                                          ),
+                                          Text('Reply'),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                        );
+                      }),
+                ),
+                Positioned(
+                  height: height * 0.1,
+                  left: 20,
+                  right: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  child: TextFormField(
+                    controller: newComment,
+                    decoration: InputDecoration(
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          var item = Comments(
+                              comments: [],
+                              commentID: "",
+                              commentUserId: "",
+                              commentUserName: "",
+                              commentContent: newComment.text,
+                              commentedAt: DateTime.now());
+                          Provider.of<ForumProvider>(context, listen: false)
+                              .addCommentByForumId(widget.id, item);
+                          newComment.text = "";
+                        },
+                        child: Icon(
+                          Icons.send,
+                          color: Theme.of(context).primaryColor,
                         ),
-                      );
-                    }),
-              ),
-              Positioned(
-                height: height * 0.1,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                child: TextFormField(
-                  controller: newComment,
-                  decoration: InputDecoration(
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        var item = Comments(
-                            commentID: "",
-                            commentUserId: "",
-                            commentUserName: "",
-                            commentContent: newComment.text,
-                            commentedAt: DateTime.now());
-                        Provider.of<ForumProvider>(context, listen: false)
-                            .addCommentByForumId(widget.id, item);
-                      },
-                      child: Icon(
-                        Icons.send,
-                        color: Theme.of(context).primaryColor,
                       ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(40),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                  height: height * 0.05,
-                  right: 10,
-                  top: MediaQuery.of(context).viewInsets.top,
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(Icons.cancel))),
-            ],
-          ),
-        );
+                Positioned(
+                    height: height * 0.05,
+                    right: 10,
+                    top: MediaQuery.of(context).viewInsets.top,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.cancel))),
+              ],
+            ),
+          );
+        });
       }),
     );
   }

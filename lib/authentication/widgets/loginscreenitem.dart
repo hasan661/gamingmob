@@ -221,26 +221,13 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                             "google.png",
                           ),
                         ),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Provider.of<AuthProvider>(context, listen: false)
-                                .signInWithFacebook();
-                            onGoogleButtonPressed();
-                          },
-                          child: Helper.getSocialLogin(
-                            height,
-                            "facebook.png",
-                          ),
-                        )
+                       
                       ],
                     ),
                     Padding(
                       padding: EdgeInsets.only(
                           top: height * 0.01, bottom: height * 0.04),
-                      child: const Text("Use Social To Login"),
+                      child: const Text("Use Google To Login"),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -13,6 +13,8 @@ class MyForums extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ForumProvider>(context)
+                  .fetchForums();
     var currentUserId = FirebaseAuth.instance.currentUser!.uid;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;

@@ -25,16 +25,16 @@ class ForumProvider with ChangeNotifier {
         List<Comments> commentss = [];
         List<String> likes = [];
         for (var e in comments.docs) {
-          // List<Comments> subComments=[];
-          // e["comments"].forEach((ele){
-          //   subComments.add(Comments(commentID: element.id + e["commentUserID"]+ e["commentUserID"], commentUserId: ele["commentUserID"], commentUserName: ele["commentUserName"],
-          //     commentContent: ele["commentContent"],
-          //     commentedAt: (ele["commentedAt"] as Timestamp).toDate(),));
-          // });
+          List<Comments> subComments=[];
+          
+        var subbComments =await FirebaseFirestore.instance.collection("Forums/${element.id}/comments").doc(e.id).collection("comments").snapshots().first;
+        for(var sub in subbComments.docs){
+        subComments.add(Comments(commentID: sub.id, commentUserId: sub["commentUserId"], commentUserName: sub["commentUserName"], commentContent: sub["commentContent"], commentedAt: DateTime.now()));
+        }
       
           commentss.add(
             Comments(
-              comments: [],
+              comments: subComments,
             
               commentID: e.id,
               commentUserId: e["commentUserId"],
@@ -146,14 +146,16 @@ class ForumProvider with ChangeNotifier {
       commentUserName: user.displayName ?? "",
       commentContent: obj.commentContent,
       commentedAt: obj.commentedAt,
-      commentedUserImage: user.photoURL
+      commentedUserImage: user.photoURL,
+      comments: []
     ));
     await FirebaseFirestore.instance.collection("Forums").doc(id).collection("comments").add(({
       "commentContent": obj.commentContent,
       "commentUserId":user.uid,
       "commentUserName":user.displayName,
       "commentedAt":Timestamp.now(),
-      "commentedUserImageUrl":user.photoURL
+      "commentedUserImageUrl":user.photoURL,
+      "comments":[]
       
           
     }));
@@ -170,5 +172,31 @@ class ForumProvider with ChangeNotifier {
   }
   Forum getForumByID(id){
     return _forumsList.firstWhere((element) => element.forumId==id);
+  }
+
+  Future<void> deleteComments(forumId,id)async{
+    FirebaseFirestore.instance.doc("Forums/$forumId/comments/$id").delete();
+    _forumsList.firstWhere((element) => element.forumId==forumId).comments.removeWhere((element) => element.commentID==id);
+    notifyListeners();
+
+  }
+  Future<void> addSubComment(forumId, commentID, Comments obj)async{
+    var user=FirebaseAuth.instance.currentUser;
+ 
+     await FirebaseFirestore.instance.collection("Forums/$forumId/comments").doc(commentID).collection("comments").add(({
+      "commentContent": obj.commentContent,
+      "commentUserId":user!.uid,
+      "commentUserName":user.displayName,
+      "commentedAt":Timestamp.now(),
+      "commentedUserImageUrl":user.photoURL
+      
+          
+    }));
+    notifyListeners();
+    
+
+
+    
+
   }
 }
