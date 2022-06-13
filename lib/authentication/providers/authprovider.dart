@@ -55,7 +55,6 @@ class AuthProvider with ChangeNotifier {
 
       await user.sendEmailVerification();
     } catch (e) {
-      print(e);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Try Again"),
@@ -152,7 +151,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signInWithFacebook() async {
     final LoginResult loginResult = await FacebookAuth.instance.login();
-    print(loginResult);
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 

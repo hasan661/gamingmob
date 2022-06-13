@@ -127,8 +127,6 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
       var userPhoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
       var userId = FirebaseAuth.instance.currentUser!.uid;
       var userEmail = FirebaseAuth.instance.currentUser!.email;
-     
-      print("!");
       _item = Product(
         ownerEmail: userEmail.toString(),
         ownerName: _item.ownerName,

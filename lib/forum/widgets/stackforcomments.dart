@@ -29,10 +29,7 @@ class _StackForCommentsState extends State<StackForComments> {
     return Consumer<ForumProvider>(
       builder: ((context, value, child) {
         return StreamBuilder(
-          stream: FirebaseFirestore.instance
-            .collection("Forums")
-            .orderBy("createdAt", descending: true)
-            .snapshots(),
+          stream:  FirebaseFirestore.instance.collection("Forums").doc().snapshots(),
           builder: (context, snapshot) {
           return SizedBox(
             height: height,
@@ -43,7 +40,6 @@ class _StackForCommentsState extends State<StackForComments> {
                   child: ListView.builder(
                       itemCount: widget.listOfComments.length,
                       itemBuilder: (ctx, index) {
-                        print(widget.listOfComments[index].comments);
                         return Container(
                           child: CommentTreeWidget<Comment, Comment>(
                             Comment(
@@ -57,10 +53,13 @@ class _StackForCommentsState extends State<StackForComments> {
                                     
                             [
                               ...widget.listOfComments[index].comments.map(
-                                  (e) => Comment(
+                                  (e) { 
+                                    print(e.commentedUserImage);
+                                    print(e.commentContent);
+                                    return Comment(
                                       avatar: e.commentedUserImage,
                                       userName: e.commentUserName,
-                                      content: e.commentContent)),
+                                      content: e.commentContent);}),
                               Comment(
                                   avatar: FirebaseAuth
                                       .instance.currentUser!.photoURL,
@@ -86,9 +85,7 @@ class _StackForCommentsState extends State<StackForComments> {
                               child: CircleAvatar(
                                 radius: 12,
                                 backgroundColor: Colors.grey,
-                                backgroundImage: NetworkImage(widget
-                                        .listOfComments[index]
-                                        .commentedUserImage ??
+                                backgroundImage: NetworkImage(data.avatar ??
                                     "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
                               preferredSize: const Size.fromRadius(12),
@@ -111,9 +108,7 @@ class _StackForCommentsState extends State<StackForComments> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          FirebaseAuth
-                                              .instance.currentUser!.displayName
-                                              .toString(),
+                                          data.userName?? "",
                                           style: Theme.of(context)
                                               .textTheme
                                               .caption
@@ -140,7 +135,6 @@ class _StackForCommentsState extends State<StackForComments> {
                                                 decoration: InputDecoration(
                                                 suffixIcon: GestureDetector(
                                                   onTap: () {
-                                                    print(widget.listOfComments[index].commentID+"Hasan");
                                                     Provider.of<ForumProvider>(context, listen: false).addSubComment(widget.id, widget.listOfComments[index].commentID, Comments(commentID: "", commentUserId: "", commentUserName: "", commentContent: subComment.text, commentedAt: DateTime.now()) );
                                                   },
                                                   child: Icon(
