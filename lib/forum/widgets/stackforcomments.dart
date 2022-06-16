@@ -54,8 +54,7 @@ class _StackForCommentsState extends State<StackForComments> {
                             [
                               ...widget.listOfComments[index].comments.map(
                                   (e) { 
-                                    print(e.commentedUserImage);
-                                    print(e.commentContent);
+                                  
                                     return Comment(
                                       avatar: e.commentedUserImage,
                                       userName: e.commentUserName,

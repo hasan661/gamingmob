@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/login_screen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
+import 'package:gamingmob/eventmanagement/screens/eventhomescreen.dart';
 import 'package:gamingmob/forum/screens/forumhomescreen.dart';
 import 'package:gamingmob/product/screens/productscategoryscreen.dart';
 import 'package:gamingmob/userprofile/screens/userprofilescreen.dart';
@@ -93,6 +94,18 @@ class AppDrawer extends StatelessWidget {
               color: Colors.white,
             ),
             title: const Text("Forum", style: TextStyle(color: Colors.white)),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.event,
+              color: Colors.white,
+            ),
+            title: const Text("Events", style: TextStyle(color: Colors.white)),
+            onTap: () {
+              
+              Navigator.of(context).pushReplacementNamed(EventHomeScreen.routeName);
+            },
           ),
          
           const Divider(),

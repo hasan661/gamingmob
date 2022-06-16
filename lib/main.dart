@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
 import 'package:gamingmob/authentication/screens/slidescreen.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
+import 'package:gamingmob/eventmanagement/provider/eventprovider.dart';
 import 'package:gamingmob/forum/providers/forumprovider.dart';
 import 'package:gamingmob/product/providers/categoriesprovider.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
@@ -13,7 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp()); 
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => AuthProvider(),
-        ), 
+        ),
         ChangeNotifierProvider(
           create: (ctx) => CategoryProvider(),
         ),
@@ -49,7 +50,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => ForumProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => EventProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

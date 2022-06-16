@@ -31,7 +31,6 @@ class ForumProvider with ChangeNotifier {
         List<String> likes = [];
         for (var e in comments.docs) {
           List<Comments> subComments = [];
-
           var subbComments = await FirebaseFirestore.instance
               .collection("Forums/${element.id}/comments")
               .doc(e.id)
