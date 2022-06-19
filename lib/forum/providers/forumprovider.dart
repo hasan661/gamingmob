@@ -96,17 +96,6 @@ class ForumProvider with ChangeNotifier {
       'userImageUrl': currentUser.photoURL,
       'userName': currentUser.displayName,
     });
-
-    // _forumsList.add(Forum(
-    //     comments: forum.comments,
-    //     forumId: forum.forumId,
-    //     userID: currentUser.uid,
-    //     userName: currentUser.displayName ?? "",
-    //     forumText: forum.forumText,
-    //     likeList: forum.likeList,
-    //     imageURL: forum.imageURL,
-    //     createdAt: forum.createdAt,
-    //     userImageUrl: currentUser.photoURL));
     notifyListeners();
   }
 

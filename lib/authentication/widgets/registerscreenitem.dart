@@ -210,7 +210,7 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                         Theme.of(context).primaryColor.withOpacity(1)),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10), 
                       ),
                     ),
                   ),

@@ -41,12 +41,14 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
         eventDate.text = initEventItem.eventDate;
         eventTime.text = initEventItem.eventTime;
         _pickedImageUrl = initEventItem.eventImageUrl;
+        ticketCapacity.text=initEventItem.ticketCapacity.toString();
       }
     }
   }
 
   var isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  var ticketCapacity=TextEditingController();
   var eventName = TextEditingController();
   var eventPrice = TextEditingController();
   var streetNo = TextEditingController();
@@ -57,6 +59,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
   var eventDate = TextEditingController();
   var eventTime = TextEditingController();
   var eventItem = Events(
+    ticketCapacity: 0,
     organizerEmail: "",
     eventUserID: "",
     eventID: "",
@@ -112,7 +115,8 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
         imageAdded=true;
       });
     }
-    if (!isValid || eventDate.text == "") {
+    if (!isValid || eventDate.text == "" || (_pickedImageFile==null && _pickedImageUrl==null)) {
+      
       return;
     }
     if (_pickedImageFile != null) {
@@ -140,6 +144,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
     }
 
     var item = Events(
+      ticketCapacity: int.parse(ticketCapacity.text),
         organizerEmail: currentUser.email ?? "",
         eventUserID: userID,
         eventID: id ?? "",
@@ -188,6 +193,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
                   ListTile(
                     onTap: () {
                       _pickImage(ImageSource.gallery);
+                      Navigator.of(ctx).pop();
                     },
                     leading: const Icon(
                       Icons.image_outlined,
@@ -197,6 +203,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
                   ListTile(
                     onTap: () {
                       _pickImage(ImageSource.camera);
+                      Navigator.of(ctx).pop();
                     },
                     leading: const Icon(
                       Icons.camera,
@@ -371,6 +378,39 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
                 },
                 keyboardType: TextInputType.number,
                 controller: eventPrice,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+              Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
+              child: Text(
+                "Ticket Capacity",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the ticket capacity";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                controller: ticketCapacity,
                 textInputAction: TextInputAction.next,
                 toolbarOptions:
                     const ToolbarOptions(cut: true, copy: true, paste: true),
