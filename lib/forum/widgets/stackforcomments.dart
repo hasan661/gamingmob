@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_tree/comment_tree.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,18 +20,17 @@ class StackForComments extends StatefulWidget {
 
 class _StackForCommentsState extends State<StackForComments> {
   var newComment = TextEditingController();
-  var subComment=TextEditingController();
+  var subComment = TextEditingController();
 
   var a = true;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
 
-    return Consumer<ForumProvider>(
-      builder: ((context, value, child) {
-        return StreamBuilder(
-          stream:  FirebaseFirestore.instance.collection("Forums").doc().snapshots(),
-          builder: (context, snapshot) {
+    return StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("Forums").doc().snapshots(),
+        builder: (context, snapshot) {
           return SizedBox(
             height: height,
             child: Stack(
@@ -50,15 +50,13 @@ class _StackForCommentsState extends State<StackForComments> {
                                     .listOfComments[index].commentUserName,
                                 content: widget
                                     .listOfComments[index].commentContent),
-                                    
                             [
-                              ...widget.listOfComments[index].comments.map(
-                                  (e) { 
-                                  
-                                    return Comment(
-                                      avatar: e.commentedUserImage,
-                                      userName: e.commentUserName,
-                                      content: e.commentContent);}),
+                              ...widget.listOfComments[index].comments.map((e) {
+                                return Comment(
+                                    avatar: e.commentedUserImage,
+                                    userName: e.commentUserName,
+                                    content: e.commentContent);
+                              }),
                               Comment(
                                   avatar: FirebaseAuth
                                       .instance.currentUser!.photoURL,
@@ -73,10 +71,15 @@ class _StackForCommentsState extends State<StackForComments> {
                               child: CircleAvatar(
                                 radius: 18,
                                 backgroundColor: Colors.grey,
-                                backgroundImage: NetworkImage(widget
-                                        .listOfComments[index]
-                                        .commentedUserImage ??
-                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
+                                child: CachedNetworkImage(
+                                    placeholderFadeInDuration:
+                                        const Duration(seconds: 4),
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    fit: BoxFit.cover,
+                                    imageUrl: widget.listOfComments[index]
+                                            .commentedUserImage ??
+                                        "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
                               preferredSize: const Size.fromRadius(18),
                             ),
@@ -84,8 +87,14 @@ class _StackForCommentsState extends State<StackForComments> {
                               child: CircleAvatar(
                                 radius: 12,
                                 backgroundColor: Colors.grey,
-                                backgroundImage: NetworkImage(data.avatar ??
-                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
+                                child: CachedNetworkImage(
+                                    placeholderFadeInDuration:
+                                        const Duration(seconds: 4),
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    fit: BoxFit.cover,
+                                    imageUrl: data.avatar ??
+                                        "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
                               preferredSize: const Size.fromRadius(12),
                             ),
@@ -107,7 +116,7 @@ class _StackForCommentsState extends State<StackForComments> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          data.userName?? "",
+                                          data.userName ?? "",
                                           style: Theme.of(context)
                                               .textTheme
                                               .caption
@@ -130,23 +139,48 @@ class _StackForCommentsState extends State<StackForComments> {
                                                         color: Colors.black),
                                               )
                                             : TextField(
-                                              controller: subComment ,
+                                              toolbarOptions: const ToolbarOptions(
+                          cut: true, copy: true, paste: true),
+                                                controller: subComment,
                                                 decoration: InputDecoration(
-                                                suffixIcon: GestureDetector(
-                                                  onTap: () {
-                                                    Provider.of<ForumProvider>(context, listen: false).addSubComment(widget.id, widget.listOfComments[index].commentID, Comments(commentID: "", commentUserId: "", commentUserName: "", commentContent: subComment.text, commentedAt: DateTime.now()) );
-                                                  },
-                                                  child: Icon(
-                                                    Icons.send,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
+                                                  suffixIcon: GestureDetector(
+                                                    onTap: () {
+                                                      Provider.of<ForumProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .addSubComment(
+                                                              widget.id,
+                                                              widget
+                                                                  .listOfComments[
+                                                                      index]
+                                                                  .commentID,
+                                                              Comments(
+                                                                  commentID: "",
+                                                                  commentUserId:
+                                                                      "",
+                                                                  commentUserName:
+                                                                      "",
+                                                                  commentContent:
+                                                                      subComment
+                                                                          .text,
+                                                                  commentedAt:
+                                                                      DateTime
+                                                                          .now()));
+                                                      // setState(() {
+                                                      subComment.text = "";
+                                                    },
+                                                    child: Icon(
+                                                      Icons.send,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
                                                   ),
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(40),
-                                                ),
-                                              )),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            40),
+                                                  ),
+                                                )),
                                       ],
                                     ),
                                   ),
@@ -254,6 +288,8 @@ class _StackForCommentsState extends State<StackForComments> {
                   right: 20,
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                   child: TextFormField(
+                    toolbarOptions: const ToolbarOptions(
+                          cut: true, copy: true, paste: true),
                     controller: newComment,
                     decoration: InputDecoration(
                       suffixIcon: GestureDetector(
@@ -293,7 +329,5 @@ class _StackForCommentsState extends State<StackForComments> {
             ),
           );
         });
-      }),
-    );
   }
 }

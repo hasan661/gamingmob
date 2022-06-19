@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/eventmanagement/screens/createanevent.dart';
-import 'package:gamingmob/eventmanagement/screens/myevents.dart';
+import 'package:gamingmob/eventmanagement/widgets/myevents.dart';
 import 'package:gamingmob/eventmanagement/widgets/eventbottomappbar.dart';
 import 'package:gamingmob/eventmanagement/widgets/eventhomewidget.dart';
 import 'package:gamingmob/product/widgets/appdrawer.dart';
@@ -22,7 +22,7 @@ class _EventHomeScreenState extends State<EventHomeScreen> {
     });
   }
 
-  List<Widget> screens = const [EventHomeScreen(), MyEventsScreen()];
+  List<Widget> screens = const [EventHomeScreen(), MyEventsScreen(routeFrom: "",)];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _EventHomeScreenState extends State<EventHomeScreen> {
       ),
       body: _selectedIndex == 0
           ? const EventHomeWidget()
-          : const MyEventsScreen(),
+          : const MyEventsScreen(routeFrom: "",),
     );
   }
 }

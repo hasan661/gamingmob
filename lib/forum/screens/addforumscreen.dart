@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _AddForumScreenState extends State<AddForumScreen> {
       }
       _formKey.currentState!.save();
       setState(() {
-        isLoading=true;
+        isLoading = true;
       });
       if (forumID == null) {
         var fireStorgaeObj = FirebaseStorage.instance.ref();
@@ -150,8 +151,8 @@ class _AddForumScreenState extends State<AddForumScreen> {
         );
       }
       Navigator.of(context).pop();
-        setState(() {
-        isLoading=false;
+      setState(() {
+        isLoading = false;
       });
     }
 
@@ -181,8 +182,14 @@ class _AddForumScreenState extends State<AddForumScreen> {
                         child: Row(
                           children: [
                             CircleAvatar(
-                                backgroundImage: NetworkImage(auth!.photoURL ??
-                                    "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f")),
+                                child: CachedNetworkImage(
+                                    placeholderFadeInDuration:
+                                        const Duration(seconds: 4),
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    fit: BoxFit.cover,
+                                    imageUrl: auth!.photoURL ??
+                                        "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f")),
                             const SizedBox(
                               width: 10,
                             ),
@@ -198,6 +205,8 @@ class _AddForumScreenState extends State<AddForumScreen> {
                               Form(
                                 key: _formKey,
                                 child: TextFormField(
+                                  toolbarOptions: const ToolbarOptions(
+                          cut: true, copy: true, paste: true),
                                   // initialValue: initValues["forumText"],
                                   maxLines: null,
                                   controller: forumText,
@@ -238,7 +247,14 @@ class _AddForumScreenState extends State<AddForumScreen> {
                               if (initValues["imageURL"] != "")
                                 Stack(
                                   children: [
-                                    Image.network(initValues["imageURL"] ?? ""),
+
+                                    CachedNetworkImage( placeholderFadeInDuration:
+                                                  const Duration(seconds: 4),
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                              fit: BoxFit.cover, imageUrl:  initValues["imageURL"] ?? ""),
                                     IconButton(
                                         onPressed: () {
                                           setState(() {

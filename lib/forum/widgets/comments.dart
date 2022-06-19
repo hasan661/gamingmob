@@ -6,14 +6,19 @@ class MoreComments{
  
   morecomments(context, width, id){
      var height=MediaQuery.of(context).size.height;
-      var comments=Provider.of<ForumProvider>(context, listen: false).getCommentsById(id);
+     
 
     showModalBottomSheet(
         isScrollControlled: true,
         constraints: BoxConstraints(maxHeight: height*0.95),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         context: context,
-        builder: (ctx) => StackForComments(listOfComments: comments,id:id));
+        builder: (ctx) => Consumer<ForumProvider>(
+          builder: (context, snapshot, _) {
+             var comments=Provider.of<ForumProvider>(context).getCommentsById(id);
+            return StackForComments(listOfComments: comments,id:id);
+          }
+        ));
   }
 
 }

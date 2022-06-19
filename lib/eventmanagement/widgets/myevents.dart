@@ -1,12 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/eventmanagement/provider/eventprovider.dart';
 import 'package:gamingmob/eventmanagement/screens/createanevent.dart';
+import 'package:gamingmob/eventmanagement/screens/eventdetailscreen.dart';
 import 'package:provider/provider.dart';
 
 class MyEventsScreen extends StatelessWidget {
-  const MyEventsScreen({Key? key}) : super(key: key);
+  const MyEventsScreen({Key? key, required this.routeFrom}) : super(key: key);
   static const routeName = "/MyEvents";
+  final String routeFrom;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +31,14 @@ class MyEventsScreen extends StatelessWidget {
                 ).userEvents;
 
                 return ListView.builder(
+                   physics: routeFrom=="profile"? const NeverScrollableScrollPhysics():null,
+                          shrinkWrap: true,
                   itemBuilder: ((context, index) {
                     return Card(
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pushNamed(EventDetailScreen.routeName,arguments: eventData[index].eventID);
+                        },
                         onLongPress: () {},
                         child: Card(
                           shape: RoundedRectangleBorder(
@@ -46,7 +53,14 @@ class MyEventsScreen extends StatelessWidget {
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(15),
                                         topRight: Radius.circular(15)),
-                                    child: Image.network(
+                                    child: CachedNetworkImage(
+                                       placeholderFadeInDuration:
+                                                  const Duration(seconds: 4),
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                              imageUrl:
                                       eventData[index].eventImageUrl,
                                       height: height * 0.33,
                                       width: width,

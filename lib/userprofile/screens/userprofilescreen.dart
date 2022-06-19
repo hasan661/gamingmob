@@ -102,6 +102,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                       width: double.infinity,
                                                       child: Dialog(
                                                         child: PhotoView(
+                                                          
+                                                          
                                                           imageProvider: NetworkImage(FirebaseAuth
                                                                       .instance
                                                                       .currentUser!

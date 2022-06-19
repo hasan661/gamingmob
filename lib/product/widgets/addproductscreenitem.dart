@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class AddProductScreenItem extends StatefulWidget {
 }
 
 class _AddProductScreenItemState extends State<AddProductScreenItem> {
+  var imageAdded=true;
   final List<dynamic> _pickedImage = [];
   var activeindex = 0;
 
@@ -54,11 +56,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
   var prodDes = TextEditingController();
   var prodPrice = TextEditingController();
   var isLoading = false;
-  var initvalue = {
-    "prodType": "",
-    "prodCat": "",
-    "prodSub": ""
-  };
+  var initvalue = {"prodType": "", "prodCat": "", "prodSub": ""};
   var _isInit = true;
 
   @override
@@ -77,7 +75,6 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
         prodDes.text = _item.productDescripton;
         prodPrice.text = _item.productPrice.toString();
         _pickedImage.addAll(_item.imageURL.map((e) => e));
-        
       }
 
       _isInit = false;
@@ -96,29 +93,38 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
     var height = MediaQuery.of(context).size.height;
 
     void _saveForm() async {
-      
       // var isValid;
       var isValid = _formkey.currentState!.validate();
 
       var timer = Timer.periodic(const Duration(seconds: 3), (_) {});
       timer.cancel();
-      if (!isValid) {
+
+      if(_pickedImage.isEmpty ){
+        setState(() {
+          imageAdded=false;
+        });
+      }
+      else{
+         setState(() {
+          imageAdded=true;
+        });
+      }
+      if (!isValid || _pickedImage.isEmpty ) {
         return;
       }
 
       if (!(_pickedImage.isNotEmpty)) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Theme.of(context).errorColor,
-                        duration: const Duration(days: 365),
+          duration: const Duration(days: 365),
 
-                        // content:const Text("invalid password"),
-                        action: SnackBarAction(
-                            label: "Close",
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                            textColor: Colors.white),
+          // content:const Text("invalid password"),
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+              textColor: Colors.white),
           content: const Text("Image is required"),
         ));
         return;
@@ -152,9 +158,8 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           var ref = FirebaseStorage.instance.ref().child(
               "GamingMob/Products/${_item.userID + _item.productName + _item.productDescripton}/$i");
           await ref.putFile(File(_pickedImage[i]!.path));
-          _pickedImage[i]=await ref.getDownloadURL();
+          _pickedImage[i] = await ref.getDownloadURL();
         }
-       
       }
       _item = Product(
           ownerEmail: _item.ownerEmail,
@@ -170,14 +175,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
           productSubCategory: _item.productSubCategory,
           productPrice: _item.productPrice);
 
-      if(productid==null){
+      if (productid == null) {
         await Provider.of<ProductProvider>(context, listen: false)
-          .addproduct(_item);
-      }
-      else{
-         await Provider.of<ProductProvider>(context, listen: false)
-          .updateProduct(_item);
-
+            .addproduct(_item);
+      } else {
+        await Provider.of<ProductProvider>(context, listen: false)
+            .updateProduct(_item);
       }
 
       Navigator.of(context).pop();
@@ -190,10 +193,12 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
             return SizedBox(
               height: height * 0.17,
               child: Column(
+                
                 children: [
                   ListTile(
                     onTap: () {
                       _pickImage(ImageSource.gallery);
+                      Navigator.of(ctx).pop();
                     },
                     leading: const Icon(
                       Icons.image_outlined,
@@ -203,6 +208,7 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ListTile(
                     onTap: () {
                       _pickImage(ImageSource.camera);
+                      Navigator.of(ctx).pop();
                     },
                     leading: const Icon(
                       Icons.camera,
@@ -247,7 +253,16 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                                         fit: BoxFit.cover,
                                         // scale: 100,
                                       )
-                                    : Image.network(_pickedImage[index]),
+                                    : CachedNetworkImage(
+                                        imageUrl: _pickedImage[index],
+                                        placeholderFadeInDuration:
+                                            const Duration(seconds: 4),
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                        fit: BoxFit.cover,
+                                      ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -322,6 +337,16 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                             ),
                           ),
                   ),
+                  if (!imageAdded)
+                    const Padding(
+                        padding: EdgeInsets.only(
+                          left: 17,
+                          top: 5,
+                        ),
+                        child: Text(
+                          "It is required",
+                          style: TextStyle(color: Colors.red, fontSize: 10),
+                        )),
                   SizedBox(
                     height: height * 0.01,
                   ),
@@ -338,40 +363,38 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SizedBox(
-                      height: height * 0.076,
-                      child: TextFormField(
-                        onSaved: (val) {
-                          _item = Product(
-                              ownerName: _item.ownerName,
-                              isFavorite: false,
-                              productPrice: _item.productPrice,
-                              imageURL: _item.imageURL,
-                              productDescripton: _item.productDescripton,
-                              productID: _item.productID,
-                              productName: val.toString(),
-                              productType: _item.productType,
-                              userID: _item.userID,
-                              ownerMobileNum: _item.ownerMobileNum,
-                              productCategory: _item.productCategory,
-                              productSubCategory: _item.productSubCategory,
-                              ownerEmail: _item.ownerEmail);
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter the product name";
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.name,
-                        controller: prodName,
-                        textInputAction: TextInputAction.next,
-                        toolbarOptions: const ToolbarOptions(
-                            cut: true, copy: true, paste: true),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                    child: TextFormField(
+                      toolbarOptions: const ToolbarOptions(
+                        cut: true, copy: true, paste: true),
+                      onSaved: (val) {
+                        _item = Product(
+                            ownerName: _item.ownerName,
+                            isFavorite: false,
+                            productPrice: _item.productPrice,
+                            imageURL: _item.imageURL,
+                            productDescripton: _item.productDescripton,
+                            productID: _item.productID,
+                            productName: val.toString(),
+                            productType: _item.productType,
+                            userID: _item.userID,
+                            ownerMobileNum: _item.ownerMobileNum,
+                            productCategory: _item.productCategory,
+                            productSubCategory: _item.productSubCategory,
+                            ownerEmail: _item.ownerEmail);
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter the product name";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.name,
+                      controller: prodName,
+                      textInputAction: TextInputAction.next,
+                      
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
@@ -389,43 +412,41 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SizedBox(
-                      height: height * 0.15,
-                      child: TextFormField(
-                        onSaved: (val) {
-                          _item = Product(
-                              ownerName: _item.ownerName,
-                              isFavorite: false,
-                              productPrice: _item.productPrice,
-                              imageURL: _item.imageURL,
-                              productDescripton: val.toString(),
-                              productID: _item.productID,
-                              productName: _item.productName,
-                              productType: _item.productType,
-                              userID: _item.userID,
-                              ownerMobileNum: _item.ownerMobileNum,
-                              productCategory: _item.productCategory,
-                              productSubCategory: _item.productSubCategory,
-                              ownerEmail: _item.ownerEmail);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter the product description";
-                          } else if (value.length < 20) {
-                            return "Please describe more";
-                          }
-                          return null;
-                        },
-                        controller: prodDes,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                        toolbarOptions: const ToolbarOptions(
-                            cut: true, copy: true, paste: true),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                    child: TextFormField(
+                      toolbarOptions: const ToolbarOptions(
+                        cut: true, copy: true, paste: true),
+                      onSaved: (val) {
+                        _item = Product(
+                            ownerName: _item.ownerName,
+                            isFavorite: false,
+                            productPrice: _item.productPrice,
+                            imageURL: _item.imageURL,
+                            productDescripton: val.toString(),
+                            productID: _item.productID,
+                            productName: _item.productName,
+                            productType: _item.productType,
+                            userID: _item.userID,
+                            ownerMobileNum: _item.ownerMobileNum,
+                            productCategory: _item.productCategory,
+                            productSubCategory: _item.productSubCategory,
+                            ownerEmail: _item.ownerEmail);
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter the product description";
+                        } else if (value.length < 20) {
+                          return "Please describe more";
+                        }
+                        return null;
+                      },
+                      controller: prodDes,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
@@ -496,41 +517,39 @@ class _AddProductScreenItemState extends State<AddProductScreenItem> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-                    child: SizedBox(
-                      height: height * 0.076,
-                      child: TextFormField(
-                        onSaved: (val) {
-                          _item = Product(
-                            ownerEmail: _item.ownerEmail,
-                            ownerName: _item.ownerName,
-                            isFavorite: false,
-                            productPrice: int.parse(val.toString()),
-                            imageURL: _item.imageURL,
-                            productDescripton: _item.productDescripton,
-                            productID: _item.productID,
-                            productName: _item.productName,
-                            productType: _item.productType,
-                            userID: _item.userID,
-                            ownerMobileNum: _item.ownerMobileNum,
-                            productCategory: _item.productCategory,
-                            productSubCategory: _item.productSubCategory,
-                          );
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please enter the price";
-                          }
-                          return null;
-                        },
-                        controller: prodPrice,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        toolbarOptions: const ToolbarOptions(
-                            cut: true, copy: true, paste: true),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                    child: TextFormField(
+                      toolbarOptions: const ToolbarOptions(
+                        cut: true, copy: true, paste: true),
+                      onSaved: (val) {
+                        _item = Product(
+                          ownerEmail: _item.ownerEmail,
+                          ownerName: _item.ownerName,
+                          isFavorite: false,
+                          productPrice: int.parse(val.toString()),
+                          imageURL: _item.imageURL,
+                          productDescripton: _item.productDescripton,
+                          productID: _item.productID,
+                          productName: _item.productName,
+                          productType: _item.productType,
+                          userID: _item.userID,
+                          ownerMobileNum: _item.ownerMobileNum,
+                          productCategory: _item.productCategory,
+                          productSubCategory: _item.productSubCategory,
+                        );
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter the price";
+                        }
+                        return null;
+                      },
+                      controller: prodPrice,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                    
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),

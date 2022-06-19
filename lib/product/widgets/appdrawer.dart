@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/authentication/providers/authprovider.dart';
@@ -25,8 +26,14 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-              FirebaseAuth.instance.currentUser!.photoURL ??
+                child: CachedNetworkImage(
+                  
+              placeholderFadeInDuration: const Duration(seconds: 4),
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+              fit: BoxFit.cover,
+                  imageUrl: 
+               FirebaseAuth.instance.currentUser!.photoURL ??
                   "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
             )),
             title: Text(

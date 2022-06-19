@@ -55,7 +55,7 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
   @override
   Widget build(BuildContext context) {
     Future<void> openwhatsapp(var phoneNumber) async {
-      var whatsapp = "92$phoneNumber";
+      var whatsapp = "$phoneNumber";
       var whatsappURlAndroid =
           "whatsapp://send?phone=" + whatsapp + "&text=hello";
 
@@ -253,7 +253,14 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
+
+                      child: CachedNetworkImage(
+                        // width: widget.screenWidth,
+              placeholderFadeInDuration: const Duration(seconds: 4),
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+              fit: BoxFit.cover,
+                        imageUrl: 
                         widget.product.ownerImage ??
                             "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
                       ),

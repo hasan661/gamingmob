@@ -64,6 +64,7 @@ class _MobileNumberInputState extends State<MobileNumberInput> {
                     child: SizedBox(
                       height: height * 0.13,
                       child: TextFormField(
+                        
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please provide a mobile number";

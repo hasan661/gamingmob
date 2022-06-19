@@ -133,6 +133,7 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                       child: Column(
                         children: [
                           TextFormField(
+                            
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return "Email Field Is Required";

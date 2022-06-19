@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -17,30 +18,33 @@ class CreateAnEventWidget extends StatefulWidget {
 }
 
 class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
-  String? id;
+  var dateFilled = true;
+  var timeFilled = true;
+  var imageAdded = true;
+  var id;
   var isInit = true;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (isInit) {
-      id = ModalRoute.of(context)!.settings.arguments as String;
+      id = ModalRoute.of(context)!.settings.arguments;
       if (id != null) {
         var initEventItem =
             Provider.of<EventProvider>(context).getById(id.toString());
-        eventName.text=initEventItem.eventName;
-        eventPrice.text=initEventItem.eventPrice.toString();
-        streetNo.text=initEventItem.streetNo;
-        streetName.text=initEventItem.streetName;
-        cityName.text=initEventItem.cityName;
-        countryName.text=initEventItem.countryName;
-        eventDescription.text=initEventItem.eventDescription;
-        eventDate.text=initEventItem.eventDate;
-        eventTime.text=initEventItem.eventTime;
-        _pickedImageUrl=initEventItem.eventImageUrl;
-     
+        eventName.text = initEventItem.eventName;
+        eventPrice.text = initEventItem.eventPrice.toString();
+        streetNo.text = initEventItem.streetNo;
+        streetName.text = initEventItem.streetName;
+        cityName.text = initEventItem.cityName;
+        countryName.text = initEventItem.countryName;
+        eventDescription.text = initEventItem.eventDescription;
+        eventDate.text = initEventItem.eventDate;
+        eventTime.text = initEventItem.eventTime;
+        _pickedImageUrl = initEventItem.eventImageUrl;
       }
     }
   }
+
   var isLoading = false;
   final _formKey = GlobalKey<FormState>();
   var eventName = TextEditingController();
@@ -53,6 +57,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
   var eventDate = TextEditingController();
   var eventTime = TextEditingController();
   var eventItem = Events(
+    organizerEmail: "",
     eventUserID: "",
     eventID: "",
     eventImageUrl: "",
@@ -68,14 +73,54 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
     eventTime: "",
   );
 
-  dynamic _pickedImage;
+  dynamic _pickedImageFile;
   String? _pickedImageUrl;
   var activeindex = 0;
 
   void _saveForm() async {
     var isValid = _formKey.currentState!.validate();
-    if (!isValid) {
+    if (eventDate.text == "") {
+      setState(() {
+        dateFilled = false;
+      });
+    }
+    if (eventDate.text != "") {
+      setState(() {
+        dateFilled = true;
+      });
+    }
+    if (eventTime.text == "") {
+      setState(() {
+        timeFilled = false;
+      });
+    }
+
+    if (eventTime.text != "") {
+      setState(() {
+        timeFilled = true;
+      });
+    }
+
+    if(_pickedImageUrl==null && _pickedImageFile==null){
+      setState(() {
+        imageAdded=false;
+      });
+
+    }
+    else{
+      setState(() {
+        imageAdded=true;
+      });
+    }
+    if (!isValid || eventDate.text == "") {
       return;
+    }
+    if (_pickedImageFile != null) {
+      var homeImageReference = FirebaseStorage.instance
+          .ref()
+          .child("GamingMob/BlogsHome/${_pickedImageFile!.path}");
+      await homeImageReference.putFile(File(_pickedImageFile!.path));
+      _pickedImageUrl = await homeImageReference.getDownloadURL();
     }
 
     setState(() {
@@ -86,16 +131,18 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
     var userID = currentUser!.uid;
     // var userName = currentUser.displayName;
     var fireStorgaeObj = FirebaseStorage.instance.ref();
-    if (_pickedImage != null) {
+
+    if (_pickedImageFile != null) {
       var homeImageReference =
-          fireStorgaeObj.child("GamingMob/BlogsHome/${_pickedImage!.path}");
-      await homeImageReference.putFile(File(_pickedImage!.path));
+          fireStorgaeObj.child("GamingMob/BlogsHome/${_pickedImageFile!.path}");
+      await homeImageReference.putFile(File(_pickedImageFile!.path));
       _pickedImageUrl = await homeImageReference.getDownloadURL();
     }
 
     var item = Events(
-      eventUserID: userID,
-        eventID: id??"",
+        organizerEmail: currentUser.email ?? "",
+        eventUserID: userID,
+        eventID: id ?? "",
         eventImageUrl: _pickedImageUrl ?? "",
         streetNo: streetNo.text,
         streetName: streetName.text,
@@ -110,7 +157,8 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
     if (id == null) {
       await Provider.of<EventProvider>(context, listen: false).addEvent(item);
     } else {
-      await Provider.of<EventProvider>(context, listen: false).updateEvent(item);
+      await Provider.of<EventProvider>(context, listen: false)
+          .updateEvent(item);
     }
 
     Navigator.of(context).pop();
@@ -122,7 +170,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
       return;
     }
     setState(() {
-      _pickedImage = File(image.path);
+      _pickedImageFile = File(image.path);
     });
   }
 
@@ -187,27 +235,85 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
         key: _formKey,
         child: ListView(
           children: [
-            SizedBox(
-              height: _pickedImage == null && id==null ? height * 0.25 : null,
-              width: width,
-              child: _pickedImage == null && id==null
-                  ? MaterialButton(
-                      onPressed: () {
-                        showModal();
-                      },
-                      color: Colors.grey,
-                      textColor: Colors.white,
-                      child: const Icon(
-                        Icons.add,
-                        size: 40,
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: width,
+                  height: _pickedImageFile == null && _pickedImageUrl == null ||
+                          _pickedImageUrl == "" && id == null
+                      ? height * 0.25
+                      : null,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: Colors.white),
+                  ),
+                  child: _pickedImageFile == null
+                      ? _pickedImageUrl == null || _pickedImageUrl == ""
+                          ? MaterialButton(
+                              onPressed: () {
+                                showModal();
+                              },
+                              color: Colors.grey,
+                              textColor: Colors.white,
+                              child: const Icon(
+                                Icons.add,
+                                size: 40,
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0),
+                                ),
+                              ),
+                            )
+                          : Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                CachedNetworkImage(
+                                  placeholderFadeInDuration:
+                                      const Duration(seconds: 4),
+                                  placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator()),
+                                  imageUrl: _pickedImageUrl.toString(),
+                                  fit: BoxFit.cover,
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _pickedImageUrl = null;
+                                    });
+                                  },
+                                  icon: const Icon(Icons.cancel),
+                                )
+                              ],
+                            )
+                      : Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Image.file(
+                              File(_pickedImageFile!.path),
+                              fit: BoxFit.cover,
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _pickedImageFile = null;
+                                  });
+                                },
+                                icon: const Icon(Icons.cancel))
+                          ],
                         ),
-                      ),
-                    )
-                  : id==null? Image.file(_pickedImage):Image.network(_pickedImageUrl??""),
+                ),
+                 if(!imageAdded)
+                              const Padding(
+                            padding: EdgeInsets.only(
+                              left: 17,
+                              top: 5,
+                            ),
+                            child: Text(
+                              "Image is Required",
+                              style: TextStyle(color: Colors.red, fontSize: 10),
+                            ))
+              ],
             ),
             Padding(
               padding:
@@ -222,25 +328,22 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.name,
-                  controller: eventName,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the event name";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                controller: eventName,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -258,25 +361,22 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.number,
-                  controller: eventPrice,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the event price";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                controller: eventPrice,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -294,30 +394,27 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.number,
-                  controller: streetNo,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the street no";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
+                controller: streetNo,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
               child: Text(
@@ -330,30 +427,27 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.name,
-                  controller: streetName,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the street name";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                controller: streetName,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
               child: Text(
@@ -366,30 +460,27 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.name,
-                  controller: cityName,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the city";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                controller: cityName,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
-             Padding(
+            Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 10),
               child: Text(
@@ -402,25 +493,22 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.name,
-                  controller: countryName,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the country";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.name,
+                controller: countryName,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -438,26 +526,24 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-              child: SizedBox(
-                height: height * 0.076,
-                child: TextFormField(
-                  onSaved: (val) {},
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter the product name";
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.multiline,
-                  controller: eventDescription,
-                  // keyboardAppearance: ,
-                  textInputAction: TextInputAction.next,
-                  toolbarOptions:
-                      const ToolbarOptions(cut: true, copy: true, paste: true),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+              child: TextFormField(
+                onSaved: (val) {},
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter the event description name";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: eventDescription,
+                // keyboardAppearance: ,
+                textInputAction: TextInputAction.next,
+                toolbarOptions:
+                    const ToolbarOptions(cut: true, copy: true, paste: true),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
@@ -477,13 +563,32 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: GestureDetector(
                   onTap: presentDatePicker,
-                  child: Container(
-                      padding: const EdgeInsets.only(top: 15, left: 10),
-                      height: height * 0.076,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1, color: Colors.grey)),
-                      child: Text(eventDate.text)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.only(top: 15, left: 10),
+                          height: height * 0.076,
+                          width: width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  width: 1,
+                                  color:
+                                      !dateFilled ? Colors.red : Colors.grey)),
+                          child: Text(eventDate.text)),
+                      if (!dateFilled)
+                        const Padding(
+                            padding: EdgeInsets.only(
+                              left: 17,
+                              top: 5,
+                            ),
+                            child: Text(
+                              "Please Enter The Date",
+                              style: TextStyle(color: Colors.red, fontSize: 10),
+                            ))
+                    ],
+                  ),
                 )),
             Padding(
               padding:
@@ -500,13 +605,32 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
                 padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                 child: GestureDetector(
                   onTap: presentTimePicker,
-                  child: Container(
-                      padding: const EdgeInsets.only(top: 15, left: 10),
-                      height: height * 0.076,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1, color: Colors.grey)),
-                      child: Text(eventTime.text)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.only(top: 15, left: 10),
+                          height: height * 0.076,
+                          width: width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                width: 1,
+                                color: !timeFilled ? Colors.red : Colors.grey,
+                              )),
+                          child: Text(eventTime.text)),
+                      if (!timeFilled)
+                        const Padding(
+                            padding: EdgeInsets.only(
+                              left: 17,
+                              top: 5,
+                            ),
+                            child: Text(
+                              "Please Enter The Time",
+                              style: TextStyle(color: Colors.red, fontSize: 10),
+                            ))
+                    ],
+                  ),
                 )),
             Center(
               child: TextButton.icon(

@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/eventmanagement/provider/eventprovider.dart';
+import 'package:gamingmob/eventmanagement/screens/eventdetailscreen.dart';
 import 'package:provider/provider.dart';
 
 class EventHomeWidget extends StatelessWidget {
@@ -31,7 +33,9 @@ class EventHomeWidget extends StatelessWidget {
               itemBuilder: ((context, index) {
                 return Card(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(EventDetailScreen.routeName,arguments: eventData[index].eventID);
+                    },
                     child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -45,11 +49,17 @@ class EventHomeWidget extends StatelessWidget {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
-                                child: Image.network(
+                                child: CachedNetworkImage( placeholderFadeInDuration:
+                                                  const Duration(seconds: 4),
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                              fit: BoxFit.cover,imageUrl:
                                   eventData[index].eventImageUrl,
                                   height: height * 0.33,
                                   width: width,
-                                  fit: BoxFit.cover,
+                                  
                                 ),
                               ),
                               Positioned(

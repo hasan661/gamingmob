@@ -46,7 +46,9 @@ dependencies:
   photo_view: ^0.13.0
   google_sign_in: ^5.3.1
   comment_tree: ^0.3.0
+  flutter_email_sender: ^5.1.0
   flutter_facebook_auth: ^4.3.4
+  http: ^0.13.4
  
   
   

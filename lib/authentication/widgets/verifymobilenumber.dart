@@ -61,6 +61,7 @@ class _MobileVerificationState extends State<MobileVerification> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 25.0, horizontal: 40),
                         child: PinCodeTextField(
+                          
                           appContext: context,
                           length: 6,
                           obscureText: true,

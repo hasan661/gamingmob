@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/eventmanagement/models/event.dart';
+import 'package:http/http.dart' as http;
 
 class EventProvider with ChangeNotifier {
   List<Events> _events = [];
@@ -76,6 +79,7 @@ class EventProvider with ChangeNotifier {
 
       try{
         fetchedEvents.add(Events(
+          organizerEmail: element["organizerEmail"],
             eventUserID: element["eventUserID"],
             eventID: element.id,
             eventImageUrl: element["eventImageUrl"],
@@ -103,6 +107,7 @@ class EventProvider with ChangeNotifier {
 
   Future<void> addEvent(Events item) async {
     FirebaseFirestore.instance.collection("Events").doc().set({
+      "organizerEmail":item.organizerEmail,
       "eventUserID":item.eventUserID,
       "eventName": item.eventName,
       "eventPrice": item.eventPrice,
@@ -120,5 +125,27 @@ class EventProvider with ChangeNotifier {
 
     // _blogs.add(item);
     notifyListeners();
+  }
+
+  Future sendEmail(String name, String email,)async{
+      final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+  const serviceId = 'service_enivazl';
+  const templateId = 'template_vcw2w1m';
+  const userId = 'XWlCa7IIk0e-jePbq';
+  final response = await http.post(url,
+      headers: {'Content-Type': 'application/json'},//This line makes sure it works for all platforms.
+      body: json.encode({
+        'service_id': serviceId,
+        'template_id': templateId,
+        'user_id': userId,
+        'template_params': {
+          'to_name': name,
+          'from_name': email,
+          'eventName':"Zabefest"
+          // 'message': message
+        }
+      }));
+      print(response.body);
+  return response;
   }
 }

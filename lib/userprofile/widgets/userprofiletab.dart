@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamingmob/blogs/widgets/myblogsitem.dart';
+import 'package:gamingmob/eventmanagement/widgets/myevents.dart';
 import 'package:gamingmob/forum/widgets/myforums.dart';
 import 'package:gamingmob/product/screens/myadsscreen.dart';
 
@@ -75,6 +76,20 @@ class _UserProfileTabState extends State<UserProfileTab> {
                           : Colors.black),
                 ),
               ),
+               GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = 3;
+                  });
+                },
+                child: Text(
+                  "Events",
+                  style: TextStyle(
+                      color: selectedIndex == 3
+                          ? Theme.of(context).primaryColor
+                          : Colors.black),
+                ),
+              ),
             ],
           ),
         ),
@@ -92,6 +107,11 @@ class _UserProfileTabState extends State<UserProfileTab> {
               child: const MyForums(routeFrom: "profile"),
               maintainState: true,
               visible: selectedIndex == 2,
+            ),
+            Visibility(
+              child: const MyEventsScreen(routeFrom: "profile",),
+              maintainState: true,
+              visible: selectedIndex == 3,
             ),
           ],
           index: selectedIndex,

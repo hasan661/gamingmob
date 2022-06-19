@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/blogs/providers/blogprovider.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class BlogDetailScreen extends StatelessWidget {
              
               if(e.type=="image"){
                 return Column(
-                  children: [Image.network(e.data.toString()), SizedBox(height: height*0.02,)],
+                  children: [CachedNetworkImage(imageUrl:e.data.toString()), SizedBox(height: height*0.02,)],
                 );
               }
               else{

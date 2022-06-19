@@ -7,6 +7,7 @@ class Events{
   String streetName;
   String cityName;
   String countryName;
+  String organizerEmail;
   
   String eventImageUrl;
   String eventDescription;
@@ -15,6 +16,6 @@ class Events{
   String eventTime;
 
 
-  Events({required this.eventID, required this.eventImageUrl, required this.cityName, required this.countryName, required this.streetName, required this.streetNo, required this.eventName, required this.eventPrice, required this.eventDescription, required this.usersRegistered, required this.eventDate, required this.eventTime, required this.eventUserID});
+  Events({required this.eventID, required this.eventImageUrl, required this.cityName, required this.countryName, required this.streetName, required this.streetNo, required this.eventName, required this.eventPrice, required this.eventDescription, required this.usersRegistered, required this.eventDate, required this.eventTime, required this.eventUserID, required this.organizerEmail});
   
 }

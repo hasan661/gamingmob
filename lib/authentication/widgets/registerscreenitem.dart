@@ -219,20 +219,11 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
               SizedBox(
                 height: height * 0.03,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Helper.getSocialLogin(height, "google.png"),
-                  SizedBox(
-                    width: width * 0.05,
-                  ),
-                  Helper.getSocialLogin(height, "facebook.png")
-                ],
-              ),
+              Helper.getSocialLogin(height, "google.png"),
               Padding(
                 padding:
                     EdgeInsets.only(top: height * 0.01, bottom: height * 0.01),
-                child: const Text("Use Social To Login"),
+                child: const Text("Use Google To Login"),
               ),
               SizedBox(
                 height: height * 0.03,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,34 @@ import 'package:provider/provider.dart';
 class MyForums extends StatelessWidget {
   const MyForums({Key? key, required this.routeFrom}) : super(key: key);
   final String routeFrom;
+  String timeFunction(listofForums, index) {
+    if (DateTime.now().difference(listofForums[index].createdAt).inSeconds <
+        60) {
+      return "${DateTime.now().difference(listofForums[index].createdAt).inSeconds} seconds ago";
+    } else if (DateTime.now()
+            .difference(listofForums[index].createdAt)
+            .inMinutes <
+        60) {
+      return "${DateTime.now().difference(listofForums[index].createdAt).inMinutes} minutes ago";
+    } else if (DateTime.now()
+            .difference(listofForums[index].createdAt)
+            .inHours <
+        24) {
+      return "${DateTime.now().difference(listofForums[index].createdAt).inHours} hours ago";
+    } else if (DateTime.now().difference(listofForums[index].createdAt).inDays <
+        30) {
+      return "${DateTime.now().difference(listofForums[index].createdAt).inDays} days ago";
+    } else if (DateTime.now().difference(listofForums[index].createdAt).inDays >
+            30 &&
+        DateTime.now().difference(listofForums[index].createdAt).inDays < 365) {
+      return "${DateTime.now().difference(listofForums[index].createdAt).inDays / 30} months ago";
+    }
+    return "${DateTime.now().difference(listofForums[index].createdAt).inDays / 365} years ago";
+  }
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ForumProvider>(context)
-                  .fetchForums();
+    Provider.of<ForumProvider>(context).fetchForums();
     var currentUserId = FirebaseAuth.instance.currentUser!.uid;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
@@ -65,7 +89,9 @@ class MyForums extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.loose,
                       child: ListView.builder(
-                          physics: routeFrom=="profile"? const NeverScrollableScrollPhysics():null,
+                          physics: routeFrom == "profile"
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
                           shrinkWrap: true,
                           itemCount: listofForums.length,
                           itemBuilder: (ctx, index) {
@@ -119,21 +145,19 @@ class MyForums extends StatelessWidget {
                                                                     .bold),
                                                         children: [
                                                           TextSpan(
-                                                            text:
-                                                                "${DateTime.now().difference(listofForums[index].createdAt).inMinutes} minutes ago",
-                                                          )
+                                                              text: timeFunction(
+                                                                  listofForums,
+                                                                  index))
                                                         ])),
                                                   ),
                                                 ],
                                               ),
                                               PopupMenuButton(
-                                                
                                                 itemBuilder: (ctx) {
                                                   return [
                                                     const PopupMenuItem(
-                                                      
                                                       value: "hasan",
-                                                     
+
                                                       child: Text(
                                                         "Update",
                                                       ),
@@ -141,27 +165,29 @@ class MyForums extends StatelessWidget {
                                                     ),
                                                     const PopupMenuItem(
                                                       value: "Mudassir",
-                                                     
-                                                      child:
-                                                          Text("Delete"),
+
+                                                      child: Text("Delete"),
                                                       // value: FilterOptions.All,
                                                     )
                                                   ];
                                                 },
                                                 onSelected: (value) {
-                                                  if(value=="Mudassir"){
-                                                     Provider.of<ForumProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .deletForum(
+                                                  if (value == "Mudassir") {
+                                                    Provider.of<ForumProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .deletForum(
+                                                            listofForums[index]
+                                                                .forumId);
+                                                  } else {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            AddForumScreen
+                                                                .routeName,
+                                                            arguments:
                                                                 listofForums[
                                                                         index]
                                                                     .forumId);
-
-                                                  }
-                                                  else{
-                                                     Navigator.of(context).pushNamed(AddForumScreen.routeName, arguments: listofForums[index].forumId);
-
                                                   }
                                                 },
                                                 icon: const Icon(
@@ -201,10 +227,17 @@ class MyForums extends StatelessWidget {
                                                     );
                                                   });
                                             },
-                                            child: Image.network(
-                                              listofForums[index].imageURL ??
+                                            child: CachedNetworkImage(
+                                              placeholderFadeInDuration:
+                                                  const Duration(seconds: 4),
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                              fit: BoxFit.cover,
+                                              imageUrl: listofForums[index]
+                                                      .imageURL ??
                                                   "",
-                                              fit: BoxFit.fitWidth,
                                               height: 220,
                                               width: width,
                                             ),

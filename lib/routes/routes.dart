@@ -7,6 +7,7 @@ import 'package:gamingmob/blogs/screens/addblogsscreen.dart';
 import 'package:gamingmob/blogs/screens/blogdetailscreen.dart';
 import 'package:gamingmob/blogs/screens/bloghomescreen.dart';
 import 'package:gamingmob/eventmanagement/screens/createanevent.dart';
+import 'package:gamingmob/eventmanagement/screens/eventdetailscreen.dart';
 import 'package:gamingmob/eventmanagement/screens/eventhomescreen.dart';
 import 'package:gamingmob/forum/screens/forumhomescreen.dart';
 import 'package:gamingmob/forum/screens/addforumscreen.dart';
@@ -45,11 +46,12 @@ getRoutes() {
 
 
     //UserProfile
-    UserProfileScreen.routeName:(ctx)=>const UserProfileScreen(),
+    UserProfileScreen.routeName:(ctx)=>const InterentCheckStream(child: UserProfileScreen()),
 
     //Event Management
-    EventHomeScreen.routeName:(ctx)=>const EventHomeScreen(),
-    CreateEvent.routeName:(ctx)=> const CreateEvent(),
+    EventHomeScreen.routeName:(ctx)=> const InterentCheckStream(child: EventHomeScreen()),
+    CreateEvent.routeName:(ctx)=> const InterentCheckStream(child: CreateEvent()),
+    EventDetailScreen.routeName:(ctx)=>const InterentCheckStream(child: EventDetailScreen())
 
     
   };

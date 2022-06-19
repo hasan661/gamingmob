@@ -11,6 +11,31 @@ import 'package:provider/provider.dart';
 class ForumHomeItem extends StatelessWidget {
   const ForumHomeItem({Key? key}) : super(key: key);
 
+  String timeFunction(listofForums, index){
+    if(DateTime.now().difference(listofForums[index].createdAt).inSeconds<60){
+      return "${DateTime.now().difference(listofForums[index].createdAt).inSeconds} seconds ago";
+    }
+    else if(DateTime.now().difference(listofForums[index].createdAt).inMinutes<60){
+      return "${DateTime.now().difference(listofForums[index].createdAt).inMinutes} minutes ago";
+    }
+    else if(DateTime.now().difference(listofForums[index].createdAt).inHours<24){
+      return "${DateTime.now().difference(listofForums[index].createdAt).inHours} hours ago";
+
+    }
+    else if(DateTime.now().difference(listofForums[index].createdAt).inDays<30){
+      return "${DateTime.now().difference(listofForums[index].createdAt).inDays} days ago";
+      
+
+    }
+      else if(DateTime.now().difference(listofForums[index].createdAt).inDays> 30 &&  DateTime.now().difference(listofForums[index].createdAt).inDays<365 ){
+      return "${DateTime.now().difference(listofForums[index].createdAt).inDays/30} months ago";
+      
+
+    }
+     return "${DateTime.now().difference(listofForums[index].createdAt).inDays/365} years ago";
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -115,7 +140,7 @@ class ForumHomeItem extends StatelessWidget {
                                                         children: [
                                                           TextSpan(
                                                             text:
-                                                                "${DateTime.now().difference(listofForums[index].createdAt).inMinutes} minutes ago",
+                                                                timeFunction(listofForums, index)
                                                           )
                                                         ])),
                                                   ),
