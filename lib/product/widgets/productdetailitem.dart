@@ -67,16 +67,15 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
           SnackBar(
             content: const Text("Whatsapp Not Installed"),
             backgroundColor: Theme.of(context).errorColor,
-                        duration: const Duration(days: 365),
+            duration: const Duration(days: 365),
 
-                        // content:const Text("invalid password"),
-                        action: SnackBarAction(
-                            label: "Close",
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                            textColor: Colors.white),
+            // content:const Text("invalid password"),
+            action: SnackBarAction(
+                label: "Close",
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+                textColor: Colors.white),
           ),
         );
       }
@@ -253,15 +252,13 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-
                       child: CachedNetworkImage(
                         // width: widget.screenWidth,
-              placeholderFadeInDuration: const Duration(seconds: 4),
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
-              fit: BoxFit.cover,
-                        imageUrl: 
-                        widget.product.ownerImage ??
+                        placeholderFadeInDuration: const Duration(seconds: 4),
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        fit: BoxFit.cover,
+                        imageUrl: widget.product.ownerImage ??
                             "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
                       ),
                     ),

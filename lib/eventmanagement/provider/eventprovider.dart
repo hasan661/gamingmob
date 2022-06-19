@@ -32,7 +32,6 @@ class EventProvider with ChangeNotifier {
           .update({
         "eventUserID": newEvent.eventUserID,
         "eventName": newEvent.eventName,
-        "eventPrice": newEvent.eventPrice,
         "streetNo": newEvent.streetNo,
         "streetName": newEvent.streetName,
         "cityName": newEvent.cityName,
@@ -103,7 +102,6 @@ class EventProvider with ChangeNotifier {
               cityName: element["cityName"],
               countryName: element["countryName"],
               eventName: element["eventName"],
-              eventPrice: element["eventPrice"],
               eventDescription: element["eventDescription"],
               usersRegistered: list,
               eventDate: element["eventDate"],
@@ -124,7 +122,6 @@ class EventProvider with ChangeNotifier {
       "organizerEmail": item.organizerEmail,
       "eventUserID": item.eventUserID,
       "eventName": item.eventName,
-      "eventPrice": item.eventPrice,
       "streetNo": item.streetNo,
       "streetName": item.streetName,
       "cityName": item.cityName,
@@ -187,11 +184,20 @@ class EventProvider with ChangeNotifier {
         .collection("registeredUsers")
         .snapshots()
         .first;
-    print(obj.docs.length);
+   print(obj.docs.length);
+   print(ticketCapacity);
 
     if (obj.docs.length >= ticketCapacity) {
       return "Error";
-    } else {
+    } 
+   
+    else {
+      for(var i in obj.docs){
+        if(i.data()["userID"]==user.userID){
+          print("object");
+          return "Error2";
+        }
+      }
       await FirebaseFirestore.instance
           .collection("Events")
           .doc(eventID)
@@ -200,7 +206,7 @@ class EventProvider with ChangeNotifier {
             "userID": user.userID,
             "userName": user.userName,
           }));
-           await sendEmail(FirebaseAuth.instance.currentUser!.displayName??"", eventObj.organizerEmail, eventObj.eventName, obj.docs.length.toString());
+           await sendEmail(FirebaseAuth.instance.currentUser!.displayName??"", eventObj.organizerEmail, eventObj.eventName, obj.docs.length);
     }
    
     notifyListeners();
@@ -211,8 +217,10 @@ class EventProvider with ChangeNotifier {
     String name,
     String email,
     String eventName
-    ,String count
+    ,int count
   ) async {
+    var counted=count+1;
+    
     final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
     const serviceId = 'service_enivazl';
     const templateId = 'template_vcw2w1m';
@@ -229,7 +237,7 @@ class EventProvider with ChangeNotifier {
             'eventName': eventName,
             "reciever_email": email,
             // 'message': message
-            "member count":count
+            "member count":"$counted"
           }
         }));
 

@@ -2,7 +2,7 @@ class Events {
   String eventUserID;
   String eventID;
   String eventName;
-  int eventPrice;
+  // int eventPrice;
   String streetNo;
   String streetName;
   String cityName;
@@ -23,7 +23,7 @@ class Events {
     required this.streetName,
     required this.streetNo,
     required this.eventName,
-    required this.eventPrice,
+    // required this.eventPrice,
     required this.eventDescription,
     required this.usersRegistered,
     required this.eventDate,

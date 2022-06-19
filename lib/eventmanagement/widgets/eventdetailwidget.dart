@@ -14,20 +14,14 @@ class EventDetailWidget extends StatefulWidget {
 }
 
 class _EventDetailWidgetState extends State<EventDetailWidget> {
-  String status="";
-  bool? eventObj;
+  String? status;
+  
 
   @override
   Widget build(BuildContext context) {
+    // bool? eventObj;
     var id = ModalRoute.of(context)!.settings.arguments as String;
-    call() async {
-      eventObj = await Provider.of<EventProvider>(context, listen: false)
-          .checkIsUserRegistered(FirebaseAuth.instance.currentUser!.uid, id);
-      print(eventObj);
-      status = await Provider.of<EventProvider>(context, listen: false)
-          .checkStatus(FirebaseAuth.instance.currentUser!.uid, id);
-      print(status);
-    }
+
 
     var event = Provider.of<EventProvider>(context).getById(id);
     var screenWidth = MediaQuery.of(context).size.width;
@@ -39,7 +33,7 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
             .collection("registeredUsers")
             .snapshots(),
         builder: (context, snapshot) {
-          call();
+          // call();
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -81,16 +75,7 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
                       event.eventDescription,
                       style: const TextStyle(fontSize: 20),
                     ),
-                    const Text(
-                      "Price:",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    Text(
-                      event.eventPrice.toString(),
-                      overflow: TextOverflow.fade,
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                    
                     const Text(
                       "Address:",
                       style:
@@ -112,11 +97,8 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
                         padding: const EdgeInsets.only(
                           top: 20,
                         ),
-                        child:
-                             ElevatedButton(
-                                onPressed: eventObj ?? false
-                                    ? null
-                                    : () async {
+                        child: ElevatedButton(
+                                onPressed:() async {
                                         var credentials = RegisteredUsers(
                                             userID: FirebaseAuth
                                                 .instance.currentUser!.uid,
@@ -148,6 +130,24 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
                                             content:
                                                 const Text("No seats left"),
                                           ));
+                                        }
+                                        else if(errorOrNot=="Error2"){
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            backgroundColor:
+                                                Theme.of(context).errorColor,
+                                            duration: const Duration(days: 365),
+                                            action: SnackBarAction(
+                                                label: "Close",
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                      .hideCurrentSnackBar();
+                                                },
+                                                textColor: Colors.white),
+                                            content:
+                                                const Text("You have already registered"),
+                                          ));
+
                                         }
                                       },
                                 child: const Text("Register"),

@@ -32,7 +32,6 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
         var initEventItem =
             Provider.of<EventProvider>(context).getById(id.toString());
         eventName.text = initEventItem.eventName;
-        eventPrice.text = initEventItem.eventPrice.toString();
         streetNo.text = initEventItem.streetNo;
         streetName.text = initEventItem.streetName;
         cityName.text = initEventItem.cityName;
@@ -69,7 +68,7 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
     streetName: "",
     streetNo: "",
     eventName: "",
-    eventPrice: 0,
+    
     eventDescription: "",
     usersRegistered: [],
     eventDate: DateTime.now().toString(),
@@ -154,7 +153,6 @@ class _CreateAnEventWidgetState extends State<CreateAnEventWidget> {
         cityName: cityName.text,
         countryName: countryName.text,
         eventName: eventName.text,
-        eventPrice: int.parse(eventPrice.text),
         eventDescription: eventDescription.text,
         usersRegistered: [],
         eventDate: eventDate.text,

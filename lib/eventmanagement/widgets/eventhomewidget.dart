@@ -107,20 +107,7 @@ class EventHomeWidget extends StatelessWidget {
                                     Text(eventData[index].streetName+eventData[index].cityName)
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "    RS",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(eventData[index].eventPrice.toString())
-                                  ],
-                                ),
+                               
                               ],
                             ),
                           )
