@@ -25,6 +25,7 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
 
     var event = Provider.of<EventProvider>(context).getById(id);
     var screenWidth = MediaQuery.of(context).size.width;
+    var height =MediaQuery.of(context).size.height;
 
     return StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -55,51 +56,58 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Title:",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
                     Text(
-                      event.eventName,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    const Text(
-                      "Description:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
+                    "Title",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    event.eventName,
+                  ),
+                   const SizedBox(
+                    height: 16,
+                  ),
                     Text(
-                      event.eventDescription,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    
-                    const Text(
-                      "Address:",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    Text(
-                      event.streetNo +
+                    "Description",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    event.eventDescription,
+                  ),
+                   const SizedBox(
+                    height: 16,
+                  ),
+                    // ),
+                       Text(
+                    "Address",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    event.address +
                           "," +
-                          event.streetName +
-                          "," +
-                          event.cityName +
-                          "," +
-                          event.countryName,
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                          event.cityName
+                  ),
+                   const SizedBox(
+                    height: 16,
+                  ),
+                  
                     if (event.organizerEmail !=
                         FirebaseAuth.instance.currentUser!.email)
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 20,
                         ),
-                        child: ElevatedButton(
-                                onPressed:() async {
-                                        var credentials = RegisteredUsers(
+                        child:  ElevatedButton(
+                      onPressed: () async {
+                          var credentials = RegisteredUsers(
                                             userID: FirebaseAuth
                                                 .instance.currentUser!.uid,
                                             userName: FirebaseAuth.instance
@@ -147,12 +155,28 @@ class _EventDetailWidgetState extends State<EventDetailWidget> {
                                             content:
                                                 const Text("You have already registered"),
                                           ));
+                                          
 
                                         }
-                                      },
-                                child: const Text("Register"),
+                                        else{
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Registered Successfully")));
+                                        }
+                                        
+                      },
+                      child: const Text("Register"),
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor.withOpacity(1)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          fixedSize: MaterialStateProperty.all(
+                              Size(screenWidth, height * 0.06))),
+                    ),
                               ),
-                      ),
+                      
                   ],
                 ),
               )

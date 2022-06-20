@@ -113,41 +113,32 @@ class ForumHomeItem extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.all(12.0),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        listofForums[index]
-                                                                .userImageUrl ??
-                                                            "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10.0),
-                                                    child: Text.rich(TextSpan(
-                                                        text:
-                                                            listofForums[index]
-                                                                    .userName +
-                                                                "\n",
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        children: [
-                                                          TextSpan(
-                                                            text:
-                                                                timeFunction(listofForums, index)
-                                                          )
-                                                        ])),
-                                                  ),
-                                                ],
+                                              CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    listofForums[index]
+                                                            .userImageUrl ??
+                                                        "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                                               ),
-                                              const Icon(
-                                                Icons.more_horiz,
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 10.0),
+                                                child: Text.rich(TextSpan(
+                                                    text:
+                                                        listofForums[index]
+                                                                .userName +
+                                                            "\n",
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .bold),
+                                                    children: [
+                                                      TextSpan(
+                                                        text:
+                                                            timeFunction(listofForums, index)
+                                                      )
+                                                    ])),
                                               ),
                                             ],
                                           ),

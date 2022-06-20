@@ -252,13 +252,9 @@ class _ProductDetailItemState extends State<ProductDetailItem> {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: CachedNetworkImage(
-                        // width: widget.screenWidth,
-                        placeholderFadeInDuration: const Duration(seconds: 4),
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator()),
-                        fit: BoxFit.cover,
-                        imageUrl: widget.product.ownerImage ??
+                      backgroundImage:
+                       NetworkImage(
+                      widget.product.ownerImage ??
                             "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f",
                       ),
                     ),

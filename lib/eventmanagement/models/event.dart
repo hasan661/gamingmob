@@ -3,12 +3,13 @@ class Events {
   String eventID;
   String eventName;
   // int eventPrice;
-  String streetNo;
-  String streetName;
+  
+ 
   String cityName;
-  String countryName;
+  String address;
+
   String organizerEmail;
-  int ticketCapacity;
+  
   String eventImageUrl;
   String eventDescription;
   List<RegisteredUsers> usersRegistered;
@@ -16,21 +17,18 @@ class Events {
   String eventTime;
 
   Events({
+    required this.address,
     required this.eventID,
     required this.eventImageUrl,
     required this.cityName,
-    required this.countryName,
-    required this.streetName,
-    required this.streetNo,
-    required this.eventName,
-    // required this.eventPrice,
     required this.eventDescription,
     required this.usersRegistered,
     required this.eventDate,
     required this.eventTime,
     required this.eventUserID,
     required this.organizerEmail,
-    required this.ticketCapacity,
+    required this.eventName
+   
   });
 
   

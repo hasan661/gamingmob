@@ -27,7 +27,7 @@ class EventHomeWidget extends StatelessWidget {
             }
             var eventData = Provider.of<EventProvider>(
           context,
-        ).notUserEvents;
+        ).events;
         
             return ListView.builder(
               itemBuilder: ((context, index) {
@@ -86,8 +86,8 @@ class EventHomeWidget extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(20),
-                            child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Row(
                                   children: [
@@ -104,7 +104,7 @@ class EventHomeWidget extends StatelessWidget {
                                     const SizedBox(
                                       width: 6,
                                     ),
-                                    Text(eventData[index].streetName+eventData[index].cityName)
+                                    Text(eventData[index].address+eventData[index].cityName)
                                   ],
                                 ),
                                

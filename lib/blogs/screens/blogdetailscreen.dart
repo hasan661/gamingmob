@@ -21,7 +21,7 @@ class BlogDetailScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
+          // physics: const NeverScrollableScrollPhysics(),
           children: [
         
             Text(

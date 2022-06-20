@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gamingmob/product/providers/productprovider.dart';
@@ -24,14 +23,10 @@ class MyAdScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             leading: CircleAvatar(
-              child: userProducts[index].imageURL.isEmpty
+              backgroundImage:  userProducts[index].imageURL.isEmpty
                   ? null
-                  : CachedNetworkImage(
-                      placeholderFadeInDuration: const Duration(seconds: 4),
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                      fit: BoxFit.cover,
-                      imageUrl: userProducts[index].imageURL[0],
+                  : NetworkImage(
+                      userProducts[index].imageURL[0],
                     ),
             ),
             title: Text(userProducts[index].productName),

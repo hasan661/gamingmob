@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_tree/comment_tree.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,13 +70,8 @@ class _StackForCommentsState extends State<StackForComments> {
                               child: CircleAvatar(
                                 radius: 18,
                                 backgroundColor: Colors.grey,
-                                child: CachedNetworkImage(
-                                    placeholderFadeInDuration:
-                                        const Duration(seconds: 4),
-                                    placeholder: (context, url) => const Center(
-                                        child: CircularProgressIndicator()),
-                                    fit: BoxFit.cover,
-                                    imageUrl: widget.listOfComments[index]
+                                backgroundImage: NetworkImage(
+                                    widget.listOfComments[index]
                                             .commentedUserImage ??
                                         "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
@@ -86,14 +80,9 @@ class _StackForCommentsState extends State<StackForComments> {
                             avatarChild: (context, data) => PreferredSize(
                               child: CircleAvatar(
                                 radius: 12,
-                                backgroundColor: Colors.grey,
-                                child: CachedNetworkImage(
-                                    placeholderFadeInDuration:
-                                        const Duration(seconds: 4),
-                                    placeholder: (context, url) => const Center(
-                                        child: CircularProgressIndicator()),
-                                    fit: BoxFit.cover,
-                                    imageUrl: data.avatar ??
+                                backgroundColor: const Color.fromRGBO(158, 158, 158, 1),
+                                backgroundImage: NetworkImage(
+                                   data.avatar ??
                                         "https://firebasestorage.googleapis.com/v0/b/gaming-mob.appspot.com/o/GamingMob%2FNoImage.png?alt=media&token=59a0d10a-0d32-4a96-ae4f-f06f359f566f"),
                               ),
                               preferredSize: const Size.fromRadius(12),

@@ -29,12 +29,12 @@ class CategoriesScreenItem extends StatelessWidget {
         } else {
           return TabBarView(children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: GridView.builder(
                 itemCount: categires.length,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,
-                  childAspectRatio: 3 / 2,
+                  // childAspectRatio: 3 / 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
@@ -66,7 +66,7 @@ class CategoriesScreenItem extends StatelessWidget {
                             placeholder: (context, url)=>const Center(child: CircularProgressIndicator()),
                             
                             fit: BoxFit.cover,
-                            height: 100,
+                            height: 150,
                             width: width*0.5,
                           ),
                            Container(

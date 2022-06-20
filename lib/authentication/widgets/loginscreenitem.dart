@@ -162,6 +162,8 @@ class _LoginScreenItemState extends State<LoginScreenItem> {
                             height: height * 0.009,
                           ),
                           TextFormField(
+                            obscureText: true,
+                            // obscuringCharacter: "*",
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return "Password Field Is Required";

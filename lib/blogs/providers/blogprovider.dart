@@ -7,8 +7,8 @@ class BlogProvider with ChangeNotifier {
   List<Blog> _blogs = [];
 
   List<Blog> get allBlogs {
-    var id = FirebaseAuth.instance.currentUser!.uid;
-    return _blogs.where((element) => element.userId != id).toList();
+    // var id = FirebaseAuth.instance.currentUser!.uid;
+    return _blogs;
   }
 
   Future<void> fetchBlogs() async {

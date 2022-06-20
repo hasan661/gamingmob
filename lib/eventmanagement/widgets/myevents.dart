@@ -112,7 +112,7 @@ class MyEventsScreen extends StatelessWidget {
                                         const SizedBox(
                                           width: 6,
                                         ),
-                                        Text(eventData[index].streetName+", "+eventData[index].cityName)
+                                        Text(eventData[index].address+", "+eventData[index].cityName)
                                       ],
                                     ),
                                   

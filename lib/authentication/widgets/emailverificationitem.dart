@@ -33,35 +33,35 @@ class EmailVerificationItem extends StatelessWidget {
               SizedBox(
                 width: width * 0.8,
                 child: const Text(
-                  "An email verification link is sent to your procided email. Click on that link to verify your email. You will automatically be verified",
+                  "An email verification link is sent to your provided email. Click on that link to verify your email. You will automatically be verified",
                   textAlign: TextAlign.justify,
                 ),
               ),
               const Expanded(child: SizedBox()),
-              SizedBox(
-                height: height * 0.06,
-                width: width,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Provider.of<AuthProvider>(context, listen: false).sendEmailVerification(context);
-                  },
+              // SizedBox(
+              //   height: height * 0.06,
+              //   width: width,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Provider.of<AuthProvider>(context, listen: false).sendEmailVerification(context);
+              //     },
                   
-                  child: const Text("Resend Email"),
-                  style: ButtonStyle(
+              //     child: const Text("Resend Email"),
+              //     style: ButtonStyle(
                     
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor.withOpacity(1)),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: height * 0.03,
-              ),
+              //       backgroundColor: MaterialStateProperty.all(
+              //           Theme.of(context).primaryColor.withOpacity(1)),
+              //       shape: MaterialStateProperty.all(
+              //         RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(10),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: height * 0.03,
+              // ),
             ],
           ),
         ),

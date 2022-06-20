@@ -94,13 +94,7 @@ class _MobileVerificationState extends State<MobileVerification> {
                           },
                         )),
                   ),
-                  const Text(
-                    "This code will expire in 5 minutes",
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
+                 
                   const SizedBox(height: 40),
                   GestureDetector(
                     onTap: () {

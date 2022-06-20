@@ -177,9 +177,9 @@ class _RegisterScreenItemState extends State<RegisterScreenItem> {
                 obscureText: true,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "please confirm your password";
+                    return "Please confirm your password";
                   } else if (password.text != confirmPassword.text) {
-                    return "passwords do not match";
+                    return "Passwords do not match";
                   }
                   return null;
                 },

@@ -13,7 +13,6 @@ class ForumProvider with ChangeNotifier {
   Future<void> fetchForums() async {
     try {
       List<Forum> fetchedForums = [];
-
       var forumObj = await FirebaseFirestore.instance
           .collection("Forums")
           .orderBy("createdAt", descending: true)
